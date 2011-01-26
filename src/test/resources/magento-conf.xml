@@ -70,4 +70,15 @@
 		<magento:sales-order-shipment-create orderIncrementId="#[map-payload:orderId]" itemsQty="#[map-payload:itemsQty]" comment="HelloWorld" config-ref="MagentoTest"/>
     </flow>
 
+    <flow name="MagentoOrderInvoicesList">
+        <inbound-endpoint address="vm://getSalesOrderInvoicesList" exchange-pattern="request-response"/>
+		<magento:sales-order-invoices-list>
+			<magento:filters>   
+				<magento:complex-filter key="#[map-payload:filterKey]">
+					<magento:filter key="#[map-payload:operator]" value="#[map-payload:orderId]"/>
+				</magento:complex-filter>
+			</magento:filters>
+		</magento:sales-order-invoices-list>
+    </flow>
+
 </mule>

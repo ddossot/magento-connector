@@ -59,5 +59,7 @@ public class MagentoNamespaceHandler extends AbstractPojoNamespaceHandler
         registerMuleBeanDefinitionParser("sales-order-shipment-create", new InvokerMessageProcessorDefinitionParser("messageProcessor",
                 Magento.class, "salesOrderShipmentCreate", new String[]{"orderIncrementId", "itemsQty", "comment", "email", "includeInEmail"}));
 
+        registerMuleBeanDefinitionParser("sales-order-invoices-list", new ChildDefinitionParser("messageProcessor",
+                MagentoSalesOrderInvoicesListFactoryBean.class, false));
     }
 }

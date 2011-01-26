@@ -408,4 +408,14 @@
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
+	
+	<xsd:element name="sales-order-invoices-list" type="magentoFiltersMethodType" substitutionGroup="mule:abstract-message-processor">
+        <xsd:annotation>
+            <xsd:documentation>
+                List Magento Invoices
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+	
+	
 </xsd:schema>

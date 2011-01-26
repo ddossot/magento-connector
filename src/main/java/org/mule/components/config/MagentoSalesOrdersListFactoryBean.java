@@ -33,17 +33,7 @@ public class MagentoSalesOrdersListFactoryBean
         } else if (appContext.getBean(Magento.class) != null) {
         	invokerMessageProcessor.setObject(appContext.getBean(Magento.class));
         }
-        /*
-        if (appContext.getBean(Magento.class) != null)
-        {
-            invokerMessageProcessor.setObject(appContext.getBean(Magento.class));
-
-        } else
-        {
-            invokerMessageProcessor.setObject(config);
-
-        }
-        */
+         
         return invokerMessageProcessor;
     }
 }

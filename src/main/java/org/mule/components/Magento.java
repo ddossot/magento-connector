@@ -21,6 +21,7 @@ import Magento.Mage_Api_Model_Server_V2_HandlerPortType;
 import Magento.MagentoServiceLocator;
 import Magento.OrderItemIdQty;
 import Magento.SalesOrderEntity;
+import Magento.SalesOrderInvoiceEntity;
 import Magento.SalesOrderShipmentEntity;
 
 /**
@@ -98,16 +99,7 @@ public class Magento implements Initialisable
 	 * @throws Exception
 	 */
 	public SalesOrderEntity[] salesOrdersList(Filters filters) throws Exception {
-		//log.debug("Filters is " + filters);
-		ComplexFilter first = filters.getComplex_filter()[0];
-		//log.debug("Filter[0] is " + filters.getFilter()[0].getKey() + "=" + filters.getFilter()[0].getValue());
-		log.debug("ComplextFilter is " + first.getKey() + " " + first.getValue().getKey() + " " + first.getValue().getValue());
-		
-		//AssociativeEntity first = filters.getFilter()[0];
-		//log.debug("Filter[0] is " + first.getKey() + "=" + first.getValue());
-		
 		String sessionId = this.login();
-		//log.debug(">>>>> Session ID is " + sessionId);
 		return this.getPort().salesOrderList(sessionId, filters);
 	}
 	
@@ -175,16 +167,7 @@ public class Magento implements Initialisable
 	 * @throws Exception
 	 */
 	public SalesOrderShipmentEntity[] salesOrderShipmentsList(Filters filters) throws Exception {
-		log.debug("Filters is " + filters);
-		ComplexFilter first = filters.getComplex_filter()[0];
-		//log.debug("Filter[0] is " + filters.getFilter()[0].getKey() + "=" + filters.getFilter()[0].getValue());
-		log.debug("ComplextFilter is " + first.getKey() + " " + first.getValue().getKey() + " " + first.getValue().getValue());
-		
-		//AssociativeEntity first = filters.getFilter()[0];
-		//log.debug("Filter[0] is " + first.getKey() + "=" + first.getValue());
-		
 		String sessionId = this.login();
-		//log.debug(">>>>> Session ID is " + sessionId);
 		return this.getPort().salesOrderShipmentList(sessionId, filters);
 	}
 	
@@ -251,4 +234,16 @@ public class Magento implements Initialisable
 		String sessionId = this.login();
 		return this.getPort().salesOrderShipmentCreate(sessionId, orderIncrementId, itemsQty, comment, ("true".equals(email) ? 1 : 0), ("true".equals(includeInEmail) ? 1 : 0));
 	}
+	
+	/**
+	 * Returns list of Magento sales order invoices
+	 * @param filters optional list of filters
+	 * @return list of sales order invoices
+	 * @throws Exception
+	 */
+	public SalesOrderInvoiceEntity[] salesOrderInvoicesList(Filters filters) throws Exception {
+		String sessionId = this.login();
+		return this.getPort().salesOrderInvoiceList(sessionId, filters);
+	}
+	
 }
