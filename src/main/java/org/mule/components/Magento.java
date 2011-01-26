@@ -172,9 +172,9 @@ public class Magento implements Initialisable
 	}
 	
 	/**
-	 * Retrieves order information
-	 * @param Order ID
-	 * @return sales order information
+	 * Retrieves order shipment information
+	 * @param Order shipment ID
+	 * @return sales order shipment information
 	 * @throws Exception
 	 */
 	public SalesOrderShipmentEntity salesOrderShipmentInfo(String shipmentIncrementId) throws Exception {
@@ -246,4 +246,65 @@ public class Magento implements Initialisable
 		return this.getPort().salesOrderInvoiceList(sessionId, filters);
 	}
 	
+	/**
+	 * Retrieves order invoice information
+	 * @param Order invoice ID
+	 * @return sales order invoice information
+	 * @throws Exception
+	 */
+	public SalesOrderInvoiceEntity salesOrderInvoiceInfo(String invoiceIncrementId) throws Exception {
+		String sessionId = this.login();
+		return this.getPort().salesOrderInvoiceInfo(sessionId, invoiceIncrementId);
+	}
+
+	public String salesOrderInvoiceCreate(String orderIncrementId, OrderItemIdQty[] itemsQty, String comment, String email, String includeInEmail) throws Exception {
+		String sessionId = this.login();
+		return this.getPort().salesOrderInvoiceCreate(sessionId, orderIncrementId, itemsQty, comment, email, includeInEmail);
+	}
+	
+	/**
+	 * @param invoiceIncrementId
+	 * @param comment
+	 * @param notify
+	 * @param includeInEmail
+	 * @return
+	 * @throws Exception
+	 */
+	public String salesOrderInvoiceComment(String invoiceIncrementId, String comment, String notify, String includeInEmail) throws Exception {
+		String sessionId = this.login();
+		return this.getPort().salesOrderInvoiceAddComment(sessionId, invoiceIncrementId, comment, notify, includeInEmail);
+	}
+	
+	/**
+	 * Captures invoice
+	 * @param Order invoice ID
+	 * @return 
+	 * @throws Exception
+	 */
+	public String salesOrderInvoiceCapture(String invoiceIncrementId) throws Exception {
+		String sessionId = this.login();
+		return this.getPort().salesOrderInvoiceCapture(sessionId, invoiceIncrementId);
+	}
+
+	/**
+	 * Voids invoice
+	 * @param Order invoice ID
+	 * @return 
+	 * @throws Exception
+	 */
+	public String salesOrderInvoiceVoid(String invoiceIncrementId) throws Exception {
+		String sessionId = this.login();
+		return this.getPort().salesOrderInvoiceVoid(sessionId, invoiceIncrementId);
+	}
+
+	/**
+	 * Cancel invoice
+	 * @param Order invoice ID
+	 * @return 
+	 * @throws Exception
+	 */
+	public String salesOrderInvoiceCancel(String invoiceIncrementId) throws Exception {
+		String sessionId = this.login();
+		return this.getPort().salesOrderInvoiceCancel(sessionId, invoiceIncrementId);
+	}
 }

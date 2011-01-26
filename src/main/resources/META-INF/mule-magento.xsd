@@ -362,7 +362,7 @@
 		</xsd:complexContent>
 	</xsd:complexType>	
 
-    <xsd:element name="sales-order-shipment-create" type="salesOrderShipmentCreateType" substitutionGroup="mule:abstract-message-processor">
+    <xsd:element name="sales-order-shipment-create" type="salesOrderCreateType" substitutionGroup="mule:abstract-message-processor">
         <xsd:annotation>
             <xsd:documentation>
                 Creates new shipment for the order
@@ -370,7 +370,7 @@
         </xsd:annotation>
     </xsd:element>
     
-	<xsd:complexType name="salesOrderShipmentCreateType">
+	<xsd:complexType name="salesOrderCreateType">
 		<xsd:complexContent>
 			<xsd:extension base="salesOrderInfoType">
 				<xsd:attribute name="itemsQty" type="xsd:string" use="required">
@@ -417,5 +417,109 @@
         </xsd:annotation>
     </xsd:element>
 	
+	<xsd:complexType name="salesOrderInvoiceType">
+		<xsd:complexContent>
+			<xsd:extension base="magentoApiAbstractType">
+				<xsd:attribute name="invoiceIncrementId" type="xsd:string" use="required">
+					<xsd:annotation>
+						<xsd:documentation>
+							The ID of the sales order invoice that should be returned by
+							the call.
+	                    </xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
 	
+	<xsd:element name="sales-order-invoice-info" type="salesOrderInvoiceType" substitutionGroup="mule:abstract-message-processor">
+        <xsd:annotation>
+            <xsd:documentation>
+                Retrieves information about Magento Sales Order Invoice
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    
+	<xsd:element name="sales-order-invoice-create" type="salesOrderCreateType" substitutionGroup="mule:abstract-message-processor">
+        <xsd:annotation>
+            <xsd:documentation>
+                Creates new invoice for the order
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+	<xsd:complexType name="salesOrderInvoiceCommentType">
+		<xsd:complexContent>
+			<xsd:extension base="salesOrderInvoiceType">
+				<xsd:attribute name="comment" type="xsd:string" use="required">
+					<xsd:annotation>
+						<xsd:documentation>
+							The comment to add.
+	                    </xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+
+				<xsd:attribute name="email" type="xsd:boolean" use="optional" default="false">
+					<xsd:annotation>
+						<xsd:documentation>
+							Notify customer
+	                    </xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>				
+				
+				<xsd:attribute name="includeInEmail" type="xsd:boolean"  use="optional" default="false">
+					<xsd:annotation>
+						<xsd:documentation>
+							Include comment in email
+	                    </xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>				
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
+	<xsd:element name="sales-order-invoice-comment" type="salesOrderInvoiceCommentType" substitutionGroup="mule:abstract-message-processor">
+        <xsd:annotation>
+            <xsd:documentation>
+                Add new comment to the invoice
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    
+    <xsd:element name="sales-order-invoice-capture" type="salesOrderInvoiceType" substitutionGroup="mule:abstract-message-processor">
+        <xsd:annotation>
+            <xsd:documentation>
+                Capture invoice.
+                You should check the invoice to see if can be captured before attempting to capture an invoice, 
+                otherwise the API call with generate an error.
+
+				Invoices have states as defined in the model Mage_Sales_Model_Order_Invoice:
+
+				STATE_OPEN = 1
+				STATE_PAID = 2
+				STATE_CANCELED = 3
+				
+				Also note there is a method call in the model that checks this for you canCapture(), and it also 
+				verifies that the payment is able to be captured, so the invoice state might not be the only condition 
+				that’s required to allow it to be captured.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    
+	<xsd:element name="sales-order-invoice-void" type="salesOrderInvoiceType" substitutionGroup="mule:abstract-message-processor">
+        <xsd:annotation>
+            <xsd:documentation>
+                Voids the invoice
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+	<xsd:element name="sales-order-invoice-cancel" type="salesOrderInvoiceType" substitutionGroup="mule:abstract-message-processor">
+        <xsd:annotation>
+            <xsd:documentation>
+                Cancels the invoice
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
 </xsd:schema>

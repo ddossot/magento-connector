@@ -61,5 +61,23 @@ public class MagentoNamespaceHandler extends AbstractPojoNamespaceHandler
 
         registerMuleBeanDefinitionParser("sales-order-invoices-list", new ChildDefinitionParser("messageProcessor",
                 MagentoSalesOrderInvoicesListFactoryBean.class, false));
+        
+        registerMuleBeanDefinitionParser("sales-order-invoice-info", new InvokerMessageProcessorDefinitionParser("messageProcessor",
+                Magento.class, "salesOrderInvoiceInfo", new String[]{"invoiceIncrementId"}));
+
+        registerMuleBeanDefinitionParser("sales-order-invoice-create", new InvokerMessageProcessorDefinitionParser("messageProcessor",
+                Magento.class, "salesOrderInvoiceCreate", new String[]{"orderIncrementId", "itemsQty", "comment", "email", "includeInEmail"}));
+
+        registerMuleBeanDefinitionParser("sales-order-invoice-comment", new InvokerMessageProcessorDefinitionParser("messageProcessor",
+                Magento.class, "salesOrderInvoiceComment", new String[]{"invoiceIncrementId", "status", "comment", "email", "includeInEmail"}));
+
+        registerMuleBeanDefinitionParser("sales-order-invoice-capture", new InvokerMessageProcessorDefinitionParser("messageProcessor",
+                Magento.class, "salesOrderInvoiceCapture", new String[]{"invoiceIncrementId"}));
+        
+        registerMuleBeanDefinitionParser("sales-order-invoice-void", new InvokerMessageProcessorDefinitionParser("messageProcessor",
+                Magento.class, "salesOrderInvoiceVoid", new String[]{"invoiceIncrementId"}));
+        
+        registerMuleBeanDefinitionParser("sales-order-invoice-cancel", new InvokerMessageProcessorDefinitionParser("messageProcessor",
+                Magento.class, "salesOrderInvoiceCancel", new String[]{"invoiceIncrementId"}));
     }
 }
