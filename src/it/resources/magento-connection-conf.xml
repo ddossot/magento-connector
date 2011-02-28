@@ -6,8 +6,7 @@
                http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/3.1/mule.xsd
                http://www.mulesoft.org/schema/mule/magento http://www.mulesoft.org/schema/mule/magento/3.1/mule-magento.xsd
                ">
-
-    <magento:config name="MagentoTest" username="testUser" password="testPassword" address="testAddress"/>
+    <magento:config name="MagentoTest" username="${username}" password="${password}" address="${address}"/>
 
 
     <flow name="MagentoOrdersList">
