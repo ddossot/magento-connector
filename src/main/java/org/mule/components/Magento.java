@@ -11,11 +11,8 @@ package org.mule.components;
 
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import Magento.AssociativeEntity;
-import Magento.ComplexFilter;
 import Magento.Filters;
 import Magento.Mage_Api_Model_Server_V2_HandlerPortType;
 import Magento.MagentoServiceLocator;
@@ -23,6 +20,9 @@ import Magento.OrderItemIdQty;
 import Magento.SalesOrderEntity;
 import Magento.SalesOrderInvoiceEntity;
 import Magento.SalesOrderShipmentEntity;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author eberman

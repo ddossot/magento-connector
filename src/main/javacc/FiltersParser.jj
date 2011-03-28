@@ -3,11 +3,26 @@ options {
 }
 PARSER_BEGIN(FiltersParser)
     package org.mule.components.magento.filters;
+    import java.io.ByteArrayInputStream;
     import  Magento.Filters;
-    
+
+	/**
+	 * A Magento's filter expression parser
+	 */    
 	public class FiltersParser {
-		private FiltersBuilder builder = new FiltersBuilder(); 
+	
+	private FiltersBuilder builder = new FiltersBuilder(); 
+	
+	/**
+	 * Parses a filter expression. TODO document expression syntax
+	 * @return a Filter for the given expression
+	 * @throws ParseException if the expression can not be parsed
+	 */
+	public static Filters parse(String expression) throws ParseException {
+		return new FiltersParser(new ByteArrayInputStream(expression.getBytes())).start();
 	}
+}
+	
 PARSER_END(FiltersParser)
 
 

@@ -14,31 +14,40 @@ import static org.junit.Assert.assertEquals;
 import Magento.AssociativeEntity;
 import Magento.ComplexFilter;
 import Magento.Filters;
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
+
 import java.io.ByteArrayInputStream;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * Test for {@link FiltersParser}
+ * @author flbulgarelli
  */
 public class FiltersParserTestCase
 {
 
+    /***
+     * Tests that a bad formed expression is rejected by parser
+     */
     @Test(expected = ParseException.class)
     public void testParseBadExpression() throws Exception
     {
         parse("lalalal");
     }
 
+    /***
+     * Tests that a well formed expression but that pass less parameters than needed
+     * is rejected by parser
+     */
     @Test(expected = ParseException.class)
     public void testParseUnaryInsteadOfBinaryExpression() throws Exception
     {
         parse("eq(customer_id)");
     }
 
+    /**
+     *  Tests that unary expressions are acepted  
+     */
     @Test
     public void testParseSimpleUnaryExpressionIntegerType() throws Exception
     {
@@ -46,6 +55,9 @@ public class FiltersParserTestCase
         parse("notnull(customer_id)");
     }
 
+    /**
+     *  Tests that binary expressions are accepted  
+     */
     @Test
     public void testParseSimpleBinaryExpressionIntegerType() throws Exception
     {
@@ -53,25 +65,36 @@ public class FiltersParserTestCase
         parse("neq(customer_id, 500)");
     }
 
-
+    /**
+     *  Tests that expressions that use string literals are accepted  
+     */
     @Test
     public void testParseSimpleBinaryExpressionStringValue() throws Exception
     {
         parse("like(customer_name, '% DOE')");
     }
 
+    /**
+     *  Tests that expressions that use simple "and" conjunction are accepted   
+     */
     @Test
     public void testParseSimpleExpressionAnd() throws Exception
     {
         parse("lt(customer_id, 156), gt(customer_id, 100)");
     }
 
+    /**
+     *  Tests that expressions that use multiple "and" conjunction are accepted   
+     */
     @Test
     public void testParseSimpleExpressionAndAnd() throws Exception
     {
         parse("lt(customer_id, 156), gt(customer_id, 100), gteq(customer_city_code, 9986)");
     }
 
+    /**
+     *  Tests that expressions once parsed can be interpreted   
+     */
     @Test
     public void testFilterCreationWithBinary() throws Exception
     {
@@ -79,6 +102,9 @@ public class FiltersParserTestCase
             new ComplexFilter[]{new ComplexFilter("customer_name", new AssociativeEntity("eq", "900"))}));
     }
 
+    /**
+     *  Tests that expressions once parsed can be interpreted   
+     */
     @Test
     public void testFilterCreationWithUnary() throws Exception
     {
@@ -86,6 +112,9 @@ public class FiltersParserTestCase
             new ComplexFilter[]{new ComplexFilter("customer_name", new AssociativeEntity("notnull", ""))}));
     }
 
+    /**
+     *  Tests that expressions once parsed can be interpreted   
+     */
     @Test
     public void testFilterCreationWithAnd() throws Exception
     {
@@ -97,7 +126,7 @@ public class FiltersParserTestCase
 
     public Filters parse(String expression) throws ParseException
     {
-        return new FiltersParser(new ByteArrayInputStream(expression.getBytes())).start();
+        return FiltersParser.parse(expression);
     }
 
 }
