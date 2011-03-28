@@ -1,0 +1,36 @@
+options {
+	STATIC = false ;
+}
+PARSER_BEGIN(FiltersParser)
+    package org.mule.components.magento.filters;
+	public class FiltersParser { }
+PARSER_END(FiltersParser)
+
+
+SKIP : { " " | "\n" | "\r" | "\t" }
+TOKEN : { < COMMA : "," > }
+TOKEN : { < BINARY_OP : "from" | "to" | "eq" | "neq" | "like" | "nlike" | "is" | "gt" | "gteq" | "lt" | "lteq" | "nin" | "in" > }
+TOKEN : { < UNARY_OP : "null" | "notnull" > }
+TOKEN : { < INDIV : (["0"-"9","a"-"z","A"-"Z","_"])+ > }
+TOKEN : { < OPEN_PAR : "(" > }
+TOKEN : { < CLOSE_PAR : ")" > }
+
+
+void start() : 
+{}
+{ simpleFilter() (<COMMA> simpleFilter())* }
+
+void simpleFilter() :
+{}
+{ binaryFilter() | unaryFilter() }
+
+void binaryFilter() :
+{}
+{ <BINARY_OP> <OPEN_PAR> <INDIV> <COMMA> <INDIV> <CLOSE_PAR>  }
+
+void unaryFilter() :
+{}
+{ <UNARY_OP> <OPEN_PAR> <INDIV> <CLOSE_PAR>  }
+ 
+
+     
