@@ -15,7 +15,10 @@ SKIP : { " " | "\n" | "\r" | "\t" }
 TOKEN : { < COMMA : "," > }
 TOKEN : { < BINARY_OP : "from" | "to" | "eq" | "neq" | "like" | "nlike" | "is" | "gt" | "gteq" | "lt" | "lteq" | "nin" | "in" > }
 TOKEN : { < UNARY_OP : "null" | "notnull" > }
-TOKEN : { < INDIV : (["0"-"9","a"-"z","A"-"Z","_"])+ > }
+TOKEN : { < INDIV : < NUMBER > | < STRING > > }
+TOKEN : { < NUMBER : ("-")?(["0"-"9"])+ > }
+TOKEN : { < STRING : "'" (~["'"])* "'" > }
+TOKEN : { < IDENTIFIER : (["a"-"z","A"-"Z","_"])+ > }
 TOKEN : { < OPEN_PAR : "(" > }
 TOKEN : { < CLOSE_PAR : ")" > }
 
@@ -34,7 +37,7 @@ void simpleExpression() :
 void binaryExpression() :
 { Token operation, variable, value; }
 { operation = <BINARY_OP> <OPEN_PAR> 
-  variable = <INDIV> <COMMA> 
+  variable = <IDENTIFIER> <COMMA> 
   value = <INDIV> <CLOSE_PAR>
   {  builder.addBinaryExpression(operation.image, variable.image, value.image); }
 }
@@ -42,7 +45,7 @@ void binaryExpression() :
 void unaryFilter() :
 { Token operation, variable; }
 { operation = <UNARY_OP> <OPEN_PAR> 
-  variable = <INDIV> <CLOSE_PAR>
+  variable = <IDENTIFIER> <CLOSE_PAR>
   {  builder.addUnaryExpression(operation.image, variable.image); }  
 }
  

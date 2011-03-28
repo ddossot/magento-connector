@@ -53,7 +53,7 @@ public class FiltersParserTestCase
         parse("neq(customer_id, 500)");
     }
 
-    @Ignore
+
     @Test
     public void testParseSimpleBinaryExpressionStringValue() throws Exception
     {
