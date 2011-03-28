@@ -3,7 +3,11 @@ options {
 }
 PARSER_BEGIN(FiltersParser)
     package org.mule.components.magento.filters;
-	public class FiltersParser { }
+    import  Magento.Filters;
+    
+	public class FiltersParser {
+		private FiltersBuilder builder = new FiltersBuilder(); 
+	}
 PARSER_END(FiltersParser)
 
 
@@ -16,21 +20,31 @@ TOKEN : { < OPEN_PAR : "(" > }
 TOKEN : { < CLOSE_PAR : ")" > }
 
 
-void start() : 
-{}
-{ simpleFilter() (<COMMA> simpleFilter())* }
+Filters start() : 
+{ }
+{ 
+  simpleExpression() (<COMMA> simpleExpression())* 
+  {return builder.build();}
+}
 
-void simpleFilter() :
+void simpleExpression() :
 {}
-{ binaryFilter() | unaryFilter() }
+{ binaryExpression() | unaryFilter() }
 
-void binaryFilter() :
-{}
-{ <BINARY_OP> <OPEN_PAR> <INDIV> <COMMA> <INDIV> <CLOSE_PAR>  }
+void binaryExpression() :
+{ Token operation, variable, value; }
+{ operation = <BINARY_OP> <OPEN_PAR> 
+  variable = <INDIV> <COMMA> 
+  value = <INDIV> <CLOSE_PAR>
+  {  builder.addBinaryExpression(operation.image, variable.image, value.image); }
+}
 
 void unaryFilter() :
-{}
-{ <UNARY_OP> <OPEN_PAR> <INDIV> <CLOSE_PAR>  }
+{ Token operation, variable; }
+{ operation = <UNARY_OP> <OPEN_PAR> 
+  variable = <INDIV> <CLOSE_PAR>
+  {  builder.addUnaryExpression(operation.image, variable.image); }  
+}
  
 
      

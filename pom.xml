@@ -37,6 +37,7 @@
                     <source>1.5</source>
                     <target>1.5</target>
                    <encoding>ISO-8859-1</encoding>
+                   
                 </configuration>
             </plugin>
            <plugin>
@@ -129,10 +130,18 @@
                     </systemProperties>
                 </configuration>
             </plugin>
-            <plugin>
-    			<groupId>org.codehaus.mojo</groupId>
-    			<artifactId>javacc-maven-plugin</artifactId>
-    			<version>2.6</version>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>javacc-maven-plugin</artifactId>
+				<version>2.6</version>
+				<executions>
+					<execution>
+						<id>javacc</id>
+						<goals>
+							<goal>javacc</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
         </plugins>
     </build>
@@ -249,7 +258,12 @@
             <version>4.8.2</version>
             <scope>test</scope>
         </dependency>
-        
+        <dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.8.4</version>
+			<scope>test</scope>
+		</dependency>
     </dependencies>
 
     <!-- Mule Forge Configuration -->
