@@ -27,6 +27,7 @@ import Magento.SalesOrderEntity;
 import Magento.SalesOrderInvoiceEntity;
 import Magento.SalesOrderShipmentEntity;
 
+import org.apache.commons.lang.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,8 +80,7 @@ public class MagentoCloudConnector implements Initialisable
     {
         MagentoServiceLocator serviceLocator = new MagentoServiceLocator();
         serviceLocator.setMage_Api_Model_Server_V2_HandlerPortEndpointAddress(this.getAddress());
-        Mage_Api_Model_Server_V2_HandlerPortType port = serviceLocator.getMage_Api_Model_Server_V2_HandlerPort();
-        return port;
+        return serviceLocator.getMage_Api_Model_Server_V2_HandlerPort();
     }
 
     /**
@@ -91,14 +91,14 @@ public class MagentoCloudConnector implements Initialisable
      */
     protected String login() throws Exception
     {
-        String sessionId = this.getPort().login(getUsername(), getPassword());
-        return sessionId;
+        return this.getPort().login(getUsername(), getPassword());
     }
 
     public void initialise() throws InitialisationException
     {
-        // TODO Auto-generated method stub
-
+        Validate.notNull(username);
+        Validate.notNull(password);
+        Validate.notNull(address);
     }
 
     /**
@@ -111,8 +111,13 @@ public class MagentoCloudConnector implements Initialisable
     @Operation
     public SalesOrderEntity[] salesOrdersList(@Parameter String filter) throws Exception
     {
-        String sessionId = this.login();
+        String sessionId = getSessionId();
         return this.getPort().salesOrderList(sessionId, FiltersParser.parse(filter));
+    }
+
+    private String getSessionId() throws Exception
+    {
+        return this.login();
     }
 
     /**
@@ -125,8 +130,7 @@ public class MagentoCloudConnector implements Initialisable
     @Operation
     public SalesOrderEntity salesOrderInfo(@Parameter String orderIncrementId) throws Exception
     {
-        String sessionId = this.login();
-        return this.getPort().salesOrderInfo(sessionId, orderIncrementId);
+        return this.getPort().salesOrderInfo(getSessionId(), orderIncrementId);
     }
 
     /**
@@ -139,8 +143,7 @@ public class MagentoCloudConnector implements Initialisable
     @Operation
     public int salesOrderHold(@Parameter String orderIncrementId) throws Exception
     {
-        String sessionId = this.login();
-        return this.getPort().salesOrderHold(sessionId, orderIncrementId);
+        return this.getPort().salesOrderHold(getSessionId(), orderIncrementId);
     }
 
     /**
@@ -153,8 +156,7 @@ public class MagentoCloudConnector implements Initialisable
     @Operation
     public int salesOrderUnhold(@Parameter String orderIncrementId) throws Exception
     {
-        String sessionId = this.login();
-        return this.getPort().salesOrderUnhold(sessionId, orderIncrementId);
+        return this.getPort().salesOrderUnhold(getSessionId(), orderIncrementId);
     }
 
     /**
@@ -167,8 +169,7 @@ public class MagentoCloudConnector implements Initialisable
     @Operation
     public int salesOrderCancel(@Parameter String orderIncrementId) throws Exception
     {
-        String sessionId = this.login();
-        return this.getPort().salesOrderCancel(sessionId, orderIncrementId);
+        return this.getPort().salesOrderCancel(getSessionId(), orderIncrementId);
     }
 
     /**
@@ -180,13 +181,12 @@ public class MagentoCloudConnector implements Initialisable
      * @throws Exception
      */
     @Operation
-    public int salesOrderComment(@Parameter String orderIncrementId,
-                                 @Parameter String status,
-                                 @Parameter String comment,
-                                 @Parameter(optional = true) String notify) throws Exception
+    public int salesOrderAddComment(@Parameter String orderIncrementId,
+                                    @Parameter String status,
+                                    @Parameter String comment,
+                                    @Parameter(optional = true) String notify) throws Exception
     {
-        String sessionId = this.login();
-        return this.getPort().salesOrderAddComment(sessionId, orderIncrementId, status, comment, notify);
+        return this.getPort().salesOrderAddComment(getSessionId(), orderIncrementId, status, comment, notify);
     }
 
     /**
@@ -200,8 +200,7 @@ public class MagentoCloudConnector implements Initialisable
     public SalesOrderShipmentEntity[] salesOrderShipmentsList(@Parameter(optional = true) String filter)
         throws Exception
     {
-        String sessionId = this.login();
-        return this.getPort().salesOrderShipmentList(sessionId, FiltersParser.parse(filter));
+        return this.getPort().salesOrderShipmentList(getSessionId(), FiltersParser.parse(filter));
     }
 
     // TODO revise optionals starting from here
@@ -222,8 +221,7 @@ public class MagentoCloudConnector implements Initialisable
     public SalesOrderShipmentEntity salesOrderShipmentInfo(@Parameter String shipmentIncrementId)
         throws Exception
     {
-        String sessionId = this.login();
-        return this.getPort().salesOrderShipmentInfo(sessionId, shipmentIncrementId);
+        return this.getPort().salesOrderShipmentInfo(getSessionId(), shipmentIncrementId);
     }
 
     /**
@@ -231,18 +229,17 @@ public class MagentoCloudConnector implements Initialisable
      * @param comment
      * @param notify
      * @param includeInEmail
-     * @return
+     * @return TODO what?
      * @throws Exception
      */
     @Operation
     public int salesOrderShipmentComment(@Parameter String shipmentIncrementId,
                                          @Parameter String comment,
-                                         @Parameter String notify,
+                                         @Parameter(optional = true, defaultValue = "false") String notify,
                                          @Parameter String includeInEmail) throws Exception
     {
-        String sessionId = this.login();
-        return this.getPort().salesOrderShipmentAddComment(sessionId, shipmentIncrementId, comment, notify,
-            includeInEmail);
+        return this.getPort().salesOrderShipmentAddComment(getSessionId(), shipmentIncrementId, comment,
+            notify, includeInEmail);
     }
 
     /**
@@ -256,8 +253,7 @@ public class MagentoCloudConnector implements Initialisable
     public AssociativeEntity[] salesOrderShipmentGetCarriers(@Parameter String orderIncrementId)
         throws Exception
     {
-        String sessionId = this.login();
-        return this.getPort().salesOrderShipmentGetCarriers(sessionId, orderIncrementId);
+        return this.getPort().salesOrderShipmentGetCarriers(getSessionId(), orderIncrementId);
     }
 
     /**
@@ -274,8 +270,7 @@ public class MagentoCloudConnector implements Initialisable
                                           @Parameter String title,
                                           @Parameter String trackNumber) throws Exception
     {
-        String sessionId = this.login();
-        return this.getPort().salesOrderShipmentAddTrack(sessionId, shipmentIncrementId, carrier, title,
+        return this.getPort().salesOrderShipmentAddTrack(getSessionId(), shipmentIncrementId, carrier, title,
             trackNumber);
     }
 
@@ -289,8 +284,7 @@ public class MagentoCloudConnector implements Initialisable
     public int salesOrderShipmentRemoveTrack(@Parameter String shipmentIncrementId, @Parameter String trackId)
         throws Exception
     {
-        String sessionId = this.login();
-        return this.getPort().salesOrderShipmentRemoveTrack(sessionId, shipmentIncrementId, trackId);
+        return this.getPort().salesOrderShipmentRemoveTrack(getSessionId(), shipmentIncrementId, trackId);
     }
 
     @Operation
@@ -300,8 +294,7 @@ public class MagentoCloudConnector implements Initialisable
                                            @Parameter String email,
                                            @Parameter String includeInEmail) throws Exception
     {
-        String sessionId = this.login();
-        return this.getPort().salesOrderShipmentCreate(sessionId, orderIncrementId, itemsQty, comment,
+        return this.getPort().salesOrderShipmentCreate(getSessionId(), orderIncrementId, itemsQty, comment,
             ("true".equals(email) ? 1 : 0), ("true".equals(includeInEmail) ? 1 : 0));
     }
 
@@ -316,8 +309,7 @@ public class MagentoCloudConnector implements Initialisable
     public SalesOrderInvoiceEntity[] salesOrderInvoicesList(@Parameter(optional = true) String filter)
         throws Exception
     {
-        String sessionId = this.login();
-        return this.getPort().salesOrderInvoiceList(sessionId, FiltersParser.parse(filter));
+        return this.getPort().salesOrderInvoiceList(getSessionId(), FiltersParser.parse(filter));
     }
 
     /**
@@ -331,8 +323,7 @@ public class MagentoCloudConnector implements Initialisable
     public SalesOrderInvoiceEntity salesOrderInvoiceInfo(@Parameter String invoiceIncrementId)
         throws Exception
     {
-        String sessionId = this.login();
-        return this.getPort().salesOrderInvoiceInfo(sessionId, invoiceIncrementId);
+        return this.getPort().salesOrderInvoiceInfo(getSessionId(), invoiceIncrementId);
     }
 
     // string orderIncrementId - order increment id
@@ -348,9 +339,8 @@ public class MagentoCloudConnector implements Initialisable
                                           @Parameter String email,
                                           @Parameter String includeInEmail) throws Exception
     {
-        String sessionId = this.login();
-        return this.getPort().salesOrderInvoiceCreate(sessionId, orderIncrementId, itemsQty, comment, email,
-            includeInEmail);
+        return this.getPort().salesOrderInvoiceCreate(getSessionId(), orderIncrementId, itemsQty, comment,
+            email, includeInEmail);
     }
 
     // string invoiceIncrementId - invoice increment id
@@ -372,9 +362,8 @@ public class MagentoCloudConnector implements Initialisable
                                            @Parameter String notify,
                                            @Parameter String includeInEmail) throws Exception
     {
-        String sessionId = this.login();
-        return this.getPort().salesOrderInvoiceAddComment(sessionId, invoiceIncrementId, comment, notify,
-            includeInEmail);
+        return this.getPort().salesOrderInvoiceAddComment(getSessionId(), invoiceIncrementId, comment,
+            notify, includeInEmail);
     }
 
     /**
@@ -387,8 +376,7 @@ public class MagentoCloudConnector implements Initialisable
     @Operation
     public String salesOrderInvoiceCapture(@Parameter String invoiceIncrementId) throws Exception
     {
-        String sessionId = this.login();
-        return this.getPort().salesOrderInvoiceCapture(sessionId, invoiceIncrementId);
+        return this.getPort().salesOrderInvoiceCapture(getSessionId(), invoiceIncrementId);
     }
 
     /**
@@ -401,8 +389,7 @@ public class MagentoCloudConnector implements Initialisable
     @Operation
     public String salesOrderInvoiceVoid(@Parameter String invoiceIncrementId) throws Exception
     {
-        String sessionId = this.login();
-        return this.getPort().salesOrderInvoiceVoid(sessionId, invoiceIncrementId);
+        return this.getPort().salesOrderInvoiceVoid(getSessionId(), invoiceIncrementId);
     }
 
     /**
@@ -415,7 +402,6 @@ public class MagentoCloudConnector implements Initialisable
     @Operation
     public String salesOrderInvoiceCancel(@Parameter String invoiceIncrementId) throws Exception
     {
-        String sessionId = this.login();
-        return this.getPort().salesOrderInvoiceCancel(sessionId, invoiceIncrementId);
+        return this.getPort().salesOrderInvoiceCancel(getSessionId(), invoiceIncrementId);
     }
 }
