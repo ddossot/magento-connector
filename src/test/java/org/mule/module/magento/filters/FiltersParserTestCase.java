@@ -8,14 +8,12 @@
  * LICENSE.txt file.
  */
 
-package org.mule.components.magento.filters;
+package org.mule.module.magento.filters;
 
 import static org.junit.Assert.assertEquals;
 import Magento.AssociativeEntity;
 import Magento.ComplexFilter;
 import Magento.Filters;
-
-import java.io.ByteArrayInputStream;
 
 import org.junit.Test;
 
@@ -46,7 +44,7 @@ public class FiltersParserTestCase
     }
 
     /**
-     *  Tests that unary expressions are acepted  
+     *  Tests that unary expressions are accepted  
      */
     @Test
     public void testParseSimpleUnaryExpressionIntegerType() throws Exception
@@ -72,6 +70,7 @@ public class FiltersParserTestCase
     public void testParseSimpleBinaryExpressionStringValue() throws Exception
     {
         parse("like(customer_name, '% DOE')");
+        parse("nlike(customer_name, '% DOE')");
     }
 
     /**
@@ -89,7 +88,7 @@ public class FiltersParserTestCase
     @Test
     public void testParseSimpleExpressionAndAnd() throws Exception
     {
-        parse("lt(customer_id, 156), gt(customer_id, 100), gteq(customer_city_code, 9986)");
+        parse("lteq(customer_id, 156), gt(customer_id, 100), gteq(customer_city_code, 9986)");
     }
 
     /**

@@ -8,14 +8,14 @@
  * LICENSE.txt file.
  */
 
-package org.mule.components.config;
+package org.mule.module.magento.config;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mule.components.Magento;
+import org.mule.module.magento.Magento;
 
-public class MagentoSalesOrderShipmentsListFactoryBean
+public class MagentoSalesOrderInvoicesListFactoryBean
         extends MagentoAbstractFilteredMethodFactoryBean
 {
 
@@ -26,14 +26,14 @@ public class MagentoSalesOrderShipmentsListFactoryBean
         List<Object> args = new ArrayList<Object>();
         args.add(filters);
         invokerMessageProcessor.setArguments(args);
-        invokerMessageProcessor.setMethodName("salesOrderShipmentsList");
+        invokerMessageProcessor.setMethodName("salesOrderInvoicesList");
         
         if (config != null) {
         	invokerMessageProcessor.setObject(config);
         } else if (appContext.getBean(Magento.class) != null) {
         	invokerMessageProcessor.setObject(appContext.getBean(Magento.class));
         }
-         
+
         return invokerMessageProcessor;
     }
 }

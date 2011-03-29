@@ -1,4 +1,4 @@
-package org.mule.components.config;
+package org.mule.module.magento.config;
 
 import java.util.ArrayList;
 import java.util.Arrays;

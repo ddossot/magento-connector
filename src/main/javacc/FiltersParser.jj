@@ -2,7 +2,7 @@ options {
 	STATIC = false ;
 }
 PARSER_BEGIN(FiltersParser)
-    package org.mule.components.magento.filters;
+    package org.mule.module.magento.filters;
     import java.io.ByteArrayInputStream;
     import  Magento.Filters;
 

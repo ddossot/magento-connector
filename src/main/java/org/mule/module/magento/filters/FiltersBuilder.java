@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.components.magento.filters;
+package org.mule.module.magento.filters;
 
 import Magento.AssociativeEntity;
 import Magento.ComplexFilter;

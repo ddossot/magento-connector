@@ -1,10 +1,11 @@
-package org.mule.components.config;
+package org.mule.module.magento.config;
 
-import org.mule.components.Magento;
 import org.mule.config.spring.handlers.AbstractPojoNamespaceHandler;
 import org.mule.config.spring.parsers.generic.ChildDefinitionParser;
 import org.mule.config.spring.parsers.generic.OrphanDefinitionParser;
 import org.mule.config.spring.parsers.specific.InvokerMessageProcessorDefinitionParser;
+import org.mule.module.magento.Magento;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
