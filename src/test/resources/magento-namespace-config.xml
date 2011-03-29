@@ -4,7 +4,7 @@
       xmlns:magento="http://www.mulesoft.org/schema/mule/magento"
       xsi:schemaLocation="
                http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/3.1/mule.xsd
-               http://www.mulesoft.org/schema/mule/magento http://www.mulesoft.org/schema/mule/magento/3.1/mule-magento.xsd
+               http://www.mulesoft.org/schema/mule/magento http://www.mulesoft.org/schema/mule/magento/1.0-SNAPSHOT/mule-magento.xsd
                ">
 
     <magento:config name="MagentoTest" username="testUser" password="testPassword" address="testAddress"/>
@@ -12,13 +12,7 @@
 
     <flow name="MagentoOrdersList">
         <inbound-endpoint address="vm://getSalesOrdersList" exchange-pattern="request-response"/>
-		<magento:sales-orders-list>
-			<magento:filters>   
-				<magento:complex-filter key="#[map-payload:filterKey]">
-					<magento:filter key="#[map-payload:operator]" value="#[map-payload:orderId]"/>
-				</magento:complex-filter>
-			</magento:filters>
-		</magento:sales-orders-list>
+		<magento:sales-orders-list filter="#[map-payload:operator](#[map-payload:filterKey], #[map-payload:orderId])" />
     </flow>
 
     <flow name="MagentoOrderInfo">
@@ -52,13 +46,7 @@
 
     <flow name="MagentoOrderShipmentsList">
         <inbound-endpoint address="vm://getSalesOrderShipmentsList" exchange-pattern="request-response"/>
-		<magento:sales-order-shipments-list>
-			<magento:filters>   
-				<magento:complex-filter key="#[map-payload:filterKey]">
-					<magento:filter key="#[map-payload:operator]" value="#[map-payload:orderId]"/>
-				</magento:complex-filter>
-			</magento:filters>
-		</magento:sales-order-shipments-list>
+		<magento:sales-order-shipments-list  filter="eq(order_id, #[map-payload:orderId])" />
     </flow>
 
     <flow name="MagentoOrderShipmentInfo">
@@ -66,20 +54,14 @@
 		<magento:sales-order-shipment-info shipmentIncrementId="#[map-payload:orderShipmentId]" config-ref="MagentoTest"/>
     </flow>
 
-    <flow name="MagentoOrderCreateShipment">
-        <inbound-endpoint address="vm://createSalesOrderShipment" exchange-pattern="request-response"/>
-		<magento:sales-order-shipment-create orderIncrementId="#[map-payload:orderId]" itemsQty="#[map-payload:itemsQty]" comment="HelloWorld" config-ref="MagentoTest"/>
-    </flow>
+<!--    <flow name="MagentoOrderCreateShipment">-->
+<!--        <inbound-endpoint address="vm://createSalesOrderShipment" exchange-pattern="request-response"/>-->
+<!--		<magento:sales-order-shipment-create orderIncrementId="#[map-payload:orderId]" itemsQty="#[map-payload:itemsQty]" comment="HelloWorld" config-ref="MagentoTest"/>-->
+<!--    </flow>-->
 
     <flow name="MagentoOrderInvoicesList">
         <inbound-endpoint address="vm://getSalesOrderInvoicesList" exchange-pattern="request-response"/>
-		<magento:sales-order-invoices-list>
-			<magento:filters>   
-				<magento:complex-filter key="#[map-payload:filterKey]">
-					<magento:filter key="#[map-payload:operator]" value="#[map-payload:orderId]"/>
-				</magento:complex-filter>
-			</magento:filters>
-		</magento:sales-order-invoices-list>
+		<magento:sales-order-invoices-list filter="#[map-payload:operator](#[map-payload:filterKey], #[map-payload:orderId])" />
     </flow>
 
 </mule>

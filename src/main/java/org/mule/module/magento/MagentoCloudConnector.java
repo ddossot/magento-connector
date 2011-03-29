@@ -11,6 +11,11 @@ package org.mule.module.magento;
 
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
+import org.mule.module.magento.filters.FiltersParser;
+import org.mule.tools.cloudconnect.annotations.Connector;
+import org.mule.tools.cloudconnect.annotations.Operation;
+import org.mule.tools.cloudconnect.annotations.Parameter;
+import org.mule.tools.cloudconnect.annotations.Property;
 
 import Magento.AssociativeEntity;
 import Magento.Filters;
@@ -28,16 +33,16 @@ import org.slf4j.LoggerFactory;
  * @author eberman
  *
  */
-/**
- * @author eberman
- *
- */
-public class Magento implements Initialisable
+@Connector(namespacePrefix = "magento", namespaceUri = "http://www.mulesoft.org/schema/mule/magento")
+public class MagentoCloudConnector implements Initialisable
 {
-	Logger log = LoggerFactory.getLogger(Magento.class);
+//	private Logger log = LoggerFactory.getLogger(MagentoCloudConnector.class);
 
+    @Property
     private String username;
+    @Property
     private String password;
+    @Property
     private String address;
 
     public String getUsername()
@@ -98,9 +103,10 @@ public class Magento implements Initialisable
 	 * @return list of sales orders
 	 * @throws Exception
 	 */
-	public SalesOrderEntity[] salesOrdersList(Filters filters) throws Exception {
+	@Operation
+	public SalesOrderEntity[] salesOrdersList(@Parameter String filter) throws Exception {
 		String sessionId = this.login();
-		return this.getPort().salesOrderList(sessionId, filters);
+		return this.getPort().salesOrderList(sessionId, FiltersParser.parse(filter));
 	}
 	
 	/**
@@ -109,7 +115,8 @@ public class Magento implements Initialisable
 	 * @return sales order information
 	 * @throws Exception
 	 */
-	public SalesOrderEntity salesOrderInfo(String orderIncrementId) throws Exception {
+	@Operation
+	public SalesOrderEntity salesOrderInfo(@Parameter String orderIncrementId) throws Exception {
 		String sessionId = this.login();
 		return this.getPort().salesOrderInfo(sessionId, orderIncrementId);
 	}
@@ -120,7 +127,7 @@ public class Magento implements Initialisable
 	 * @return 
 	 * @throws Exception
 	 */
-	public int salesOrderHold(String orderIncrementId) throws Exception {
+	@Operation public int salesOrderHold(@Parameter String orderIncrementId) throws Exception {
 		String sessionId = this.login();
 		return this.getPort().salesOrderHold(sessionId, orderIncrementId);
 	}
@@ -131,7 +138,7 @@ public class Magento implements Initialisable
 	 * @return 
 	 * @throws Exception
 	 */
-	public int salesOrderUnhold(String orderIncrementId) throws Exception {
+	@Operation public int salesOrderUnhold(@Parameter String orderIncrementId) throws Exception {
 		String sessionId = this.login();
 		return this.getPort().salesOrderUnhold(sessionId, orderIncrementId);
 	}
@@ -142,7 +149,7 @@ public class Magento implements Initialisable
 	 * @return sales order information
 	 * @throws Exception
 	 */
-	public int salesOrderCancel(String orderIncrementId) throws Exception {
+	@Operation public int salesOrderCancel(@Parameter String orderIncrementId) throws Exception {
 		String sessionId = this.login();
 		return this.getPort().salesOrderCancel(sessionId, orderIncrementId);
 	}
@@ -155,7 +162,7 @@ public class Magento implements Initialisable
 	 * @return
 	 * @throws Exception
 	 */
-	public int salesOrderComment(String orderIncrementId, String status, String comment, String notify) throws Exception {
+	@Operation public int salesOrderComment(@Parameter String orderIncrementId, @Parameter String status, @Parameter String comment, @Parameter(optional=true) String notify) throws Exception {
 		String sessionId = this.login();
 		return this.getPort().salesOrderAddComment(sessionId, orderIncrementId, status, comment, notify);
 	}
@@ -166,10 +173,18 @@ public class Magento implements Initialisable
 	 * @return list of sales order shipments
 	 * @throws Exception
 	 */
-	public SalesOrderShipmentEntity[] salesOrderShipmentsList(Filters filters) throws Exception {
+	@Operation public SalesOrderShipmentEntity[] salesOrderShipmentsList(@Parameter(optional=true) String filter) throws Exception {
 		String sessionId = this.login();
-		return this.getPort().salesOrderShipmentList(sessionId, filters);
+		return this.getPort().salesOrderShipmentList(sessionId, FiltersParser.parse(filter));
 	}
+	
+	//TODO revise optionals starting from here
+    //TODO revise parameter names
+    //TODO revise method names
+    //TODO Checkstyle
+    //TODO consider extract api
+	//TODO array-in-parameters issue
+    
 	
 	/**
 	 * Retrieves order shipment information
@@ -177,7 +192,7 @@ public class Magento implements Initialisable
 	 * @return sales order shipment information
 	 * @throws Exception
 	 */
-	public SalesOrderShipmentEntity salesOrderShipmentInfo(String shipmentIncrementId) throws Exception {
+	@Operation public SalesOrderShipmentEntity salesOrderShipmentInfo(@Parameter String shipmentIncrementId) throws Exception {
 		String sessionId = this.login();
 		return this.getPort().salesOrderShipmentInfo(sessionId, shipmentIncrementId);
 	}
@@ -190,7 +205,7 @@ public class Magento implements Initialisable
 	 * @return
 	 * @throws Exception
 	 */
-	public int salesOrderShipmentComment(String shipmentIncrementId, String comment, String notify, String includeInEmail) throws Exception {
+	@Operation public int salesOrderShipmentComment(@Parameter String shipmentIncrementId, @Parameter String comment, @Parameter String notify, @Parameter String includeInEmail) throws Exception {
 		String sessionId = this.login();
 		return this.getPort().salesOrderShipmentAddComment(sessionId, shipmentIncrementId, comment, notify, includeInEmail);
 	}
@@ -201,7 +216,7 @@ public class Magento implements Initialisable
 	 * @return list of carriers
 	 * @throws Exception
 	 */
-	public AssociativeEntity[] salesOrderShipmentGetCarriers(String orderIncrementId) throws Exception {
+	@Operation public AssociativeEntity[] salesOrderShipmentGetCarriers(@Parameter String orderIncrementId) throws Exception {
 		String sessionId = this.login();
 		return this.getPort().salesOrderShipmentGetCarriers(sessionId, orderIncrementId);
 	}
@@ -214,7 +229,7 @@ public class Magento implements Initialisable
 	 * @return track ID
 	 * @throws Exception
 	 */
-	public int salesOrderShipmentAddTrack(String shipmentIncrementId, String carrier, String title, String trackNumber) throws Exception {
+	@Operation public int salesOrderShipmentAddTrack(@Parameter String shipmentIncrementId, @Parameter String carrier, @Parameter String title, @Parameter String trackNumber) throws Exception {
 		String sessionId = this.login();
 		return this.getPort().salesOrderShipmentAddTrack(sessionId, shipmentIncrementId, carrier, title, trackNumber);
 	}
@@ -225,12 +240,12 @@ public class Magento implements Initialisable
 	 * @return
 	 * @throws Exception
 	 */
-	public int salesOrderShipmentRemoveTrack(String shipmentIncrementId, String trackId) throws Exception {
+	@Operation public int salesOrderShipmentRemoveTrack(@Parameter String shipmentIncrementId, @Parameter String trackId) throws Exception {
 		String sessionId = this.login();
 		return this.getPort().salesOrderShipmentRemoveTrack(sessionId, shipmentIncrementId, trackId);
 	}
 	
-	public String salesOrderShipmentCreate(String orderIncrementId, OrderItemIdQty[] itemsQty, String comment, String email, String includeInEmail) throws Exception {
+	@Operation public String salesOrderShipmentCreate(@Parameter String orderIncrementId, @Parameter OrderItemIdQty[] itemsQty, @Parameter String comment, @Parameter String email, @Parameter String includeInEmail) throws Exception {
 		String sessionId = this.login();
 		return this.getPort().salesOrderShipmentCreate(sessionId, orderIncrementId, itemsQty, comment, ("true".equals(email) ? 1 : 0), ("true".equals(includeInEmail) ? 1 : 0));
 	}
@@ -241,26 +256,39 @@ public class Magento implements Initialisable
 	 * @return list of sales order invoices
 	 * @throws Exception
 	 */
-	public SalesOrderInvoiceEntity[] salesOrderInvoicesList(Filters filters) throws Exception {
+	@Operation public SalesOrderInvoiceEntity[] salesOrderInvoicesList(@Parameter(optional=true) String filter) throws Exception {
 		String sessionId = this.login();
-		return this.getPort().salesOrderInvoiceList(sessionId, filters);
+		return this.getPort().salesOrderInvoiceList(sessionId, FiltersParser.parse(filter));
 	}
 	
+	
+
 	/**
 	 * Retrieves order invoice information
 	 * @param Order invoice ID
 	 * @return sales order invoice information
 	 * @throws Exception
 	 */
-	public SalesOrderInvoiceEntity salesOrderInvoiceInfo(String invoiceIncrementId) throws Exception {
+	@Operation public SalesOrderInvoiceEntity salesOrderInvoiceInfo(@Parameter String invoiceIncrementId) throws Exception {
 		String sessionId = this.login();
 		return this.getPort().salesOrderInvoiceInfo(sessionId, invoiceIncrementId);
 	}
+	
+//	string orderIncrementId - order increment id
+//	array itemsQty - items qty to invoice
+//	string comment - invoice comment (optional)
+//	boolean email - send invoice on e-mail (optional)
+//	boolean includeComment - include comments in e-mail (optional)
 
-	public String salesOrderInvoiceCreate(String orderIncrementId, OrderItemIdQty[] itemsQty, String comment, String email, String includeInEmail) throws Exception {
+	@Operation public String salesOrderInvoiceCreate(@Parameter String orderIncrementId, @Parameter OrderItemIdQty[] itemsQty, @Parameter String comment, @Parameter String email, @Parameter String includeInEmail) throws Exception {
 		String sessionId = this.login();
 		return this.getPort().salesOrderInvoiceCreate(sessionId, orderIncrementId, itemsQty, comment, email, includeInEmail);
 	}
+	
+//	string invoiceIncrementId - invoice increment id
+//	string comment - invoice comment
+//	boolean email - send invoice on e-mail (optional)
+//	boolean includeComment - include comments in e-mail (optional)
 	
 	/**
 	 * @param invoiceIncrementId
@@ -270,7 +298,7 @@ public class Magento implements Initialisable
 	 * @return
 	 * @throws Exception
 	 */
-	public String salesOrderInvoiceComment(String invoiceIncrementId, String comment, String notify, String includeInEmail) throws Exception {
+	@Operation public String salesOrderInvoiceComment(@Parameter String invoiceIncrementId, @Parameter String comment, @Parameter String notify, @Parameter String includeInEmail) throws Exception {
 		String sessionId = this.login();
 		return this.getPort().salesOrderInvoiceAddComment(sessionId, invoiceIncrementId, comment, notify, includeInEmail);
 	}
@@ -281,7 +309,7 @@ public class Magento implements Initialisable
 	 * @return 
 	 * @throws Exception
 	 */
-	public String salesOrderInvoiceCapture(String invoiceIncrementId) throws Exception {
+	@Operation public String salesOrderInvoiceCapture(@Parameter String invoiceIncrementId) throws Exception {
 		String sessionId = this.login();
 		return this.getPort().salesOrderInvoiceCapture(sessionId, invoiceIncrementId);
 	}
@@ -292,7 +320,7 @@ public class Magento implements Initialisable
 	 * @return 
 	 * @throws Exception
 	 */
-	public String salesOrderInvoiceVoid(String invoiceIncrementId) throws Exception {
+	@Operation public String salesOrderInvoiceVoid(@Parameter String invoiceIncrementId) throws Exception {
 		String sessionId = this.login();
 		return this.getPort().salesOrderInvoiceVoid(sessionId, invoiceIncrementId);
 	}
@@ -303,7 +331,7 @@ public class Magento implements Initialisable
 	 * @return 
 	 * @throws Exception
 	 */
-	public String salesOrderInvoiceCancel(String invoiceIncrementId) throws Exception {
+	@Operation public String salesOrderInvoiceCancel(@Parameter String invoiceIncrementId) throws Exception {
 		String sessionId = this.login();
 		return this.getPort().salesOrderInvoiceCancel(sessionId, invoiceIncrementId);
 	}

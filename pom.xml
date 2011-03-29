@@ -226,7 +226,19 @@
             <artifactId>mule-transport-axis</artifactId>
             <version>${muleVersion}</version>
         </dependency>
-
+		<dependency>
+			<groupId>org.mule.tools</groupId>
+			<artifactId>mule-cloud-connector-annotations</artifactId>
+			<version>${cloudconnect.version}</version>
+		</dependency>
+		
+		<!-- Validation annotations-->
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>1.0.0.GA</version>
+		</dependency>
+		
         <!-- for testing -->
         <dependency>
             <groupId>org.mule.modules</groupId>

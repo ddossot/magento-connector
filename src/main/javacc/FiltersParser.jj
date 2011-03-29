@@ -19,6 +19,9 @@ PARSER_BEGIN(FiltersParser)
 	 * @throws ParseException if the expression can not be parsed
 	 */
 	public static Filters parse(String expression) throws ParseException {
+		if(org.apache.commons.lang.StringUtils.isEmpty(expression)) {
+		  return new Filters();
+		}
 		return new FiltersParser(new ByteArrayInputStream(expression.getBytes())).start();
 	}
 }
