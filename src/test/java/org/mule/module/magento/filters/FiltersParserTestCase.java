@@ -19,6 +19,7 @@ import org.junit.Test;
 
 /**
  * Test for {@link FiltersParser}
+ * 
  * @author flbulgarelli
  */
 public class FiltersParserTestCase
@@ -44,7 +45,7 @@ public class FiltersParserTestCase
     }
 
     /**
-     *  Tests that unary expressions are accepted  
+     * Tests that unary expressions are accepted
      */
     @Test
     public void testParseSimpleUnaryExpressionIntegerType() throws Exception
@@ -54,7 +55,7 @@ public class FiltersParserTestCase
     }
 
     /**
-     *  Tests that binary expressions are accepted  
+     * Tests that binary expressions are accepted
      */
     @Test
     public void testParseSimpleBinaryExpressionIntegerType() throws Exception
@@ -64,7 +65,7 @@ public class FiltersParserTestCase
     }
 
     /**
-     *  Tests that expressions that use string literals are accepted  
+     * Tests that expressions that use string literals are accepted
      */
     @Test
     public void testParseSimpleBinaryExpressionStringValue() throws Exception
@@ -74,7 +75,7 @@ public class FiltersParserTestCase
     }
 
     /**
-     *  Tests that expressions that use simple "and" conjunction are accepted   
+     * Tests that expressions that use simple "and" conjunction are accepted
      */
     @Test
     public void testParseSimpleExpressionAnd() throws Exception
@@ -83,7 +84,7 @@ public class FiltersParserTestCase
     }
 
     /**
-     *  Tests that expressions that use multiple "and" conjunction are accepted   
+     * Tests that expressions that use multiple "and" conjunction are accepted
      */
     @Test
     public void testParseSimpleExpressionAndAnd() throws Exception
@@ -92,7 +93,7 @@ public class FiltersParserTestCase
     }
 
     /**
-     *  Tests that expressions once parsed can be interpreted   
+     * Tests that expressions once parsed can be interpreted
      */
     @Test
     public void testFilterCreationWithBinary() throws Exception
@@ -102,7 +103,7 @@ public class FiltersParserTestCase
     }
 
     /**
-     *  Tests that expressions once parsed can be interpreted   
+     * Tests that expressions once parsed can be interpreted
      */
     @Test
     public void testFilterCreationWithUnary() throws Exception
@@ -112,7 +113,7 @@ public class FiltersParserTestCase
     }
 
     /**
-     *  Tests that expressions once parsed can be interpreted   
+     * Tests that expressions once parsed can be interpreted
      */
     @Test
     public void testFilterCreationWithAnd() throws Exception

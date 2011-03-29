@@ -1,8 +1,6 @@
 
 package org.mule.module.magento;
 
-import static org.junit.Assert.*;
-
 import org.mule.construct.SimpleFlowConstruct;
 import org.mule.tck.FunctionalTestCase;
 
