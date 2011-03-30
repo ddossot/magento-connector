@@ -1,6 +1,6 @@
-/*
- * $Id$
- * --------------------------------------------------------------------------------------
+/**
+ * Mule Magento Cloud Connector
+ *
  * Copyright (c) MuleSoft, Inc.  All rights reserved.  http://www.mulesoft.com
  *
  * The software in this package is published under the terms of the CPAL v1.0
@@ -26,6 +26,8 @@ import org.mule.module.magento.api.internal.ComplexFilter;
 import org.mule.module.magento.api.internal.Filters;
 import org.mule.module.magento.api.internal.Mage_Api_Model_Server_V2_HandlerPortType;
 import org.mule.module.magento.api.internal.SalesOrderEntity;
+import org.mule.module.magento.api.internal.SalesOrderShipmentEntity;
+import org.mule.module.magento.api.internal.SalesOrderShipmentItemEntity;
 import org.mule.module.magento.api.model.Carrier;
 
 import java.rmi.RemoteException;
@@ -109,11 +111,14 @@ public class MagentoCloudConnectorUnitTest
         verify(port).salesOrderAddComment(anyString(), eq(ORDER_ID), eq("status"), eq("A comment"), eq("0"));
     }
 
-    @Ignore
     @Test
-    public void testSalesOrderShipmentsList()
+    public void testSalesOrderShipmentsList() throws RemoteException
     {
-        fail("Not yet implemented");
+        SalesOrderShipmentEntity shipment = new SalesOrderShipmentEntity();
+        shipment.setIs_active("1");
+        when(port.salesOrderShipmentList(anyString(), eq(new Filters()))).thenReturn(
+            new SalesOrderShipmentEntity[]{shipment});
+        assertEquals(1, connector.listOrdersShipments("").size());
     }
 
     @Ignore

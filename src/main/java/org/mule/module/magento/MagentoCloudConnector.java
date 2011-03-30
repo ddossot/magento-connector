@@ -1,6 +1,6 @@
-/*
- * $Id: $
- * --------------------------------------------------------------------------------------
+/**
+ * Mule Magento Cloud Connector
+ *
  * Copyright (c) MuleSoft, Inc.  All rights reserved.  http://www.mulesoft.com
  *
  * The software in this package is published under the terms of the CPAL v1.0
@@ -98,9 +98,9 @@ public class MagentoCloudConnector implements Initialisable
     public int addOrderShipmentTrack(@Parameter String shipmentId,
                                      @Parameter String carrier,
                                      @Parameter String title,
-                                     @Parameter String trackNumber)
+                                     @Parameter String trackId)
     {
-        return orderClient.addShipmentTrack(shipmentId, carrier, title, trackNumber);
+        return orderClient.addShipmentTrack(shipmentId, carrier, title, trackId);
     }
 
     @Operation
