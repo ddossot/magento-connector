@@ -99,7 +99,9 @@
                     <sourceDirectory>src/main/resources</sourceDirectory>
                     <wsdlFiles>
                         <wsdlFile>magento_v2_soap.wsdl</wsdlFile>
-                    </wsdlFiles>      
+                    </wsdlFiles>   
+                    <packageToNamespace>Magento=org.mule.module.magento.api.internal</packageToNamespace>
+                    <packageSpace>org.mule.module.magento.api.internal</packageSpace>
                 </configuration>
                 <executions>
                     <execution>

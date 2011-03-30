@@ -16,27 +16,33 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
 import org.apache.axis.AxisFault;
+import org.apache.commons.lang.Validate;
 
-public class AxisFaultExceptionHandler
+public final class AxisFaultExceptionHandler
 {
-    @SuppressWarnings("unchecked")
-    public <T> T handleAxisFaults(Class<T> receptorClass, T receptor)
+
+    private AxisFaultExceptionHandler()
     {
-        return (T) Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{receptorClass},
-            new InvocationHandler()
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T handleFaults(Class<T> receptorClass, final T receptor)
+    {
+        Validate.isTrue(receptorClass.isInterface());
+        return (T) Proxy.newProxyInstance(AxisFaultExceptionHandler.class.getClassLoader(),
+            new Class[]{receptorClass}, new InvocationHandler()
             {
                 public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
                 {
                     try
                     {
-                        return method.invoke(proxy, args);
+                        return method.invoke(receptor, args);
                     }
                     catch (InvocationTargetException e)
                     {
                         if (e.getCause() instanceof AxisFault)
                         {
-                            AxisFault fault = (AxisFault) e.getCause();
-                            throw new MagentoException(fault.getFaultString(), e);
+                            throw toMagentoException(e, (AxisFault) e.getCause());
                         }
                         throw e;
                     }
@@ -44,14 +50,10 @@ public class AxisFaultExceptionHandler
             });
     }
 
-    public static final class MagentoException extends RuntimeException
+    private static MagentoException toMagentoException(InvocationTargetException e, AxisFault fault)
     {
-        private static final long serialVersionUID = -5626573459450043144L;
-
-        private MagentoException(String message, Throwable cause)
-        {
-            super(message, cause);
-        }
-
+        return new MagentoException( //
+            Integer.parseInt(fault.getFaultCode().toString()), fault.getFaultString(), e);
     }
+
 }

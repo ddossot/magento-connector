@@ -1,67 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns="http://www.mulesoft.org/schema/mule/core"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:magento="http://www.mulesoft.org/schema/mule/magento"
-      xsi:schemaLocation="
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:magento="http://www.mulesoft.org/schema/mule/magento"
+	xsi:schemaLocation="
                http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/3.1/mule.xsd
                http://www.mulesoft.org/schema/mule/magento http://www.mulesoft.org/schema/mule/magento/1.0-SNAPSHOT/mule-magento.xsd
                ">
 
-    <magento:config name="MagentoTest" username="testUser" password="testPassword" address="testAddress"/>
+	<magento:config name="MagentoTest" username="testUser"
+		password="testPassword" address="testAddress" />
 
 
-    <flow name="MagentoOrdersList">
-        <inbound-endpoint address="vm://getSalesOrdersList" exchange-pattern="request-response"/>
-		<magento:sales-orders-list filter="#[map-payload:operator](#[map-payload:filterKey], #[map-payload:orderId])" />
-    </flow>
+	<flow name="MagentoOrdersList">
+		<inbound-endpoint address="vm://getSalesOrdersList"
+			exchange-pattern="request-response" />
+		<magento:list-orders
+			filter="#[map-payload:operator](#[map-payload:filterKey], #[map-payload:orderId])" />
+	</flow>
 
-    <flow name="MagentoOrderInfo">
-        <inbound-endpoint address="vm://getSalesOrderInfo" exchange-pattern="request-response"/>
-		<magento:sales-order-info orderIncrementId="#[map-payload:orderId]" config-ref="MagentoTest"/>
-    </flow>
+	<flow name="MagentoOrderInfo">
+		<inbound-endpoint address="vm://getSalesOrderInfo"
+			exchange-pattern="request-response" />
+		<magento:get-order-info orderId="#[map-payload:orderId]"
+			config-ref="MagentoTest" />
+	</flow>
 
-    <flow name="MagentoOrderHold">
-        <inbound-endpoint address="vm://salesOrderHold" exchange-pattern="request-response"/>
-		<magento:sales-order-hold orderIncrementId="#[map-payload:orderId]" config-ref="MagentoTest"/>
-    </flow>
+	<flow name="MagentoOrderHold">
+		<inbound-endpoint address="vm://salesOrderHold"
+			exchange-pattern="request-response" />
+		<magento:hold-order orderId="#[map-payload:orderId]"
+			config-ref="MagentoTest" />
+	</flow>
 
-    <flow name="MagentoOrderUnhold">
-        <inbound-endpoint address="vm://salesOrderUnhold" exchange-pattern="request-response"/>
-		<magento:sales-order-unhold orderIncrementId="#[map-payload:orderId]" config-ref="MagentoTest"/>
-    </flow>
+	<flow name="MagentoOrderUnhold">
+		<inbound-endpoint address="vm://salesOrderUnhold"
+			exchange-pattern="request-response" />
+		<magento:unhold-order orderId="#[map-payload:orderId]"
+			config-ref="MagentoTest" />
+	</flow>
 
-    <flow name="MagentoOrderCancel">
-        <inbound-endpoint address="vm://salesOrderCancel" exchange-pattern="request-response"/>
-		<magento:sales-order-cancel orderIncrementId="#[map-payload:orderId]" config-ref="MagentoTest"/>
-    </flow>
+	<flow name="MagentoOrderCancel">
+		<inbound-endpoint address="vm://salesOrderCancel"
+			exchange-pattern="request-response" />
+		<magento:cancel-order orderId="#[map-payload:orderId]"
+			config-ref="MagentoTest" />
+	</flow>
 
-    <flow name="MagentoOrderComment">
-        <inbound-endpoint address="vm://salesOrderComment" exchange-pattern="request-response"/>
-		<magento:sales-order-comment orderIncrementId="#[map-payload:orderId]" 
-		                             status="#[map-payload:status]" 
-		                             comment="#[map-payload:comment]" 
-		                             notify="true"
-		                             config-ref="MagentoTest"/>
-    </flow>
+	<flow name="MagentoOrderComment">
+		<inbound-endpoint address="vm://salesOrderComment"
+			exchange-pattern="request-response" />
+		<magento:add-order-comment orderId="#[map-payload:orderId]"
+			status="#[map-payload:status]" comment="#[map-payload:comment]"
+			sendEmail="true" config-ref="MagentoTest" />
+	</flow>
 
-    <flow name="MagentoOrderShipmentsList">
-        <inbound-endpoint address="vm://getSalesOrderShipmentsList" exchange-pattern="request-response"/>
-		<magento:sales-order-shipments-list  filter="eq(order_id, #[map-payload:orderId])" />
-    </flow>
+	<flow name="MagentoOrderShipmentsList">
+		<inbound-endpoint address="vm://getSalesOrderShipmentsList"
+			exchange-pattern="request-response" />
+		<magento:list-orders-shipments filter="eq(order_id, #[map-payload:orderId])" />
+	</flow>
 
-    <flow name="MagentoOrderShipmentInfo">
-        <inbound-endpoint address="vm://getSalesOrderShipmentInfo" exchange-pattern="request-response"/>
-		<magento:sales-order-shipment-info shipmentIncrementId="#[map-payload:orderShipmentId]" config-ref="MagentoTest"/>
-    </flow>
+	<flow name="MagentoOrderShipmentInfo">
+		<inbound-endpoint address="vm://getSalesOrderShipmentInfo"
+			exchange-pattern="request-response" />
+		<magento:get-order-shipment-info
+			shipmentId="#[map-payload:orderShipmentId]" config-ref="MagentoTest" />
+	</flow>
 
-<!--    <flow name="MagentoOrderCreateShipment">-->
-<!--        <inbound-endpoint address="vm://createSalesOrderShipment" exchange-pattern="request-response"/>-->
-<!--		<magento:sales-order-shipment-create orderIncrementId="#[map-payload:orderId]" itemsQty="#[map-payload:itemsQty]" comment="HelloWorld" config-ref="MagentoTest"/>-->
-<!--    </flow>-->
+	<!--    <flow name="MagentoOrderCreateShipment">-->
+	<!--
+		<inbound-endpoint address="vm://createSalesOrderShipment"
+		exchange-pattern="request-response"/>
+	-->
+	<!--
+		<magento:sales-order-shipment-create orderId="#[map-payload:orderId]"
+		itemsQty="#[map-payload:itemsQty]" comment="HelloWorld"
+		config-ref="MagentoTest"/>
+	-->
+	<!--    </flow>-->
 
-    <flow name="MagentoOrderInvoicesList">
-        <inbound-endpoint address="vm://getSalesOrderInvoicesList" exchange-pattern="request-response"/>
-		<magento:sales-order-invoices-list filter="#[map-payload:operator](#[map-payload:filterKey], #[map-payload:orderId])" />
-    </flow>
+	<flow name="MagentoOrderInvoicesList">
+		<inbound-endpoint address="vm://getSalesOrderInvoicesList"
+			exchange-pattern="request-response" />
+		<magento:list-orders-invoices
+			filter="#[map-payload:operator](#[map-payload:filterKey], #[map-payload:orderId])" />
+	</flow>
 
 </mule>

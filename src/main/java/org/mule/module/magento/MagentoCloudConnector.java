@@ -12,26 +12,26 @@ package org.mule.module.magento;
 
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.module.magento.filters.FiltersParser;
+import org.mule.module.magento.api.AxisFaultExceptionHandler;
+import org.mule.module.magento.api.AxisMagentoOrderClient;
+import org.mule.module.magento.api.DefaultAxisPortProvider;
+import org.mule.module.magento.api.MagentoException;
+import org.mule.module.magento.api.MagentoOrderClient;
+import org.mule.module.magento.api.internal.AssociativeEntity;
+import org.mule.module.magento.api.internal.SalesOrderEntity;
+import org.mule.module.magento.api.internal.SalesOrderInvoiceEntity;
+import org.mule.module.magento.api.internal.SalesOrderShipmentEntity;
 import org.mule.tools.cloudconnect.annotations.Connector;
 import org.mule.tools.cloudconnect.annotations.Operation;
 import org.mule.tools.cloudconnect.annotations.Parameter;
 import org.mule.tools.cloudconnect.annotations.Property;
 
-import Magento.AssociativeEntity;
-import Magento.Filters;
-import Magento.Mage_Api_Model_Server_V2_HandlerPortType;
-import Magento.MagentoServiceLocator;
-import Magento.OrderItemIdQty;
-import Magento.SalesOrderEntity;
-import Magento.SalesOrderInvoiceEntity;
-import Magento.SalesOrderShipmentEntity;
-
-import org.apache.commons.lang.Validate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.List;
+import java.util.Map;
 
 /**
+ * A Cloud Connector for the Magento Order Sales API.
+ * 
  * @author eberman
  */
 @Connector(namespacePrefix = "magento", namespaceUri = "http://www.mulesoft.org/schema/mule/magento")
@@ -45,6 +45,8 @@ public class MagentoCloudConnector implements Initialisable
     private String password;
     @Property
     private String address;
+
+    private MagentoOrderClient<MagentoException> orderClient;
 
     public String getUsername()
     {
@@ -76,332 +78,169 @@ public class MagentoCloudConnector implements Initialisable
         this.address = address;
     }
 
-    protected Mage_Api_Model_Server_V2_HandlerPortType getPort() throws Exception
-    {
-        MagentoServiceLocator serviceLocator = new MagentoServiceLocator();
-        serviceLocator.setMage_Api_Model_Server_V2_HandlerPortEndpointAddress(this.getAddress());
-        return serviceLocator.getMage_Api_Model_Server_V2_HandlerPort();
-    }
-
-    /**
-     * Need to authenticate before every call
-     * 
-     * @return Magento session ID
-     * @throws Exception
-     */
-    protected String login() throws Exception
-    {
-        return this.getPort().login(getUsername(), getPassword());
-    }
-
     public void initialise() throws InitialisationException
     {
-        Validate.notNull(username);
-        Validate.notNull(password);
-        Validate.notNull(address);
-    }
-
-    /**
-     * Returns list of Magento sales orders
-     * 
-     * @param filters optional list of filters
-     * @return list of sales orders
-     * @throws Exception
-     */
-    @Operation
-    public SalesOrderEntity[] salesOrdersList(@Parameter String filter) throws Exception
-    {
-        String sessionId = getSessionId();
-        return this.getPort().salesOrderList(sessionId, FiltersParser.parse(filter));
-    }
-
-    private String getSessionId() throws Exception
-    {
-        return this.login();
-    }
-
-    /**
-     * Retrieves order information
-     * 
-     * @param Order ID
-     * @return sales order information
-     * @throws Exception
-     */
-    @Operation
-    public SalesOrderEntity salesOrderInfo(@Parameter String orderIncrementId) throws Exception
-    {
-        return this.getPort().salesOrderInfo(getSessionId(), orderIncrementId);
-    }
-
-    /**
-     * Puts order on hold
-     * 
-     * @param order id
-     * @return
-     * @throws Exception
-     */
-    @Operation
-    public int salesOrderHold(@Parameter String orderIncrementId) throws Exception
-    {
-        return this.getPort().salesOrderHold(getSessionId(), orderIncrementId);
-    }
-
-    /**
-     * Releases order
-     * 
-     * @param order id
-     * @return
-     * @throws Exception
-     */
-    @Operation
-    public int salesOrderUnhold(@Parameter String orderIncrementId) throws Exception
-    {
-        return this.getPort().salesOrderUnhold(getSessionId(), orderIncrementId);
-    }
-
-    /**
-     * Cancels order
-     * 
-     * @param order id
-     * @return sales order information
-     * @throws Exception
-     */
-    @Operation
-    public int salesOrderCancel(@Parameter String orderIncrementId) throws Exception
-    {
-        return this.getPort().salesOrderCancel(getSessionId(), orderIncrementId);
-    }
-
-    /**
-     * @param orderIncrementId
-     * @param status
-     * @param comment
-     * @param notify
-     * @return
-     * @throws Exception
-     */
-    @Operation
-    public int salesOrderAddComment(@Parameter String orderIncrementId,
-                                    @Parameter String status,
-                                    @Parameter String comment,
-                                    @Parameter(optional = true) String notify) throws Exception
-    {
-        return this.getPort().salesOrderAddComment(getSessionId(), orderIncrementId, status, comment, notify);
-    }
-
-    /**
-     * Returns list of Magento sales order shipments
-     * 
-     * @param filters optional list of filters
-     * @return list of sales order shipments
-     * @throws Exception
-     */
-    @Operation
-    public SalesOrderShipmentEntity[] salesOrderShipmentsList(@Parameter(optional = true) String filter)
-        throws Exception
-    {
-        return this.getPort().salesOrderShipmentList(getSessionId(), FiltersParser.parse(filter));
-    }
-
-    // TODO revise optionals starting from here
-    // TODO revise parameter names
-    // TODO revise method names
-    // TODO Checkstyle
-    // TODO consider extract api
-    // TODO array-in-parameters issue
-
-    /**
-     * Retrieves order shipment information
-     * 
-     * @param Order shipment ID
-     * @return sales order shipment information
-     * @throws Exception
-     */
-    @Operation
-    public SalesOrderShipmentEntity salesOrderShipmentInfo(@Parameter String shipmentIncrementId)
-        throws Exception
-    {
-        return this.getPort().salesOrderShipmentInfo(getSessionId(), shipmentIncrementId);
-    }
-
-    /**
-     * @param shipmentIncrementId
-     * @param comment
-     * @param notify
-     * @param includeInEmail
-     * @return TODO what?
-     * @throws Exception
-     */
-    @Operation
-    public int salesOrderShipmentComment(@Parameter String shipmentIncrementId,
-                                         @Parameter String comment,
-                                         @Parameter(optional = true, defaultValue = "false") String notify,
-                                         @Parameter String includeInEmail) throws Exception
-    {
-        return this.getPort().salesOrderShipmentAddComment(getSessionId(), shipmentIncrementId, comment,
-            notify, includeInEmail);
-    }
-
-    /**
-     * Returns list of carriers for the order
-     * 
-     * @param order id
-     * @return list of carriers
-     * @throws Exception
-     */
-    @Operation
-    public AssociativeEntity[] salesOrderShipmentGetCarriers(@Parameter String orderIncrementId)
-        throws Exception
-    {
-        return this.getPort().salesOrderShipmentGetCarriers(getSessionId(), orderIncrementId);
-    }
-
-    /**
-     * @param shipmentIncrementId
-     * @param carrier
-     * @param title
-     * @param trackNumber
-     * @return track ID
-     * @throws Exception
-     */
-    @Operation
-    public int salesOrderShipmentAddTrack(@Parameter String shipmentIncrementId,
-                                          @Parameter String carrier,
-                                          @Parameter String title,
-                                          @Parameter String trackNumber) throws Exception
-    {
-        return this.getPort().salesOrderShipmentAddTrack(getSessionId(), shipmentIncrementId, carrier, title,
-            trackNumber);
-    }
-
-    /**
-     * @param shipmentIncrementId
-     * @param trackId
-     * @return
-     * @throws Exception
-     */
-    @Operation
-    public int salesOrderShipmentRemoveTrack(@Parameter String shipmentIncrementId, @Parameter String trackId)
-        throws Exception
-    {
-        return this.getPort().salesOrderShipmentRemoveTrack(getSessionId(), shipmentIncrementId, trackId);
+        if (orderClient == null)
+        {
+            setOrderClient(AxisFaultExceptionHandler.handleFaults(MagentoOrderClient.class,
+                new AxisMagentoOrderClient(new DefaultAxisPortProvider(username, password, address))));
+        }
     }
 
     @Operation
-    public String salesOrderShipmentCreate(@Parameter String orderIncrementId,
-                                           @Parameter OrderItemIdQty[] itemsQty,
-                                           @Parameter String comment,
-                                           @Parameter String email,
-                                           @Parameter String includeInEmail) throws Exception
-    {
-        return this.getPort().salesOrderShipmentCreate(getSessionId(), orderIncrementId, itemsQty, comment,
-            ("true".equals(email) ? 1 : 0), ("true".equals(includeInEmail) ? 1 : 0));
-    }
+    public int addOrderShipmentComment(@Parameter String shipmentId,
+                                       @Parameter(optional = true) String comment,
+                                       @Parameter(optional = true, defaultValue = "false") boolean sendEmail,
+                                       @Parameter(optional = true, defaultValue = "false") boolean includeCommentInEmail)
 
-    /**
-     * Returns list of Magento sales order invoices
-     * 
-     * @param filters optional list of filters
-     * @return list of sales order invoices
-     * @throws Exception
-     */
-    @Operation
-    public SalesOrderInvoiceEntity[] salesOrderInvoicesList(@Parameter(optional = true) String filter)
-        throws Exception
     {
-        return this.getPort().salesOrderInvoiceList(getSessionId(), FiltersParser.parse(filter));
+        return orderClient.addShipmentComment(shipmentId, comment, sendEmail, includeCommentInEmail);
     }
-
-    /**
-     * Retrieves order invoice information
-     * 
-     * @param Order invoice ID
-     * @return sales order invoice information
-     * @throws Exception
-     */
-    @Operation
-    public SalesOrderInvoiceEntity salesOrderInvoiceInfo(@Parameter String invoiceIncrementId)
-        throws Exception
-    {
-        return this.getPort().salesOrderInvoiceInfo(getSessionId(), invoiceIncrementId);
-    }
-
-    // string orderIncrementId - order increment id
-    // array itemsQty - items qty to invoice
-    // string comment - invoice comment (optional)
-    // boolean email - send invoice on e-mail (optional)
-    // boolean includeComment - include comments in e-mail (optional)
 
     @Operation
-    public String salesOrderInvoiceCreate(@Parameter String orderIncrementId,
-                                          @Parameter OrderItemIdQty[] itemsQty,
-                                          @Parameter String comment,
-                                          @Parameter String email,
-                                          @Parameter String includeInEmail) throws Exception
+    public int addOrderShipmentTrack(@Parameter String shipmentId,
+                                     @Parameter String carrier,
+                                     @Parameter String title,
+                                     @Parameter String trackNumber)
     {
-        return this.getPort().salesOrderInvoiceCreate(getSessionId(), orderIncrementId, itemsQty, comment,
-            email, includeInEmail);
+        return orderClient.addShipmentTrack(shipmentId, carrier, title, trackNumber);
     }
 
-    // string invoiceIncrementId - invoice increment id
-    // string comment - invoice comment
-    // boolean email - send invoice on e-mail (optional)
-    // boolean includeComment - include comments in e-mail (optional)
-
-    /**
-     * @param invoiceIncrementId
-     * @param comment
-     * @param notify
-     * @param includeInEmail
-     * @return
-     * @throws Exception
-     */
     @Operation
-    public String salesOrderInvoiceComment(@Parameter String invoiceIncrementId,
-                                           @Parameter String comment,
-                                           @Parameter String notify,
-                                           @Parameter String includeInEmail) throws Exception
+    public boolean cancelOrder(@Parameter String orderId)
     {
-        return this.getPort().salesOrderInvoiceAddComment(getSessionId(), invoiceIncrementId, comment,
-            notify, includeInEmail);
+        return orderClient.cancel(orderId);
     }
 
-    /**
-     * Captures invoice
-     * 
-     * @param Order invoice ID
-     * @return
-     * @throws Exception
-     */
     @Operation
-    public String salesOrderInvoiceCapture(@Parameter String invoiceIncrementId) throws Exception
+    public String createOrderShipment(@Parameter String orderId,
+                                      @Parameter Map<Integer, Double> itemsQuantities,
+                                      @Parameter(optional = true) String comment,
+                                      @Parameter(optional = true, defaultValue = "false") boolean sendEmail,
+                                      @Parameter(optional = true, defaultValue = "false") boolean includeCommentInEmail)
+
     {
-        return this.getPort().salesOrderInvoiceCapture(getSessionId(), invoiceIncrementId);
+        return orderClient.createShipment(orderId, itemsQuantities, comment, sendEmail, includeCommentInEmail);
     }
 
-    /**
-     * Voids invoice
-     * 
-     * @param Order invoice ID
-     * @return
-     * @throws Exception
-     */
     @Operation
-    public String salesOrderInvoiceVoid(@Parameter String invoiceIncrementId) throws Exception
+    public SalesOrderEntity getOrderInfo(@Parameter String orderId)
     {
-        return this.getPort().salesOrderInvoiceVoid(getSessionId(), invoiceIncrementId);
+        return orderClient.getInfo(orderId);
     }
 
-    /**
-     * Cancel invoice
-     * 
-     * @param Order invoice ID
-     * @return
-     * @throws Exception
-     */
     @Operation
-    public String salesOrderInvoiceCancel(@Parameter String invoiceIncrementId) throws Exception
+    public SalesOrderInvoiceEntity getOrderInvoiceInfo(@Parameter String invoiceId)
     {
-        return this.getPort().salesOrderInvoiceCancel(getSessionId(), invoiceIncrementId);
+        return orderClient.getInvoiceInfo(invoiceId);
     }
+
+    @Operation
+    public List<AssociativeEntity> getOrderShipmentCarriers(@Parameter String orderId)
+    {
+        return orderClient.getShipmentCarriers(orderId);
+    }
+
+    @Operation
+    public SalesOrderShipmentEntity getOrderShipmentInfo(@Parameter String shipmentId)
+    {
+        return orderClient.getShipmentInfo(shipmentId);
+    }
+
+    @Operation
+    public boolean holdOrder(@Parameter String orderId)
+    {
+        return orderClient.hold(orderId);
+    }
+
+    @Operation
+    public List<SalesOrderEntity> listOrders(@Parameter(optional = true) String filter)
+    {
+        return orderClient.list(filter);
+    }
+
+    @Operation
+    public List<SalesOrderInvoiceEntity> listOrdersInvoices(@Parameter(optional = true) String filter)
+
+    {
+        return orderClient.listInvoices(filter);
+    }
+
+    @Operation
+    public List<SalesOrderShipmentEntity> listOrdersShipments(@Parameter(optional = true) String filter)
+
+    {
+        return orderClient.listShipments(filter);
+    }
+
+    @Operation
+    public int removeOrdersShipmentTrack(@Parameter String shipmentId, @Parameter String trackId)
+
+    {
+        return orderClient.removeShipmentTrack(shipmentId, trackId);
+    }
+
+    @Operation
+    public boolean addOrderComment(@Parameter String orderId,
+                                   @Parameter String status,
+                                   @Parameter String comment,
+                                   @Parameter(optional = true, defaultValue = "false") boolean sendEmail)
+
+    {
+        return orderClient.salesOrderAddComment(orderId, status, comment, sendEmail);
+    }
+
+    @Operation
+    public boolean unholdOrder(@Parameter String orderId)
+    {
+        return orderClient.unhold(orderId);
+    }
+
+    @Operation
+    public String createOrderInvoice(@Parameter String orderId,
+                                     @Parameter Map<Integer, Double> itemsQuantities,
+                                     @Parameter(optional = true) String comment,
+                                     @Parameter(optional = true, defaultValue = "false") boolean sendEmail,
+                                     @Parameter(optional = true, defaultValue = "false") boolean includeCommentInEmail)
+
+    {
+        return orderClient.createInvoice(orderId, itemsQuantities, comment, sendEmail, includeCommentInEmail);
+    }
+
+    @Operation
+    public String addOrderInvoiceComment(@Parameter String invoiceId,
+                                         @Parameter(optional = true) String comment,
+                                         @Parameter(optional = true, defaultValue = "false") boolean sendEmail,
+                                         @Parameter(optional = true, defaultValue = "false") boolean includeCommentInEmail)
+
+    {
+        return orderClient.addInvoiceComment(invoiceId, comment, sendEmail, includeCommentInEmail);
+    }
+
+    @Operation
+    public boolean captureOrderInvoice(@Parameter String invoiceId)
+    {
+        return orderClient.captureInvoice(invoiceId);
+    }
+
+    @Operation
+    public String voidOrderInvoice(@Parameter String invoiceId)
+    {
+        return orderClient.voidInvoice(invoiceId);
+    }
+
+    @Operation
+    public String cancelOrderInvoice(@Parameter String invoiceId)
+    {
+        return orderClient.cancelInvoiceOrder(invoiceId);
+    }
+
+    @SuppressWarnings("unchecked")
+    public void setOrderClient(MagentoOrderClient<?> magentoOrderClient)
+    {
+        //hack for softening exceptions
+        this.orderClient = (MagentoOrderClient<MagentoException>) magentoOrderClient;
+    }
+
+    // TODO ids shoudl be integrals
 }

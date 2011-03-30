@@ -4,6 +4,9 @@ package org.mule.module.magento;
 import org.mule.construct.SimpleFlowConstruct;
 import org.mule.tck.FunctionalTestCase;
 
+/**
+ * Test for the xml mapping of the {@link MagentoCloudConnector}
+ */
 public class MagentoNamespaceHandlerTestCase extends FunctionalTestCase
 {
     public void testNamespaceConfig() throws Exception

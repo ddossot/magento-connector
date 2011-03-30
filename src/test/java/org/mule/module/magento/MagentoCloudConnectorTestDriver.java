@@ -11,14 +11,19 @@
 package org.mule.module.magento;
 
 import static org.junit.Assert.assertNotNull;
-import Magento.SalesOrderEntity;
+import static org.junit.Assert.assertTrue;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.mule.module.magento.api.MagentoException;
+
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * Integration test of the {@link MagentoCloudConnector}
+ */
 public class MagentoCloudConnectorTestDriver
 {
+    private static final String ORDER_ID = "100000001";
     private MagentoCloudConnector connector;
 
     @Before
@@ -32,32 +37,45 @@ public class MagentoCloudConnectorTestDriver
     }
 
     @Test
-    public void testSalesOrdersList() throws Exception
+    public void listOrders() throws Exception
     {
-        SalesOrderEntity[] salesOrdersList = connector.salesOrdersList(null);
-        assertNotNull(salesOrdersList);
+        assertNotNull(connector.listOrders(null));
     }
 
+    /**
+     * Tests listing order invoices
+     */
     @Test
-    public void testSalesOrderInvoiceCancel() throws Exception
+    public void listOrdersInvoices() throws Exception
     {
-        assertNotNull(connector.salesOrderInvoicesList(null));
+        assertNotNull(connector.listOrdersInvoices(null));
     }
 
+    /**
+     * Tests getting information of an existent order
+     */
     @Test
-    public void testSalesOrderInfoInexistent()
+    public void getOrderInfo() throws Exception
     {
-        try
-        {
-            assertNotNull(connector.salesOrderInfo("899966"));
-        }
-        catch (Exception e)
-        {
-            System.out.println(e);
-            System.err.println(e.getClass());
-            System.err.println(e.getCause());
-            System.out.println(ToStringBuilder.reflectionToString(e));
-        }
+        assertNotNull(connector.getOrderInfo(ORDER_ID));
+    }
+
+    /**
+     * Tests adding a comment to an existent order
+     */
+    @Test
+    public void addOrderComment() throws Exception
+    {
+        assertTrue(connector.addOrderComment(ORDER_ID, "status", "A comment", false));
+    }
+
+    /**
+     * Tests getting an order that does not exists
+     */
+    @Test(expected = MagentoException.class)
+    public void getOrderInfoInexistent()
+    {
+        connector.getOrderInfo("899966");
     }
 
 }

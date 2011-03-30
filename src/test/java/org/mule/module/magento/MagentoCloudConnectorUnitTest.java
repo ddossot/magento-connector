@@ -10,138 +10,194 @@
 
 package org.mule.module.magento;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import org.mule.module.magento.api.AxisFaultExceptionHandler;
+import org.mule.module.magento.api.AxisMagentoOrderClient;
+import org.mule.module.magento.api.AxisPortProvider;
+import org.mule.module.magento.api.MagentoOrderClient;
+import org.mule.module.magento.api.internal.AssociativeEntity;
+import org.mule.module.magento.api.internal.ComplexFilter;
+import org.mule.module.magento.api.internal.Filters;
+import org.mule.module.magento.api.internal.Mage_Api_Model_Server_V2_HandlerPortType;
+import org.mule.module.magento.api.internal.SalesOrderEntity;
+
+import java.rmi.RemoteException;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 public class MagentoCloudConnectorUnitTest
 {
-
+    private static final String ORDER_ID = "10001";
     private MagentoCloudConnector connector;
+    private AxisPortProvider portProvider;
+    private Mage_Api_Model_Server_V2_HandlerPortType port;
 
     @Before
     public void setup() throws Exception
     {
         connector = new MagentoCloudConnector();
-        // connector.setSalesClient(new MagentoSalesClientAxisImpl());
+        portProvider = mock(AxisPortProvider.class);
+        port = mock(Mage_Api_Model_Server_V2_HandlerPortType.class);
+        connector.setOrderClient(AxisFaultExceptionHandler.handleFaults(MagentoOrderClient.class,
+            new AxisMagentoOrderClient(portProvider)));
         connector.initialise();
+        when(portProvider.getPort()).thenReturn(port);
     }
 
     @Test
-    public void testSalesOrdersList()
+    public void testSalesOrdersListNoFilters() throws Exception
     {
-        fail("Not yet implemented");
+        when(port.salesOrderList(anyString(), eq(new Filters()))).thenReturn(
+            new SalesOrderEntity[]{new SalesOrderEntity()});
+        assertEquals(1, connector.listOrders(null).size());
     }
 
     @Test
-    public void testSalesOrderInfo()
+    public void testSalesOrdersList() throws Exception
     {
-        fail("Not yet implemented");
+        when(port.salesOrderList(anyString(), // 
+            eq(new Filters(null, new ComplexFilter[]{ //
+                new ComplexFilter("customer_id", new AssociativeEntity("eq", "500"))})))) //
+        .thenReturn(new SalesOrderEntity[]{new SalesOrderEntity()});
+        assertEquals(1, connector.listOrders("eq(customer_id, 500)").size());
     }
 
     @Test
-    public void testSalesOrderHold()
+    public void testSalesOrderInfo() throws Exception
     {
-        fail("Not yet implemented");
+        connector.getOrderInfo(ORDER_ID);
+        verify(port).salesOrderInfo(anyString(), eq(ORDER_ID));
     }
 
     @Test
-    public void testSalesOrderUnhold()
+    public void testSalesOrderHold() throws Exception
     {
-        fail("Not yet implemented");
+        connector.holdOrder(ORDER_ID);
+        verify(port).salesOrderHold(anyString(), eq(ORDER_ID));
     }
 
     @Test
-    public void testSalesOrderCancel()
+    public void testSalesOrderUnhold() throws Exception
     {
-        fail("Not yet implemented");
+        connector.unholdOrder(ORDER_ID);
+        verify(port).salesOrderUnhold(anyString(), eq(ORDER_ID));
     }
 
     @Test
-    public void testSalesOrderAddComment()
+    public void testSalesOrderCancel() throws Exception
     {
-        fail("Not yet implemented");
+        connector.cancelOrder(ORDER_ID);
+        verify(port).salesOrderCancel(anyString(), eq(ORDER_ID));
     }
 
+    @Test
+    public void testSalesOrderAddComment() throws RemoteException
+    {
+        connector.addOrderComment(ORDER_ID, "status", "A comment", false);
+        verify(port).salesOrderAddComment(anyString(), eq(ORDER_ID), eq("status"), eq("A comment"), eq("0"));
+    }
+
+    @Ignore
     @Test
     public void testSalesOrderShipmentsList()
     {
         fail("Not yet implemented");
     }
 
+    @Ignore
     @Test
     public void testSalesOrderShipmentInfo()
     {
         fail("Not yet implemented");
     }
 
+    @Ignore
     @Test
     public void testSalesOrderShipmentComment()
     {
         fail("Not yet implemented");
     }
 
+    @Ignore
     @Test
     public void testSalesOrderShipmentGetCarriers()
     {
         fail("Not yet implemented");
     }
 
+    @Ignore
     @Test
     public void testSalesOrderShipmentAddTrack()
     {
         fail("Not yet implemented");
     }
 
+    @Ignore
     @Test
     public void testSalesOrderShipmentRemoveTrack()
     {
         fail("Not yet implemented");
     }
 
+    @Ignore
     @Test
     public void testSalesOrderShipmentCreate()
     {
         fail("Not yet implemented");
     }
 
+    @Ignore
     @Test
     public void testSalesOrderInvoicesList()
     {
         fail("Not yet implemented");
     }
 
+    @Ignore
     @Test
     public void testSalesOrderInvoiceInfo()
     {
         fail("Not yet implemented");
     }
 
+    @Ignore
     @Test
     public void testSalesOrderInvoiceCreate()
     {
         fail("Not yet implemented");
     }
 
+    @Ignore
     @Test
     public void testSalesOrderInvoiceComment()
     {
         fail("Not yet implemented");
     }
 
+    @Ignore
     @Test
     public void testSalesOrderInvoiceCapture()
     {
         fail("Not yet implemented");
     }
 
+    @Ignore
     @Test
     public void testSalesOrderInvoiceVoid()
     {
         fail("Not yet implemented");
     }
 
+    @Ignore
     @Test
     public void testSalesOrderInvoiceCancel()
     {

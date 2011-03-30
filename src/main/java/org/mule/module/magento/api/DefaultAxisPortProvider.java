@@ -10,17 +10,31 @@
 
 package org.mule.module.magento.api;
 
-import Magento.Mage_Api_Model_Server_V2_HandlerPortType;
-import Magento.MagentoServiceLocator;
+import org.mule.module.magento.api.internal.Mage_Api_Model_Server_V2_HandlerPortType;
+import org.mule.module.magento.api.internal.MagentoServiceLocator;
 
-public class DefaultPortProvider implements PortProvider
+import javax.validation.constraints.NotNull;
+
+import org.apache.commons.lang.Validate;
+
+public class DefaultAxisPortProvider implements AxisPortProvider
 {
     private final String username;
     private final String password;
     private final String address;
 
-    public DefaultPortProvider(String username, String password, String address)
+    /**
+     * Creates the port provider
+     * 
+     * @param username
+     * @param password
+     * @param address
+     */
+    public DefaultAxisPortProvider(@NotNull String username, @NotNull String password, @NotNull String address)
     {
+        Validate.notNull(username);
+        Validate.notNull(password);
+        Validate.notNull(address);
         this.username = username;
         this.password = password;
         this.address = address;

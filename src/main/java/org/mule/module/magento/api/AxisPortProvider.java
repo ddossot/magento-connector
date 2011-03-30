@@ -10,9 +10,9 @@
 
 package org.mule.module.magento.api;
 
-import Magento.Mage_Api_Model_Server_V2_HandlerPortType;
+import org.mule.module.magento.api.internal.Mage_Api_Model_Server_V2_HandlerPortType;
 
-public interface PortProvider
+public interface AxisPortProvider
 {
 
     Mage_Api_Model_Server_V2_HandlerPortType getPort() throws Exception;
