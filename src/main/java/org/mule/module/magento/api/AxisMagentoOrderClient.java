@@ -15,9 +15,7 @@ import static org.apache.commons.lang.BooleanUtils.toIntegerObject;
 
 import org.mule.module.magento.api.internal.AssociativeEntity;
 import org.mule.module.magento.api.internal.OrderItemIdQty;
-import org.mule.module.magento.api.internal.SalesOrderEntity;
-import org.mule.module.magento.api.internal.SalesOrderInvoiceEntity;
-import org.mule.module.magento.api.internal.SalesOrderShipmentEntity;
+import org.mule.module.magento.api.model.Carrier;
 import org.mule.module.magento.filters.FiltersParser;
 
 import java.util.Arrays;
@@ -27,6 +25,8 @@ import java.util.Map.Entry;
 
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Transformer;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.Validate;
 
@@ -44,14 +44,15 @@ public class AxisMagentoOrderClient implements MagentoOrderClient<Exception>
         return provider.getSessionId();
     }
 
-    public List<SalesOrderEntity> list(String filter) throws Exception
+    public List<Map<String, Object>> list(String filter) throws Exception
     {
-        return Arrays.asList(provider.getPort().salesOrderList(getSessionId(), FiltersParser.parse(filter)));
+        return MagentoMap.toMap(provider.getPort()
+            .salesOrderList(getSessionId(), FiltersParser.parse(filter)));
     }
 
-    public SalesOrderEntity getInfo(String orderId) throws Exception
+    public Map<String, Object> getInfo(String orderId) throws Exception
     {
-        return provider.getPort().salesOrderInfo(getSessionId(), orderId);
+        return MagentoMap.toMap(provider.getPort().salesOrderInfo(getSessionId(), orderId));
     }
 
     public boolean hold(String orderId) throws Exception
@@ -77,15 +78,15 @@ public class AxisMagentoOrderClient implements MagentoOrderClient<Exception>
     }
 
     @NotNull
-    public List<SalesOrderShipmentEntity> listShipments(String filter) throws Exception
+    public List<Map<String, Object>> listShipments(String filter) throws Exception
     {
-        return Arrays.asList(provider.getPort().salesOrderShipmentList(getSessionId(),
+        return MagentoMap.toMap(provider.getPort().salesOrderShipmentList(getSessionId(),
             FiltersParser.parse(filter)));
     }
 
-    public SalesOrderShipmentEntity getShipmentInfo(String shipmentId) throws Exception
+    public Map<String, Object> getShipmentInfo(String shipmentId) throws Exception
     {
-        return provider.getPort().salesOrderShipmentInfo(getSessionId(), shipmentId);
+        return MagentoMap.toMap(provider.getPort().salesOrderShipmentInfo(getSessionId(), shipmentId));
     }
 
     public int addShipmentComment(@NotNull String shipmentId,
@@ -98,11 +99,20 @@ public class AxisMagentoOrderClient implements MagentoOrderClient<Exception>
                 toIntegerString(includeCommentInEmail));
     }
 
+    @SuppressWarnings("unchecked")
     @NotNull
-    public List<AssociativeEntity> getShipmentCarriers(@NotNull String orderId) throws Exception
+    public List<Carrier> getShipmentCarriers(@NotNull String orderId) throws Exception
     {
         Validate.notNull(orderId);
-        return Arrays.asList(provider.getPort().salesOrderShipmentGetCarriers(getSessionId(), orderId));
+        return (List<Carrier>) CollectionUtils.collect(Arrays.asList(provider.getPort()
+            .salesOrderShipmentGetCarriers(getSessionId(), orderId)), new Transformer()
+        {
+            public Object transform(Object input)
+            {
+                AssociativeEntity entity = (AssociativeEntity) input;
+                return new Carrier(entity.getKey(), entity.getValue());
+            }
+        });
     }
 
     public int addShipmentTrack(@NotNull String shipmentId,
@@ -141,16 +151,16 @@ public class AxisMagentoOrderClient implements MagentoOrderClient<Exception>
             comment, toInteger(sendEmail), toInteger(includeCommentInEmail));
     }
 
-    public List<SalesOrderInvoiceEntity> listInvoices(String filter) throws Exception
+    public List<Map<String, Object>> listInvoices(String filter) throws Exception
     {
-        return Arrays.asList(provider.getPort().salesOrderInvoiceList(getSessionId(),
+        return MagentoMap.toMap(provider.getPort().salesOrderInvoiceList(getSessionId(),
             FiltersParser.parse(filter)));
     }
 
-    public SalesOrderInvoiceEntity getInvoiceInfo(@NotNull String invoiceId) throws Exception
+    public Map<String, Object> getInvoiceInfo(@NotNull String invoiceId) throws Exception
     {
         Validate.notNull(invoiceId);
-        return provider.getPort().salesOrderInvoiceInfo(getSessionId(), invoiceId);
+        return MagentoMap.toMap(provider.getPort().salesOrderInvoiceInfo(getSessionId(), invoiceId));
     }
 
     public String createInvoice(@NotNull String orderId,

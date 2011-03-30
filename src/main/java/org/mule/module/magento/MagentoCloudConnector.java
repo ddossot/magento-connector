@@ -17,10 +17,7 @@ import org.mule.module.magento.api.AxisMagentoOrderClient;
 import org.mule.module.magento.api.DefaultAxisPortProvider;
 import org.mule.module.magento.api.MagentoException;
 import org.mule.module.magento.api.MagentoOrderClient;
-import org.mule.module.magento.api.internal.AssociativeEntity;
-import org.mule.module.magento.api.internal.SalesOrderEntity;
-import org.mule.module.magento.api.internal.SalesOrderInvoiceEntity;
-import org.mule.module.magento.api.internal.SalesOrderShipmentEntity;
+import org.mule.module.magento.api.model.Carrier;
 import org.mule.tools.cloudconnect.annotations.Connector;
 import org.mule.tools.cloudconnect.annotations.Operation;
 import org.mule.tools.cloudconnect.annotations.Parameter;
@@ -124,25 +121,25 @@ public class MagentoCloudConnector implements Initialisable
     }
 
     @Operation
-    public SalesOrderEntity getOrderInfo(@Parameter String orderId)
+    public Map<String, Object> getOrderInfo(@Parameter String orderId)
     {
         return orderClient.getInfo(orderId);
     }
 
     @Operation
-    public SalesOrderInvoiceEntity getOrderInvoiceInfo(@Parameter String invoiceId)
+    public Map<String, Object> getOrderInvoiceInfo(@Parameter String invoiceId)
     {
         return orderClient.getInvoiceInfo(invoiceId);
     }
 
     @Operation
-    public List<AssociativeEntity> getOrderShipmentCarriers(@Parameter String orderId)
+    public List<Carrier> getOrderShipmentCarriers(@Parameter String orderId)
     {
         return orderClient.getShipmentCarriers(orderId);
     }
 
     @Operation
-    public SalesOrderShipmentEntity getOrderShipmentInfo(@Parameter String shipmentId)
+    public Map<String, Object> getOrderShipmentInfo(@Parameter String shipmentId)
     {
         return orderClient.getShipmentInfo(shipmentId);
     }
@@ -154,20 +151,20 @@ public class MagentoCloudConnector implements Initialisable
     }
 
     @Operation
-    public List<SalesOrderEntity> listOrders(@Parameter(optional = true) String filter)
+    public List<Map<String, Object>> listOrders(@Parameter(optional = true) String filter)
     {
         return orderClient.list(filter);
     }
 
     @Operation
-    public List<SalesOrderInvoiceEntity> listOrdersInvoices(@Parameter(optional = true) String filter)
+    public List<Map<String, Object>> listOrdersInvoices(@Parameter(optional = true) String filter)
 
     {
         return orderClient.listInvoices(filter);
     }
 
     @Operation
-    public List<SalesOrderShipmentEntity> listOrdersShipments(@Parameter(optional = true) String filter)
+    public List<Map<String, Object>> listOrdersShipments(@Parameter(optional = true) String filter)
 
     {
         return orderClient.listShipments(filter);
@@ -238,7 +235,7 @@ public class MagentoCloudConnector implements Initialisable
     @SuppressWarnings("unchecked")
     public void setOrderClient(MagentoOrderClient<?> magentoOrderClient)
     {
-        //hack for softening exceptions
+        // hack for softening exceptions
         this.orderClient = (MagentoOrderClient<MagentoException>) magentoOrderClient;
     }
 

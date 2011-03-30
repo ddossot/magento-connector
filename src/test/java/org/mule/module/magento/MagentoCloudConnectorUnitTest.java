@@ -26,8 +26,11 @@ import org.mule.module.magento.api.internal.ComplexFilter;
 import org.mule.module.magento.api.internal.Filters;
 import org.mule.module.magento.api.internal.Mage_Api_Model_Server_V2_HandlerPortType;
 import org.mule.module.magento.api.internal.SalesOrderEntity;
+import org.mule.module.magento.api.model.Carrier;
 
 import java.rmi.RemoteException;
+
+import edu.emory.mathcs.backport.java.util.Collections;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -74,8 +77,8 @@ public class MagentoCloudConnectorUnitTest
     @Test
     public void testSalesOrderInfo() throws Exception
     {
+        when(port.salesOrderInfo(anyString(), eq(ORDER_ID))).thenReturn(new SalesOrderEntity());
         connector.getOrderInfo(ORDER_ID);
-        verify(port).salesOrderInfo(anyString(), eq(ORDER_ID));
     }
 
     @Test
@@ -127,11 +130,13 @@ public class MagentoCloudConnectorUnitTest
         fail("Not yet implemented");
     }
 
-    @Ignore
     @Test
-    public void testSalesOrderShipmentGetCarriers()
+    public void testSalesOrderShipmentGetCarriers() throws RemoteException
     {
-        fail("Not yet implemented");
+        when(port.salesOrderShipmentGetCarriers(anyString(), eq(ORDER_ID))) //
+        .thenReturn(new AssociativeEntity[]{new AssociativeEntity("FDX", "Fedex Express")});
+        assertEquals(Collections.singletonList(new Carrier("FDX", "Fedex Express")),
+            connector.getOrderShipmentCarriers(ORDER_ID));
     }
 
     @Ignore

@@ -10,11 +10,19 @@
 
 package org.mule.module.magento;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertTrue;
 
 import org.mule.module.magento.api.MagentoException;
+import org.mule.module.magento.api.internal.SalesOrderEntity;
+import org.mule.module.magento.api.model.Carrier;
 
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.DynaBean;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -57,7 +65,9 @@ public class MagentoCloudConnectorTestDriver
     @Test
     public void getOrderInfo() throws Exception
     {
-        assertNotNull(connector.getOrderInfo(ORDER_ID));
+        Map<String, Object> orderInfo = connector.getOrderInfo(ORDER_ID);
+        assertNotNull(orderInfo);
+        System.out.println(ToStringBuilder.reflectionToString(orderInfo));
     }
 
     /**
@@ -67,6 +77,12 @@ public class MagentoCloudConnectorTestDriver
     public void addOrderComment() throws Exception
     {
         assertTrue(connector.addOrderComment(ORDER_ID, "status", "A comment", false));
+    }
+
+    @Test
+    public void getShipmentCarriers() throws Exception
+    {
+        assertFalse(connector.getOrderShipmentCarriers(ORDER_ID).isEmpty());
     }
 
     /**

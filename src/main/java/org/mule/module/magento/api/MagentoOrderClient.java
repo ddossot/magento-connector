@@ -10,17 +10,19 @@
 
 package org.mule.module.magento.api;
 
-import org.mule.module.magento.api.internal.AssociativeEntity;
-import org.mule.module.magento.api.internal.SalesOrderEntity;
-import org.mule.module.magento.api.internal.SalesOrderInvoiceEntity;
-import org.mule.module.magento.api.internal.SalesOrderShipmentEntity;
+import org.mule.module.magento.api.model.Carrier;
 
 import java.util.List;
 import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
-public interface MagentoOrderClient<E extends Exception>
+/**
+ * Facade for the Magento Sales Order API
+ * 
+ * @author flbulgarelli
+ */
+public interface MagentoOrderClient<ExceptionType extends Exception>
 {
 
     /**
@@ -28,46 +30,46 @@ public interface MagentoOrderClient<E extends Exception>
      * 
      * @param filters optional list of filters
      * @return list of sales orders
-     * @throws E
+     * @throws ExceptionType
      */
-    List<SalesOrderEntity> list(@NotNull String filter) throws E;
+    List<Map<String, Object>> list(@NotNull String filter) throws ExceptionType;
 
     /**
      * Retrieves order information
      * 
      * @param Order ID
      * @return sales order information
-     * @throws E
+     * @throws ExceptionType
      */
 
-    SalesOrderEntity getInfo(@NotNull String orderId) throws E;
+    Map<String, Object> getInfo(@NotNull String orderId) throws ExceptionType;
 
     /**
      * Puts order on hold
      * 
      * @param order id
      * @return
-     * @throws E
+     * @throws ExceptionType
      */
-    boolean hold(@NotNull String orderId) throws E;
+    boolean hold(@NotNull String orderId) throws ExceptionType;
 
     /**
      * Releases order
      * 
      * @param order id
      * @return
-     * @throws E
+     * @throws ExceptionType
      */
-    boolean unhold(String orderId) throws E;
+    boolean unhold(String orderId) throws ExceptionType;
 
     /**
      * Cancels order
      * 
      * @param order id
      * @return sales order information
-     * @throws E
+     * @throws ExceptionType
      */
-    boolean cancel(String orderId) throws E;
+    boolean cancel(String orderId) throws ExceptionType;
 
     /**
      * @param orderId
@@ -75,30 +77,30 @@ public interface MagentoOrderClient<E extends Exception>
      * @param comment
      * @param sendEmail if an email must be sent after shipment creation
      * @return
-     * @throws E
+     * @throws ExceptionType
      */
     boolean salesOrderAddComment(String orderId, String status, String comment, boolean sendEmail)
-        throws E;
+        throws ExceptionType;
 
     /**
      * Returns list of Magento sales order shipments
      * 
      * @param filters optional list of filters
      * @return list of sales order shipments
-     * @throws E
+     * @throws ExceptionType
      */
     @NotNull
-    List<SalesOrderShipmentEntity> listShipments(String filter) throws E;
+    List<Map<String, Object>> listShipments(String filter) throws ExceptionType;
 
     /**
      * Retrieves order shipment information
      * 
      * @param Order shipment ID
      * @return sales order shipment information
-     * @throws E
+     * @throws ExceptionType
      */
 
-    SalesOrderShipmentEntity getShipmentInfo(String shipmentId) throws E;
+    Map<String, Object> getShipmentInfo(String shipmentId) throws ExceptionType;
 
     /**
      * Adds a comment to the shipment
@@ -108,22 +110,22 @@ public interface MagentoOrderClient<E extends Exception>
      * @param sendEmail if an email must be sent after shipment creation
      * @param includeCommentInEmail if the comment must be sent in the email
      * @return TODO
-     * @throws E
+     * @throws ExceptionType
      */
     int addShipmentComment(@NotNull String shipmentId,
                            String comment,
                            boolean sendEmail,
-                           boolean includeCommentInEmail) throws E;
+                           boolean includeCommentInEmail) throws ExceptionType;
 
     /**
-     * Returns list of carriers for the order
+     * Returns a list of carriers for the given order id
      * 
      * @param order id
      * @return list of carriers
-     * @throws E
+     * @throws ExceptionType
      */
     @NotNull
-    List<AssociativeEntity> getShipmentCarriers(@NotNull String orderId) throws E;
+    List<Carrier> getShipmentCarriers(@NotNull String orderId) throws ExceptionType;
 
     /**
      * Adds a new tracking number
@@ -133,20 +135,20 @@ public interface MagentoOrderClient<E extends Exception>
      * @param title TODO
      * @param trackNumber TODO
      * @return track ID TODO
-     * @throws E TODO
+     * @throws ExceptionType TODO
      */
     int addShipmentTrack(@NotNull String shipmentId,
                          @NotNull String carrier,
                          @NotNull String title,
-                         @NotNull String trackNumber) throws E;
+                         @NotNull String trackNumber) throws ExceptionType;
 
     /**
      * @param shipmentId
      * @param trackId
      * @return
-     * @throws E
+     * @throws ExceptionType
      */
-    int removeShipmentTrack(@NotNull String shipmentId, @NotNull String trackId) throws E;
+    int removeShipmentTrack(@NotNull String shipmentId, @NotNull String trackId) throws ExceptionType;
 
     /**
      * Creates a shipment for order
@@ -158,31 +160,31 @@ public interface MagentoOrderClient<E extends Exception>
      * @param sendEmail if an email must be sent after shipment creation
      * @param includeCommentInEmail if the comment must be sent in the email
      * @return
-     * @throws E
+     * @throws ExceptionType
      */
     String createShipment(@NotNull String orderId,
                           @NotNull Map<Integer, Double> itemsQuantities,
                           String comment,
                           boolean sendEmail,
-                          boolean includeCommentInEmail) throws E;
+                          boolean includeCommentInEmail) throws ExceptionType;
 
     /**
      * Returns list of Magento sales order invoices
      * 
      * @param filters optional list of filters
      * @return list of sales order invoices
-     * @throws E
+     * @throws ExceptionType
      */
-    List<SalesOrderInvoiceEntity> listInvoices(String filter) throws E;
+    List<Map<String, Object>> listInvoices(String filter) throws ExceptionType;
 
     /**
      * Retrieves order invoice information
      * 
      * @param Order invoice ID
      * @return sales order invoice information
-     * @throws E
+     * @throws ExceptionType
      */
-    SalesOrderInvoiceEntity getInvoiceInfo(@NotNull String invoiceId) throws E;
+    Map<String, Object> getInvoiceInfo(@NotNull String invoiceId) throws ExceptionType;
 
     /**
      * Creates an invoice for the given order
@@ -194,13 +196,13 @@ public interface MagentoOrderClient<E extends Exception>
      * @param sendEmail if an email must be sent after shipment creation
      * @param includeCommentInEmail if the comment must be sent in the email
      * @return TODO
-     * @throws E
+     * @throws ExceptionType
      */
     String createInvoice(@NotNull String orderId,
                          @NotNull Map<Integer, Double> itemsQuantities,
                          String comment,
                          boolean sendEmail,
-                         boolean includeCommentInEmail) throws E;
+                         boolean includeCommentInEmail) throws ExceptionType;
 
     /**
      * @param invoiceId
@@ -208,38 +210,38 @@ public interface MagentoOrderClient<E extends Exception>
      * @param sendEmail if an email must be sent after shipment creation
      * @param includeCommentInEmail if the comment must be sent in the email
      * @return
-     * @throws E
+     * @throws ExceptionType
      */
     String addInvoiceComment(@NotNull String invoiceId,
                              String comment,
                              boolean sendEmail,
-                             boolean includeCommentInEmail) throws E;
+                             boolean includeCommentInEmail) throws ExceptionType;
 
     /**
      * Captures and invoice
      * 
      * @param invoiceId
      * @return TODO
-     * @throws E
+     * @throws ExceptionType
      */
-    boolean captureInvoice(@NotNull String invoiceId) throws E;
+    boolean captureInvoice(@NotNull String invoiceId) throws ExceptionType;
 
     /**
      * Voids an invoice
      * 
      * @param invoiceId the invoice id
      * @return TODO
-     * @throws E
+     * @throws ExceptionType
      */
-    String voidInvoice(@NotNull String invoiceId) throws E;
+    String voidInvoice(@NotNull String invoiceId) throws ExceptionType;
 
     /**
      * Cancels an invoice
      * 
      * @param invoiceId the invoice id
      * @return TODO
-     * @throws E
+     * @throws ExceptionType
      */
-    String cancelInvoiceOrder(@NotNull String invoiceId) throws E;
+    String cancelInvoiceOrder(@NotNull String invoiceId) throws ExceptionType;
 
 }
