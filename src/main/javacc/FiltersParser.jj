@@ -14,7 +14,22 @@ PARSER_BEGIN(FiltersParser)
 	private FiltersBuilder builder = new FiltersBuilder(); 
 	
 	/**
-	 * Parses a filter expression. TODO document expression syntax
+	 * Parses a filter expression. 
+	 * <p>
+	 * The syntax used by it is quite simple: it consist of one or more comma-separated 
+	 * unary or binary predicates, one for each filter.
+	 * Unary predicates are in the form &lt;predicateType&gt;(&lt;targetAttribute&gt;), while binary ones
+	 * are in the form &lt;predicateType&gt;(&lt;targetAttribute&gt;, &lt;targetAttributeValue&gt;), where
+	 * &lt;predicateType&gt; is any of the supported Magento operators: eq, neq, like, null, etc.
+	 * </p>
+	 * <p> 
+	 * For example, the following expressions creates a filter for entities whose customer id is greater
+	 * than 1500, and its deletion date is not null:
+	 * <code>gt(customer_id, 1500), notnull(deletion_date)</code>
+	 * </p>
+	 *
+	 * @param expression a nullable expression. in the previously described syntax.
+	 *		  Null expressions and empty expressions are interpreted as empty filters  
 	 * @return a Filter for the given expression
 	 * @throws IllegalArgumentException if the expression can not be parsed
 	 */
