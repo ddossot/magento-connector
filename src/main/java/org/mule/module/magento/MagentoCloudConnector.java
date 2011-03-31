@@ -18,6 +18,8 @@ import org.mule.module.magento.api.MagentoClientAdaptor;
 import org.mule.module.magento.api.MagentoException;
 import org.mule.module.magento.api.customer.AxisMagentoInventoryClient;
 import org.mule.module.magento.api.customer.MagentoInventoryClient;
+import org.mule.module.magento.api.directory.AxisMagentoDirectoryClient;
+import org.mule.module.magento.api.directory.MagentoDirectoryClient;
 import org.mule.module.magento.api.inventory.AxisMagentoCustomerClient;
 import org.mule.module.magento.api.inventory.MagentoCustomerClient;
 import org.mule.module.magento.api.order.AxisMagentoOrderClient;
@@ -52,6 +54,7 @@ public class MagentoCloudConnector implements Initialisable
     private MagentoOrderClient<MagentoException> orderClient;
     private MagentoCustomerClient<Map<String, String>, List<Map<String, Object>>, MagentoException> customerClient;
     private MagentoInventoryClient<List<Map<String, Object>>, MagentoException> inventoryClient;
+    private MagentoDirectoryClient<List<Map<String, Object>>, MagentoException> directoryClient;
 
     public String getUsername()
     {
@@ -100,6 +103,11 @@ public class MagentoCloudConnector implements Initialisable
         {
             setInventoryClient(MagentoClientAdaptor.adapt(MagentoInventoryClient.class,
                 new AxisMagentoInventoryClient(initializer.getPorProvider())));
+        }
+        if (directoryClient == null)
+        {
+            setDirectoryClient(MagentoClientAdaptor.adapt(MagentoDirectoryClient.class,
+                new AxisMagentoDirectoryClient(initializer.getPorProvider())));
         }
     }
 
@@ -191,10 +199,10 @@ public class MagentoCloudConnector implements Initialisable
     }
 
     @Operation
-    public int removeOrderShipmentTrack(@Parameter String shipmentId, @Parameter String trackId)
+    public int deleteOrderShipmentTrack(@Parameter String shipmentId, @Parameter String trackId)
 
     {
-        return orderClient.removeOrderShipmentTrack(shipmentId, trackId);
+        return orderClient.deleteOrderShipmentTrack(shipmentId, trackId);
     }
 
     @Operation
@@ -337,6 +345,12 @@ public class MagentoCloudConnector implements Initialisable
     public void setInventoryClient(MagentoInventoryClient<?, ?> inventoryClient)
     {
         this.inventoryClient = (MagentoInventoryClient<List<Map<String, Object>>, MagentoException>) inventoryClient;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public void setDirectoryClient(MagentoDirectoryClient<?,?> directoryClient)
+    {
+        this.directoryClient = (MagentoDirectoryClient<List<Map<String, Object>>, MagentoException>) directoryClient;
     }
 
     // TODO ids shoudl be integrals

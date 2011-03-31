@@ -10,9 +10,27 @@
 
 package org.mule.module.magento.api.directory;
 
-public interface MagentoDirectoryClient
+import javax.validation.constraints.NotNull;
+
+/**
+ * Facade for the Magento Directory API
+ */
+public interface MagentoDirectoryClient<AttributesCollectionType, ExceptionType extends Exception>
 {
+    /**
+     * Answers the list of countries
+     * 
+     * @return a collection of countries attributes
+     * @throws ExceptionType
+     */
+    AttributesCollectionType listDirectoryCountries() throws ExceptionType;
 
+    /**
+     * Answers a list of regions for the given county
+     * 
+     * @param countryId the country code, in ISO2 or ISO3 format
+     * @return the collection of regions attributes
+     * @throws ExceptionType
+     */
+    AttributesCollectionType listDirectoryRegions(@NotNull String countryId) throws ExceptionType;
 }
-
-

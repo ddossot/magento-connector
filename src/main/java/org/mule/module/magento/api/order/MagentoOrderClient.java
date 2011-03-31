@@ -158,7 +158,7 @@ public interface MagentoOrderClient<ExceptionType extends Exception>
      * @return
      * @throws ExceptionType
      */
-    int removeOrderShipmentTrack(@NotNull String shipmentId, @NotNull String trackId) throws ExceptionType;
+    int deleteOrderShipmentTrack(@NotNull String shipmentId, @NotNull String trackId) throws ExceptionType;
 
     /**
      * Creates a shipment for order

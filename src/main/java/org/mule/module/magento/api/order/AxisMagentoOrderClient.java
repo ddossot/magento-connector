@@ -135,7 +135,7 @@ public class AxisMagentoOrderClient extends AbstractMagentoClient implements Mag
      * @return
      * @throws RemoteException
      */
-    public int removeOrderShipmentTrack(@NotNull String shipmentId, @NotNull String trackId) throws RemoteException
+    public int deleteOrderShipmentTrack(@NotNull String shipmentId, @NotNull String trackId) throws RemoteException
     {
         Validate.notNull(shipmentId);
         Validate.notNull(trackId);

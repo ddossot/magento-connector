@@ -26,13 +26,18 @@ import org.apache.commons.lang.BooleanUtils;
  * <ul>
  * <li>They are parameterized by the exception type they throw. For example, axis
  * clients should be parameterized to throw {@link RemoteException}s, while
- * MagentoClient's wrapers will throw {@link MagentoException}s</li>
+ * {@link MagentoClientAdaptor} will throw {@link MagentoException}s</li>
+ * <li>They are parameterized by the way they model attributes and attributes
+ * collections. For example, axis clients will answers arrays of magento objects for
+ * representing collection of attributes, while {@link MagentoClientAdaptor} will
+ * answer lists of maps, instead</li>
  * <li>Create and update operations take the target's object attributes in a Map with
  * String keys and Object values. TODO actual value type depend on the conversion
  * strategy used by the client</li>
  * <li>Retrieve operations return object's attributes in a Map similar to the
  * previously described</li>
  * </ul>
+ * TODO extract interface and move doc to there
  */
 public abstract class AbstractMagentoClient
 {
