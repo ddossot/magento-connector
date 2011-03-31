@@ -10,18 +10,14 @@
 
 package org.mule.module.magento;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import org.mule.module.magento.api.MagentoException;
-import org.mule.module.magento.api.internal.SalesOrderEntity;
-import org.mule.module.magento.api.model.Carrier;
 
-import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.beanutils.DynaBean;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.junit.Before;
 import org.junit.Test;

@@ -13,11 +13,11 @@ package org.mule.module.magento;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.module.magento.api.AxisFaultExceptionHandler;
-import org.mule.module.magento.api.AxisMagentoOrderClient;
 import org.mule.module.magento.api.DefaultAxisPortProvider;
 import org.mule.module.magento.api.MagentoException;
-import org.mule.module.magento.api.MagentoOrderClient;
-import org.mule.module.magento.api.model.Carrier;
+import org.mule.module.magento.api.order.AxisMagentoOrderClient;
+import org.mule.module.magento.api.order.MagentoOrderClient;
+import org.mule.module.magento.api.order.model.Carrier;
 import org.mule.tools.cloudconnect.annotations.Connector;
 import org.mule.tools.cloudconnect.annotations.Operation;
 import org.mule.tools.cloudconnect.annotations.Parameter;
@@ -184,7 +184,7 @@ public class MagentoCloudConnector implements Initialisable
                                    @Parameter(optional = true, defaultValue = "false") boolean sendEmail)
 
     {
-        return orderClient.salesOrderAddComment(orderId, status, comment, sendEmail);
+        return orderClient.addComment(orderId, status, comment, sendEmail);
     }
 
     @Operation

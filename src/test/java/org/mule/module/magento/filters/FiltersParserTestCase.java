@@ -32,7 +32,14 @@ public class FiltersParserTestCase
     @Test(expected = ParseException.class)
     public void testParseBadExpression() throws Exception
     {
-        parse("lalalal");
+        try
+        {
+            parse("lalalal");
+        }
+        catch (IllegalArgumentException e)
+        {
+            throw (Exception) e.getCause();
+        }
     }
 
     /***
@@ -42,7 +49,14 @@ public class FiltersParserTestCase
     @Test(expected = ParseException.class)
     public void testParseUnaryInsteadOfBinaryExpression() throws Exception
     {
-        parse("eq(customer_id)");
+        try
+        {
+            parse("eq(customer_id)");
+        }
+        catch (IllegalArgumentException e)
+        {
+            throw (Exception) e.getCause();
+        }
     }
 
     /**

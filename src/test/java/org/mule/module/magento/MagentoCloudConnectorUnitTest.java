@@ -10,6 +10,7 @@
 
 package org.mule.module.magento;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -18,17 +19,16 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.mule.module.magento.api.AxisFaultExceptionHandler;
-import org.mule.module.magento.api.AxisMagentoOrderClient;
 import org.mule.module.magento.api.AxisPortProvider;
-import org.mule.module.magento.api.MagentoOrderClient;
 import org.mule.module.magento.api.internal.AssociativeEntity;
 import org.mule.module.magento.api.internal.ComplexFilter;
 import org.mule.module.magento.api.internal.Filters;
 import org.mule.module.magento.api.internal.Mage_Api_Model_Server_V2_HandlerPortType;
 import org.mule.module.magento.api.internal.SalesOrderEntity;
 import org.mule.module.magento.api.internal.SalesOrderShipmentEntity;
-import org.mule.module.magento.api.internal.SalesOrderShipmentItemEntity;
-import org.mule.module.magento.api.model.Carrier;
+import org.mule.module.magento.api.order.AxisMagentoOrderClient;
+import org.mule.module.magento.api.order.MagentoOrderClient;
+import org.mule.module.magento.api.order.model.Carrier;
 
 import java.rmi.RemoteException;
 
@@ -37,7 +37,6 @@ import edu.emory.mathcs.backport.java.util.Collections;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 public class MagentoCloudConnectorUnitTest
 {

@@ -8,9 +8,9 @@
  * LICENSE.txt file.
  */
 
-package org.mule.module.magento.api;
+package org.mule.module.magento.api.order;
 
-import org.mule.module.magento.api.model.Carrier;
+import org.mule.module.magento.api.order.model.Carrier;
 
 import java.util.List;
 import java.util.Map;
@@ -18,13 +18,19 @@ import java.util.Map;
 import javax.validation.constraints.NotNull;
 
 /**
- * Facade for the Magento Sales Order API
+ * Facade for the Magento Sales Order API. This Facade uses order, shipments and
+ * invoices ids called, {@code orderId}, {@code shipmentId} and {@code invoiceId}
+ * respectively. However, those Ids correspond internally to the Magento's {@code
+ * xxxIncrementId}. Actual {@code xxxId} are used internally by magento and not
+ * exposed by the webservice in most operations
  * 
  * @author flbulgarelli
+ * @param <ExceptionType> the type of exception that this client throws
  */
 public interface MagentoOrderClient<ExceptionType extends Exception>
 {
 
+    // TODO naming not consistent with other clients
     /**
      * Returns list of Magento sales orders
      * 
@@ -32,16 +38,17 @@ public interface MagentoOrderClient<ExceptionType extends Exception>
      * @return list of sales orders
      * @throws ExceptionType
      */
+    @NotNull
     List<Map<String, Object>> list(@NotNull String filter) throws ExceptionType;
 
     /**
-     * Retrieves order information
+     * Answers the order properties for the given orderId
      * 
-     * @param Order ID
-     * @return sales order information
+     * @param orderId
+     * @return the order properties
      * @throws ExceptionType
      */
-
+    @NotNull
     Map<String, Object> getInfo(@NotNull String orderId) throws ExceptionType;
 
     /**
@@ -69,18 +76,22 @@ public interface MagentoOrderClient<ExceptionType extends Exception>
      * @return sales order information
      * @throws ExceptionType
      */
-    boolean cancel(String orderId) throws ExceptionType;
+    boolean cancel(@NotNull String orderId) throws ExceptionType;
 
     /**
-     * @param orderId
-     * @param status
+     * Adds a comment to the given order id
+     * 
+     * @param orderId the order id
+     * @param status TODO possible values?
      * @param comment
      * @param sendEmail if an email must be sent after shipment creation
-     * @return
+     * @return TODO
      * @throws ExceptionType
      */
-    boolean salesOrderAddComment(String orderId, String status, String comment, boolean sendEmail)
-        throws ExceptionType;
+    boolean addComment(@NotNull String orderId,
+                       @NotNull String status,
+                       @NotNull String comment,
+                       boolean sendEmail) throws ExceptionType;
 
     /**
      * Returns list of Magento sales order shipments

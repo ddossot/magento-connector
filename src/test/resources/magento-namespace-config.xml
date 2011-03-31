@@ -111,6 +111,14 @@
 		<magento:remove-orders-shipment-track
 			shipmentId="#[map-payload:shipmentId]" trackId="#[map-payload:trackId]" />
 	</flow>
-
-
+<!-- TODO
+AddOrderShipmentCommentOperationDefinitionParser	
+CreateOrderInvoiceOperationDefinitionParser	
+AddOrderInvoiceCommentOperationDefinitionParser	
+CaptureOrderInvoiceOperationDefinitionParser	
+VoidOrderInvoiceOperationDefinitionParser	
+GetOrderInvoiceInfoOperationDefinitionParser	
+CancelOrderInvoiceOperationDefinitionParser	
+GetOrderShipmentCarriersOperationDefinitionParser
+ -->
 </mule>

@@ -23,7 +23,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
-public class MagentoMapTest
+public class MagentoMapUnitTest
 {
 
     @Test

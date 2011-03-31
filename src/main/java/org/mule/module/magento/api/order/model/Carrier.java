@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.module.magento.api.model;
+package org.mule.module.magento.api.order.model;
 
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.EqualsBuilder;

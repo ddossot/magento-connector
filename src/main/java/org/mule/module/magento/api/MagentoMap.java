@@ -86,4 +86,11 @@ public class MagentoMap extends BeanMap
         }
     }
 
+    public static <T> T fromMap(Class<T> clazz, Map<String, Object> attributes)
+    {
+        // TODO type conversions? this map is formed by integers instead of booleans?
+        // TODO convert everything primitive into string?
+        throw new UnsupportedOperationException();
+    }
+
 }

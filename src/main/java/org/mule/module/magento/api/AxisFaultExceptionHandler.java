@@ -18,6 +18,10 @@ import java.lang.reflect.Proxy;
 import org.apache.axis.AxisFault;
 import org.apache.commons.lang.Validate;
 
+/**
+ * An utility class for creating proxies that handle {@link AxisFault}s and convert
+ * them into {@link MagentoException}s
+ */
 public final class AxisFaultExceptionHandler
 {
 
@@ -42,7 +46,7 @@ public final class AxisFaultExceptionHandler
                     {
                         if (e.getCause() instanceof AxisFault)
                         {
-                            throw toMagentoException(e, (AxisFault) e.getCause());
+                            throw toMagentoException((AxisFault) e.getCause());
                         }
                         throw e;
                     }
@@ -50,10 +54,10 @@ public final class AxisFaultExceptionHandler
             });
     }
 
-    private static MagentoException toMagentoException(InvocationTargetException e, AxisFault fault)
+    private static MagentoException toMagentoException(AxisFault fault)
     {
         return new MagentoException( //
-            Integer.parseInt(fault.getFaultCode().toString()), fault.getFaultString(), e);
+            Integer.parseInt(fault.getFaultCode().toString()), fault.getFaultString(), fault);
     }
 
 }

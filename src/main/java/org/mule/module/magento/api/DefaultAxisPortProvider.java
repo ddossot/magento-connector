@@ -13,7 +13,10 @@ package org.mule.module.magento.api;
 import org.mule.module.magento.api.internal.Mage_Api_Model_Server_V2_HandlerPortType;
 import org.mule.module.magento.api.internal.MagentoServiceLocator;
 
+import java.rmi.RemoteException;
+
 import javax.validation.constraints.NotNull;
+import javax.xml.rpc.ServiceException;
 
 import org.apache.commons.lang.Validate;
 
@@ -40,11 +43,18 @@ public class DefaultAxisPortProvider implements AxisPortProvider
         this.address = address;
     }
 
-    public Mage_Api_Model_Server_V2_HandlerPortType getPort() throws Exception
+    public Mage_Api_Model_Server_V2_HandlerPortType getPort() throws RemoteException
     {
         MagentoServiceLocator serviceLocator = new MagentoServiceLocator();
         serviceLocator.setMage_Api_Model_Server_V2_HandlerPortEndpointAddress(address);
-        return serviceLocator.getMage_Api_Model_Server_V2_HandlerPort();
+        try
+        {
+            return serviceLocator.getMage_Api_Model_Server_V2_HandlerPort();
+        }
+        catch (ServiceException e)
+        {
+            throw new RemoteException("A Service exception occured while trying to create the port", e);
+        }
     }
 
     /**
@@ -53,7 +63,7 @@ public class DefaultAxisPortProvider implements AxisPortProvider
      * @return Magento session ID
      * @throws Exception
      */
-    public String getSessionId() throws Exception
+    public String getSessionId() throws RemoteException
     {
         return getPort().login(username, password);
     }

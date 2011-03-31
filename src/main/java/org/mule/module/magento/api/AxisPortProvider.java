@@ -12,10 +12,12 @@ package org.mule.module.magento.api;
 
 import org.mule.module.magento.api.internal.Mage_Api_Model_Server_V2_HandlerPortType;
 
+import java.rmi.RemoteException;
+
 public interface AxisPortProvider
 {
 
-    Mage_Api_Model_Server_V2_HandlerPortType getPort() throws Exception;
+    Mage_Api_Model_Server_V2_HandlerPortType getPort() throws RemoteException;
 
     /**
      * Need to authenticate before every call
@@ -23,6 +25,6 @@ public interface AxisPortProvider
      * @return Magento session ID
      * @throws Exception
      */
-    String getSessionId() throws Exception;
+    String getSessionId() throws RemoteException;
 
 }

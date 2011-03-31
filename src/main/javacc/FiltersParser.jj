@@ -16,13 +16,17 @@ PARSER_BEGIN(FiltersParser)
 	/**
 	 * Parses a filter expression. TODO document expression syntax
 	 * @return a Filter for the given expression
-	 * @throws ParseException if the expression can not be parsed
+	 * @throws IllegalArgumentException if the expression can not be parsed
 	 */
-	public static Filters parse(String expression) throws ParseException {
+	public static Filters parse(String expression)  {
 		if(org.apache.commons.lang.StringUtils.isEmpty(expression)) {
 		  return new Filters();
 		}
-		return new FiltersParser(new ByteArrayInputStream(expression.getBytes())).start();
+		try{
+			return new FiltersParser(new ByteArrayInputStream(expression.getBytes())).start();
+		} catch(ParseException e){
+		   throw new IllegalArgumentException("Syntax error in filter expression", e);
+		}
 	}
 }
 	
