@@ -12,9 +12,14 @@ package org.mule.module.magento;
 
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
-import org.mule.module.magento.api.AxisFaultExceptionHandler;
+import org.mule.module.magento.api.AxisPortProvider;
 import org.mule.module.magento.api.DefaultAxisPortProvider;
+import org.mule.module.magento.api.MagentoClientAdaptor;
 import org.mule.module.magento.api.MagentoException;
+import org.mule.module.magento.api.customer.AxisMagentoInventoryClient;
+import org.mule.module.magento.api.customer.MagentoInventoryClient;
+import org.mule.module.magento.api.inventory.AxisMagentoCustomerClient;
+import org.mule.module.magento.api.inventory.MagentoCustomerClient;
 import org.mule.module.magento.api.order.AxisMagentoOrderClient;
 import org.mule.module.magento.api.order.MagentoOrderClient;
 import org.mule.module.magento.api.order.model.Carrier;
@@ -30,6 +35,7 @@ import java.util.Map;
  * A Cloud Connector for the Magento Order Sales API.
  * 
  * @author eberman
+ * @author flbulgarelli
  */
 @Connector(namespacePrefix = "magento", namespaceUri = "http://www.mulesoft.org/schema/mule/magento")
 public class MagentoCloudConnector implements Initialisable
@@ -44,6 +50,8 @@ public class MagentoCloudConnector implements Initialisable
     private String address;
 
     private MagentoOrderClient<MagentoException> orderClient;
+    private MagentoCustomerClient<Map<String, String>, List<Map<String, Object>>, MagentoException> customerClient;
+    private MagentoInventoryClient<List<Map<String, Object>>, MagentoException> inventoryClient;
 
     public String getUsername()
     {
@@ -77,21 +85,32 @@ public class MagentoCloudConnector implements Initialisable
 
     public void initialise() throws InitialisationException
     {
+        PortProviderInitializer initializer = new PortProviderInitializer();
         if (orderClient == null)
         {
-            setOrderClient(AxisFaultExceptionHandler.handleFaults(MagentoOrderClient.class,
-                new AxisMagentoOrderClient(new DefaultAxisPortProvider(username, password, address))));
+            setOrderClient(MagentoClientAdaptor.adapt(MagentoOrderClient.class, new AxisMagentoOrderClient(
+                initializer.getPorProvider())));
+        }
+        if (customerClient == null)
+        {
+            setCustomerClient(MagentoClientAdaptor.adapt(MagentoCustomerClient.class,
+                new AxisMagentoCustomerClient(initializer.getPorProvider())));
+        }
+        if (inventoryClient == null)
+        {
+            setInventoryClient(MagentoClientAdaptor.adapt(MagentoInventoryClient.class,
+                new AxisMagentoInventoryClient(initializer.getPorProvider())));
         }
     }
 
     @Operation
     public int addOrderShipmentComment(@Parameter String shipmentId,
-                                       @Parameter(optional = true) String comment,
+                                       @Parameter String comment,
                                        @Parameter(optional = true, defaultValue = "false") boolean sendEmail,
                                        @Parameter(optional = true, defaultValue = "false") boolean includeCommentInEmail)
 
     {
-        return orderClient.addShipmentComment(shipmentId, comment, sendEmail, includeCommentInEmail);
+        return orderClient.addOrderShipmentComment(shipmentId, comment, sendEmail, includeCommentInEmail);
     }
 
     @Operation
@@ -100,13 +119,13 @@ public class MagentoCloudConnector implements Initialisable
                                      @Parameter String title,
                                      @Parameter String trackId)
     {
-        return orderClient.addShipmentTrack(shipmentId, carrier, title, trackId);
+        return orderClient.addOrderShipmentTrack(shipmentId, carrier, title, trackId);
     }
 
     @Operation
     public boolean cancelOrder(@Parameter String orderId)
     {
-        return orderClient.cancel(orderId);
+        return orderClient.cancelOrder(orderId);
     }
 
     @Operation
@@ -117,64 +136,65 @@ public class MagentoCloudConnector implements Initialisable
                                       @Parameter(optional = true, defaultValue = "false") boolean includeCommentInEmail)
 
     {
-        return orderClient.createShipment(orderId, itemsQuantities, comment, sendEmail, includeCommentInEmail);
+        return orderClient.createOrderShipment(orderId, itemsQuantities, comment, sendEmail,
+            includeCommentInEmail);
     }
 
     @Operation
-    public Map<String, Object> getOrderInfo(@Parameter String orderId)
+    public Map<String, Object> getOrder(@Parameter String orderId)
     {
-        return orderClient.getInfo(orderId);
+        return orderClient.getOrder(orderId);
     }
 
     @Operation
-    public Map<String, Object> getOrderInvoiceInfo(@Parameter String invoiceId)
+    public Map<String, Object> getOrderInvoice(@Parameter String invoiceId)
     {
-        return orderClient.getInvoiceInfo(invoiceId);
+        return orderClient.getOrderInvoice(invoiceId);
     }
 
     @Operation
     public List<Carrier> getOrderShipmentCarriers(@Parameter String orderId)
     {
-        return orderClient.getShipmentCarriers(orderId);
+        return orderClient.getOrderShipmentCarriers(orderId);
     }
 
     @Operation
-    public Map<String, Object> getOrderShipmentInfo(@Parameter String shipmentId)
+    public Map<String, Object> getOrderShipment(@Parameter String shipmentId)
     {
-        return orderClient.getShipmentInfo(shipmentId);
+        return orderClient.getOrderShipment(shipmentId);
     }
 
     @Operation
     public boolean holdOrder(@Parameter String orderId)
     {
-        return orderClient.hold(orderId);
+        return orderClient.holdOrder(orderId);
     }
 
     @Operation
     public List<Map<String, Object>> listOrders(@Parameter(optional = true) String filter)
     {
-        return orderClient.list(filter);
+        return orderClient.listOrders(filter);
     }
 
     @Operation
     public List<Map<String, Object>> listOrdersInvoices(@Parameter(optional = true) String filter)
 
     {
-        return orderClient.listInvoices(filter);
+        return orderClient.listOrdersInvoices(filter);
     }
 
     @Operation
     public List<Map<String, Object>> listOrdersShipments(@Parameter(optional = true) String filter)
 
     {
-        return orderClient.listShipments(filter);
+        return orderClient.listOrdersShipments(filter);
     }
 
     @Operation
-    public int removeOrdersShipmentTrack(@Parameter String shipmentId, @Parameter String trackId)
+    public int removeOrderShipmentTrack(@Parameter String shipmentId, @Parameter String trackId)
 
     {
-        return orderClient.removeShipmentTrack(shipmentId, trackId);
+        return orderClient.removeOrderShipmentTrack(shipmentId, trackId);
     }
 
     @Operation
@@ -184,13 +204,13 @@ public class MagentoCloudConnector implements Initialisable
                                    @Parameter(optional = true, defaultValue = "false") boolean sendEmail)
 
     {
-        return orderClient.addComment(orderId, status, comment, sendEmail);
+        return orderClient.addOrderComment(orderId, status, comment, sendEmail);
     }
 
     @Operation
     public boolean unholdOrder(@Parameter String orderId)
     {
-        return orderClient.unhold(orderId);
+        return orderClient.unholdOrder(orderId);
     }
 
     @Operation
@@ -201,43 +221,136 @@ public class MagentoCloudConnector implements Initialisable
                                      @Parameter(optional = true, defaultValue = "false") boolean includeCommentInEmail)
 
     {
-        return orderClient.createInvoice(orderId, itemsQuantities, comment, sendEmail, includeCommentInEmail);
+        return orderClient.createOrderInvoice(orderId, itemsQuantities, comment, sendEmail,
+            includeCommentInEmail);
     }
 
     @Operation
     public String addOrderInvoiceComment(@Parameter String invoiceId,
-                                         @Parameter(optional = true) String comment,
+                                         @Parameter String comment,
                                          @Parameter(optional = true, defaultValue = "false") boolean sendEmail,
                                          @Parameter(optional = true, defaultValue = "false") boolean includeCommentInEmail)
 
     {
-        return orderClient.addInvoiceComment(invoiceId, comment, sendEmail, includeCommentInEmail);
+        return orderClient.addOrderInvoiceComment(invoiceId, comment, sendEmail, includeCommentInEmail);
     }
 
     @Operation
     public boolean captureOrderInvoice(@Parameter String invoiceId)
     {
-        return orderClient.captureInvoice(invoiceId);
+        return orderClient.captureOrderInvoice(invoiceId);
     }
 
     @Operation
     public String voidOrderInvoice(@Parameter String invoiceId)
     {
-        return orderClient.voidInvoice(invoiceId);
+        return orderClient.voidOrderInvoice(invoiceId);
     }
 
     @Operation
     public String cancelOrderInvoice(@Parameter String invoiceId)
     {
-        return orderClient.cancelInvoiceOrder(invoiceId);
+        return orderClient.cancelOrderInvoice(invoiceId);
+    }
+
+    @Operation
+    public int createCusomerAddress(int customerId, Map<String, Object> attributes) throws MagentoException
+    {
+        return customerClient.createCusomerAddress(customerId, attributes);
+    }
+
+    @Operation
+    public int createCustomer(Map<String, Object> attributes) throws MagentoException
+    {
+        return customerClient.createCustomer(attributes);
+    }
+
+    @Operation
+    public boolean deleteCustomer(int customerId) throws MagentoException
+    {
+        return customerClient.deleteCustomer(customerId);
+    }
+
+    @Operation
+    public boolean deleteCustomerAddress(int addressId) throws MagentoException
+    {
+        return customerClient.deleteCustomerAddress(addressId);
+    }
+
+    @Operation
+    public Map<String, String> getCustomer(int customerId, List<String> attributeNames)
+        throws MagentoException
+    {
+        return customerClient.getCustomer(customerId, attributeNames);
+    }
+
+    @Operation
+    public Map<String, String> getCustomerAddress(int addressId) throws MagentoException
+    {
+        return customerClient.getCustomerAddress(addressId);
+    }
+
+    @Operation
+    public List<Map<String, Object>> listCustomerAddresses(int customerId) throws MagentoException
+    {
+        return customerClient.listCustomerAddresses(customerId);
+    }
+
+    @Operation
+    public List<Map<String, Object>> listCustomerGroups() throws MagentoException
+    {
+        return customerClient.listCustomerGroups();
+    }
+
+    @Operation
+    public List<Map<String, Object>> listCustomers(String filters) throws MagentoException
+    {
+        return customerClient.listCustomers(filters);
+    }
+
+    @Operation
+    public boolean updateCustomer(int customerId, Map<String, Object> attributes) throws MagentoException
+    {
+        return customerClient.updateCustomer(customerId, attributes);
+    }
+
+    @Operation
+    public boolean updateCustomerAddress(int addressId, Map<String, Object> addressData)
+        throws MagentoException
+    {
+        return customerClient.updateCustomerAddress(addressId, addressData);
     }
 
     @SuppressWarnings("unchecked")
     public void setOrderClient(MagentoOrderClient<?> magentoOrderClient)
     {
-        // hack for softening exceptions
         this.orderClient = (MagentoOrderClient<MagentoException>) magentoOrderClient;
     }
 
+    @SuppressWarnings("unchecked")
+    public void setCustomerClient(MagentoCustomerClient<?, ?, ?> customerClient)
+    {
+        this.customerClient = (MagentoCustomerClient<Map<String, String>, List<Map<String, Object>>, MagentoException>) customerClient;
+    }
+
+    @SuppressWarnings("unchecked")
+    public void setInventoryClient(MagentoInventoryClient<?, ?> inventoryClient)
+    {
+        this.inventoryClient = (MagentoInventoryClient<List<Map<String, Object>>, MagentoException>) inventoryClient;
+    }
+
     // TODO ids shoudl be integrals
+    private class PortProviderInitializer
+    {
+        private DefaultAxisPortProvider provider;
+
+        public AxisPortProvider getPorProvider()
+        {
+            if (provider != null)
+            {
+                provider = new DefaultAxisPortProvider(username, password, address);
+            }
+            return provider;
+        }
+    }
 }

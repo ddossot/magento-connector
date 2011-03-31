@@ -23,46 +23,33 @@ import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.Validate;
+import static org.apache.commons.lang.BooleanUtils.*;
 
-public class AxisMagentoInventoryClient extends AbstractMagentoClient implements MagentoInventoryClient
+public class AxisMagentoInventoryClient extends AbstractMagentoClient
+    implements MagentoInventoryClient<Object[], RemoteException>
 {
     public AxisMagentoInventoryClient(AxisPortProvider provider)
     {
         super(provider);
     }
 
-    /**
-     * Retrieve stock data by product ids
-     * 
-     * @param productIds not empty
-     * @return a list of stock items properties
-     * @throws RemoteException
-     */
-    public List<Map<String, Object>> listStockItems(@NotNull List<String> productIds) throws RemoteException
+    public Object[] listStockItems(@NotNull List<String> productIdsOrSkus) throws RemoteException
     {
-        Validate.notNull(productIds);
-        Validate.notEmpty(productIds);
-        return toMap(getPort().catalogInventoryStockItemList(getSessionId(),
-            toArray(productIds, String.class)));
+        Validate.notNull(productIdsOrSkus);
+        Validate.notEmpty(productIdsOrSkus);
+        return getPort().catalogInventoryStockItemList(getSessionId(),
+            toArray(productIdsOrSkus, String.class));
     }
 
-    /**
-     * Update product stock data
-     * 
-     * @param productId
-     * @param data
-     * @return TODO
-     * @throws RemoteException
-     */
-    public Map<String, Object> updateStockItem(@NotNull String productId,
-                                               @NotNull Map<String, Object> attributes)
+    public boolean updateStockItem(@NotNull String productIdOrSkus, @NotNull Map<String, Object> attributes)
         throws RemoteException
     {
-        Validate.notNull(productId);
-        // //FIXME not clear if it updates a whole item or the full list
-        return toMap(getPort().catalogInventoryStockItemUpdate(getSessionId(), productId,
+        Validate.notNull(productIdOrSkus);
+        Validate.notNull(attributes);
+        return toBoolean(getPort().catalogInventoryStockItemUpdate(getSessionId(), productIdOrSkus,
             fromMap(CatalogInventoryStockItemUpdateEntity.class, attributes)));
     }
 

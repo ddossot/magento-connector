@@ -19,28 +19,29 @@ import org.apache.axis.AxisFault;
 import org.apache.commons.lang.Validate;
 
 /**
- * An utility class for creating proxies that handle {@link AxisFault}s and convert
- * them into {@link MagentoException}s
+ * An utility class for creating proxies that handle {@link AxisFault}s by converting
+ * them into {@link MagentoException}s, and return Maps of objects instead of magento
+ * objects
  */
-public final class AxisFaultExceptionHandler
+public final class MagentoClientAdaptor
 {
 
-    private AxisFaultExceptionHandler()
+    private MagentoClientAdaptor()
     {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> T handleFaults(Class<T> receptorClass, final T receptor)
+    public static <T> T adapt(Class<T> receptorClass, final T receptor)
     {
         Validate.isTrue(receptorClass.isInterface());
-        return (T) Proxy.newProxyInstance(AxisFaultExceptionHandler.class.getClassLoader(),
+        return (T) Proxy.newProxyInstance(MagentoClientAdaptor.class.getClassLoader(),
             new Class[]{receptorClass}, new InvocationHandler()
             {
                 public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
                 {
                     try
                     {
-                        return method.invoke(receptor, args);
+                        return new MagentoMap(new Holder(method.invoke(receptor, args))).get("value");
                     }
                     catch (InvocationTargetException e)
                     {
@@ -51,6 +52,7 @@ public final class AxisFaultExceptionHandler
                         throw e;
                     }
                 }
+
             });
     }
 
@@ -58,6 +60,21 @@ public final class AxisFaultExceptionHandler
     {
         return new MagentoException( //
             Integer.parseInt(fault.getFaultCode().toString()), fault.getFaultString(), fault);
+    }
+
+    public static class Holder
+    {
+        private Object value;
+
+        public Holder(Object value)
+        {
+            this.value = value;
+        }
+
+        public Object getValue()
+        {
+            return value;
+        }
     }
 
 }

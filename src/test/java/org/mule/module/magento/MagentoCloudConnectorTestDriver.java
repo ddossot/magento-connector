@@ -59,9 +59,9 @@ public class MagentoCloudConnectorTestDriver
      * Tests getting information of an existent order
      */
     @Test
-    public void getOrderInfo() throws Exception
+    public void getOrder() throws Exception
     {
-        Map<String, Object> orderInfo = connector.getOrderInfo(ORDER_ID);
+        Map<String, Object> orderInfo = connector.getOrder(ORDER_ID);
         assertNotNull(orderInfo);
         System.out.println(ToStringBuilder.reflectionToString(orderInfo));
     }
@@ -85,9 +85,9 @@ public class MagentoCloudConnectorTestDriver
      * Tests getting an order that does not exists
      */
     @Test(expected = MagentoException.class)
-    public void getOrderInfoInexistent()
+    public void getOrderInexistent()
     {
-        connector.getOrderInfo("899966");
+        connector.getOrder("899966");
     }
 
 }

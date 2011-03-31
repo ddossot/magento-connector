@@ -10,11 +10,15 @@
 
 package org.mule.module.magento.api;
 
+import static org.apache.commons.lang.BooleanUtils.toIntegerObject;
+
 import org.mule.module.magento.api.internal.Mage_Api_Model_Server_V2_HandlerPortType;
 
 import java.lang.reflect.Array;
 import java.rmi.RemoteException;
 import java.util.Collection;
+
+import org.apache.commons.lang.BooleanUtils;
 
 /**
  * Base class for all Magento clients. Magento clients follow the following
@@ -53,6 +57,16 @@ public abstract class AbstractMagentoClient
     protected static <T> T[] toArray(Collection<T> collection, Class<T> clazz)
     {
         return collection.toArray((T[]) Array.newInstance(clazz, collection.size()));
+    }
+
+    protected static String toIntegerString(boolean value)
+    {
+        return toIntegerObject(value).toString();
+    }
+
+    protected static boolean fromIntegerString(String value)
+    {
+        return BooleanUtils.toBoolean(Integer.parseInt(value));
     }
 
 }

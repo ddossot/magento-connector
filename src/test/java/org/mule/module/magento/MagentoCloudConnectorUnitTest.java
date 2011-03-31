@@ -18,7 +18,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.mule.module.magento.api.AxisFaultExceptionHandler;
+import org.mule.module.magento.api.MagentoClientAdaptor;
 import org.mule.module.magento.api.AxisPortProvider;
 import org.mule.module.magento.api.internal.AssociativeEntity;
 import org.mule.module.magento.api.internal.ComplexFilter;
@@ -51,7 +51,7 @@ public class MagentoCloudConnectorUnitTest
         connector = new MagentoCloudConnector();
         portProvider = mock(AxisPortProvider.class);
         port = mock(Mage_Api_Model_Server_V2_HandlerPortType.class);
-        connector.setOrderClient(AxisFaultExceptionHandler.handleFaults(MagentoOrderClient.class,
+        connector.setOrderClient(MagentoClientAdaptor.adapt(MagentoOrderClient.class,
             new AxisMagentoOrderClient(portProvider)));
         connector.initialise();
         when(portProvider.getPort()).thenReturn(port);
@@ -79,7 +79,7 @@ public class MagentoCloudConnectorUnitTest
     public void testSalesOrderInfo() throws Exception
     {
         when(port.salesOrderInfo(anyString(), eq(ORDER_ID))).thenReturn(new SalesOrderEntity());
-        connector.getOrderInfo(ORDER_ID);
+        connector.getOrder(ORDER_ID);
     }
 
     @Test

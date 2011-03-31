@@ -10,10 +10,34 @@
 
 package org.mule.module.magento.api.customer;
 
-public interface MagentoInventoryClient
+import java.rmi.RemoteException;
+import java.util.List;
+import java.util.Map;
+
+import javax.validation.constraints.NotNull;
+
+public interface MagentoInventoryClient<AttributesCollectionType, ExceptionType extends Exception>
 {
 
+    /**
+     * Retrieve stock data by product ids
+     * 
+     * @param productIdsOrSkus not empty
+     * @return a list of stock items attributes
+     * @throws RemoteException
+     */
+    public AttributesCollectionType listStockItems(@NotNull List<String> productIdsOrSkus)
+        throws RemoteException;
+
+    /**
+     * Update product stock data given its id or sku
+     * 
+     * @param productIdOrSkus a list
+     * @param the attributes to update of the given product
+     * @return if the product was effectively updated TODO verify
+     * @throws RemoteException
+     */
+    public boolean updateStockItem(@NotNull String productIdOrSkus, @NotNull Map<String, Object> attributes)
+        throws RemoteException;
 
 }
-
-

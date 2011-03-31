@@ -49,17 +49,32 @@ public class MagentoMap extends BeanMap
 
     private Object transformValue(Object value, Class<?> valueClazz)
     {
-        if (value.getClass().isArray() && isMagentoClass(valueClazz.getComponentType()))
+        if (isMagentoArray(value, valueClazz))
         {
             return toMap((Object[]) value);
         }
-        if (!value.getClass().isArray() && isMagentoClass(valueClazz))
+        if (isMagentoObject(value, valueClazz))
         {
             return toMap(value);
         }
         return value;
     }
 
+    private boolean isMagentoObject(Object value, Class<?> valueClazz)
+    {
+        return !value.getClass().isArray() && isMagentoClass(valueClazz);
+    }
+
+    private boolean isMagentoArray(Object value, Class<?> valueClazz)
+    {
+        return value.getClass().isArray() && isMagentoClass(valueClazz.getComponentType());
+    }
+    
+    private static boolean isMagentoClass(Class<?> clazz)
+    {
+        return clazz.getPackage().equals(MAGENTO_PACKAGE);
+    }
+    
     @SuppressWarnings("unchecked")
     public static Map<String, Object> toMap(Object magentoObject)
     {
@@ -73,10 +88,6 @@ public class MagentoMap extends BeanMap
         return (List<Map<String, Object>>) CollectionUtils.collect(Arrays.asList(magentoObjects), TO_MAP);
     }
 
-    private static boolean isMagentoClass(Class<?> clazz)
-    {
-        return clazz.getPackage().equals(MAGENTO_PACKAGE);
-    }
 
     private static final class ToMapTransformer implements Transformer
     {

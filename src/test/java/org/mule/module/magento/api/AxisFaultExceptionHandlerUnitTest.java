@@ -24,12 +24,12 @@ import org.junit.Test;
 import org.w3c.dom.Element;
 
 /**
- * Test for {@link AxisFaultExceptionHandler}
+ * Test for {@link MagentoClientAdaptor}
  */
 public class AxisFaultExceptionHandlerUnitTest
 {
     private static final String MESSAGE = "Ups!";
-    private FooBar handled = AxisFaultExceptionHandler.handleFaults(FooBar.class, new FooBarImp());
+    private FooBar handled = MagentoClientAdaptor.adapt(FooBar.class, new FooBarImp());
 
     @Test
     public void testHandleException() throws Exception

@@ -10,16 +10,16 @@
 
 package org.mule.module.magento.api.inventory;
 
+import static org.mule.module.magento.api.MagentoMap.fromMap;
+import static org.mule.module.magento.filters.FiltersParser.parse;
+
 import org.mule.module.magento.api.AbstractMagentoClient;
 import org.mule.module.magento.api.AxisPortProvider;
 import org.mule.module.magento.api.MagentoMap;
 import org.mule.module.magento.api.internal.CustomerAddressEntityCreate;
-import org.mule.module.magento.api.internal.CustomerCustomerEntity;
 import org.mule.module.magento.api.internal.CustomerCustomerEntityToCreate;
-import org.mule.module.magento.api.internal.Filters;
 
 import java.rmi.RemoteException;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -27,10 +27,8 @@ import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang.Validate;
 
-import static org.mule.module.magento.api.MagentoMap.*;
-import static org.mule.module.magento.filters.FiltersParser.*;
-
-public class AxisMagentoCustomerClient extends AbstractMagentoClient implements MagentoCustomerClient
+public class AxisMagentoCustomerClient extends AbstractMagentoClient
+    implements MagentoCustomerClient<Object, Object[], RemoteException>
 {
     // TODO creation operation return ids?
 
@@ -75,12 +73,12 @@ public class AxisMagentoCustomerClient extends AbstractMagentoClient implements 
      * @throws RemoteException
      */
     @NotNull
-    public Map<String, Object> getCustomer(int customerId, @NotNull Collection<String> attributeNames)
+    public Object getCustomer(int customerId, @NotNull List<String> attributeNames)
         throws RemoteException
     {
         Validate.notEmpty(attributeNames);
-        return toMap(getPort().customerCustomerInfo(getSessionId(), customerId,
-            toArray(attributeNames, String.class)));
+        return getPort().customerCustomerInfo(getSessionId(), customerId,
+            toArray(attributeNames, String.class));
     }
 
     /**
@@ -91,9 +89,9 @@ public class AxisMagentoCustomerClient extends AbstractMagentoClient implements 
      * @throws RemoteException
      */
     @NotNull
-    public List<Map<String, Object>> listCustomers(String filters) throws RemoteException
+    public Object[] listCustomers(String filters) throws RemoteException
     {
-        return toMap(getPort().customerCustomerList(getSessionId(), parse(filters)));
+        return getPort().customerCustomerList(getSessionId(), parse(filters));
     }
 
     /**
@@ -133,24 +131,25 @@ public class AxisMagentoCustomerClient extends AbstractMagentoClient implements 
         return getPort().customerAddressDelete(getSessionId(), addressId);
     }
 
-    public Map<String, Object> getCustomerAddress(int addressId) throws RemoteException
+    public Object getCustomerAddress(int addressId) throws RemoteException
     {
-        return toMap(getPort().customerAddressInfo(getSessionId(), addressId));
+        return getPort().customerAddressInfo(getSessionId(), addressId);
     }
 
-//  TODO  public boolean listCustomerAddresses(int customerId) throws RemoteException
-//    {
-//        return getPort().customerAddressList(getSessionId(), customerId);
-//    }
-//
-//    public void updateCustomerAddress(int addressId, CustomerAddressEntityCreate addressData)
-//        throws RemoteException
-//    {
-//        return getPort().customerAddressUpdate(getSessionId(), addressId, addressData);
-//    }
-//
-//    public void listCustomerGroups() throws RemoteException
-//    {
-//        return getPort().customerGroupList(getSessionId());
-//    }
+    public Object[] listCustomerAddresses(int customerId) throws RemoteException
+    {
+        return getPort().customerAddressList(getSessionId(), customerId);
+    }
+
+    public boolean updateCustomerAddress(int addressId, Map<String, Object> attributes)
+        throws RemoteException
+    {
+        return getPort().customerAddressUpdate(getSessionId(), addressId,
+            fromMap(CustomerAddressEntityCreate.class, attributes));
+    }
+
+    public Object[] listCustomerGroups() throws RemoteException
+    {
+        return getPort().customerGroupList(getSessionId());
+    }
 }

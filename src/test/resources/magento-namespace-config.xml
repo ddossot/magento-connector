@@ -32,7 +32,7 @@
 	<flow name="MagentoOrderInfo">
 		<inbound-endpoint address="vm://getSalesOrderInfo"
 			exchange-pattern="request-response" />
-		<magento:get-order-info orderId="#[map-payload:orderId]"
+		<magento:get-order orderId="#[map-payload:orderId]"
 			config-ref="MagentoTest" />
 	</flow>
 
@@ -74,7 +74,7 @@
 	<flow name="MagentoOrderShipmentInfo">
 		<inbound-endpoint address="vm://getSalesOrderShipmentInfo"
 			exchange-pattern="request-response" />
-		<magento:get-order-shipment-info
+		<magento:get-order-shipment
 			shipmentId="#[map-payload:orderShipmentId]" config-ref="MagentoTest" />
 	</flow>
 
@@ -108,15 +108,35 @@
 	<flow name="MagentoRemoveOrdersShipmentTrack">
 		<inbound-endpoint address="vm://removeOrdersShipmentTrack"
 			exchange-pattern="request-response" />
-		<magento:remove-orders-shipment-track
+		<magento:remove-order-shipment-track
 			shipmentId="#[map-payload:shipmentId]" trackId="#[map-payload:trackId]" />
 	</flow>
+	
+	<flow name="MagentoAddOrderShipmentComment">
+		<inbound-endpoint address="vm://addOrderShipmentComment"
+			exchange-pattern="request-response" />
+		<magento:add-order-shipment-comment
+			shipmentId="#[map-payload:shipmentId]" 
+			comment="#[map-payload:comment]" />
+	</flow>
+	
+	<flow name="MagentoAddOrderInvoiceComment">
+		<inbound-endpoint address="vm://addOrderInvoiceComment"
+			exchange-pattern="request-response" />
+		<magento:add-order-invoice-comment
+			invoiceId="#[map-payload:shipmentId]" 
+			comment="#[map-payload:comment]" />
+	</flow>
+	
+	<flow name="MagentoVoidOrderInvoice">
+		<inbound-endpoint address="vm://voidOrderInvoice"
+			exchange-pattern="request-response" />
+		<magento:void-order-invoice
+			invoiceId="#[map-payload:invoiceId]"  />
+	</flow>
 <!-- TODO
-AddOrderShipmentCommentOperationDefinitionParser	
-CreateOrderInvoiceOperationDefinitionParser	
-AddOrderInvoiceCommentOperationDefinitionParser	
+	
 CaptureOrderInvoiceOperationDefinitionParser	
-VoidOrderInvoiceOperationDefinitionParser	
 GetOrderInvoiceInfoOperationDefinitionParser	
 CancelOrderInvoiceOperationDefinitionParser	
 GetOrderShipmentCarriersOperationDefinitionParser
