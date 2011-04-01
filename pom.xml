@@ -310,19 +310,20 @@
         </developerConnection>
         <url>http://github.com/mulesoft/magento-connector</url>
     </scm>
-
     <distributionManagement>
         <repository>
-            <id>muleforge.webdav.releases</id>
+            <id>muleforge-releases</id>
+            <name>MuleForge Snapshot Repository</name>
             <url>dav:https://repository.muleforge.org/release/</url>
         </repository>
         <snapshotRepository>
-            <id>muleforge.webdav.snapshots</id>
+            <id>muleforge-snapshots</id>
+            <name>MuleForge Repository</name>
             <url>dav:https://repository.muleforge.org/snapshot/</url>
             <uniqueVersion>false</uniqueVersion>
         </snapshotRepository>
     </distributionManagement>
-    
+
     <repositories>
         <repository>
             <id>codehaus-repo</id>
