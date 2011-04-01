@@ -65,6 +65,13 @@ Here is detailed list of all the configuration attributes:
 
 
 
+
+
+
+
+
+
+
 Add Order Shipment Comment
 --------------------------
 
@@ -76,6 +83,8 @@ Add Order Shipment Comment
 |sendEmail||yes|false|
 |includeCommentInEmail||yes|false|
 
+
+
 Add Order Shipment Track
 ------------------------
 
@@ -83,9 +92,11 @@ Add Order Shipment Track
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |shipmentId||no||
-|carrier||no||
+|carrierCode||no||
 |title||no||
 |trackId||no||
+
+
 
 Cancel Order
 ------------
@@ -94,6 +105,8 @@ Cancel Order
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |orderId||no||
+
+
 
 Create Order Shipment
 ---------------------
@@ -107,6 +120,8 @@ Create Order Shipment
 |sendEmail||yes|false|
 |includeCommentInEmail||yes|false|
 
+
+
 Get Order
 ---------
 
@@ -114,6 +129,8 @@ Get Order
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |orderId||no||
+
+
 
 Get Order Invoice
 -----------------
@@ -123,6 +140,8 @@ Get Order Invoice
 |config-ref|Specify which configuration to use for this invocation|yes||
 |invoiceId||no||
 
+
+
 Get Order Shipment Carriers
 ---------------------------
 
@@ -130,6 +149,8 @@ Get Order Shipment Carriers
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |orderId||no||
+
+
 
 Get Order Shipment
 ------------------
@@ -139,6 +160,8 @@ Get Order Shipment
 |config-ref|Specify which configuration to use for this invocation|yes||
 |shipmentId||no||
 
+
+
 Hold Order
 ----------
 
@@ -146,6 +169,8 @@ Hold Order
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |orderId||no||
+
+
 
 List Orders
 -----------
@@ -155,6 +180,8 @@ List Orders
 |config-ref|Specify which configuration to use for this invocation|yes||
 |filter||yes||
 
+
+
 List Orders Invoices
 --------------------
 
@@ -162,6 +189,8 @@ List Orders Invoices
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |filter||yes||
+
+
 
 List Orders Shipments
 ---------------------
@@ -171,6 +200,8 @@ List Orders Shipments
 |config-ref|Specify which configuration to use for this invocation|yes||
 |filter||yes||
 
+
+
 Delete Order Shipment Track
 ---------------------------
 
@@ -179,6 +210,8 @@ Delete Order Shipment Track
 |config-ref|Specify which configuration to use for this invocation|yes||
 |shipmentId||no||
 |trackId||no||
+
+
 
 Add Order Comment
 -----------------
@@ -191,6 +224,8 @@ Add Order Comment
 |comment||no||
 |sendEmail||yes|false|
 
+
+
 Unhold Order
 ------------
 
@@ -198,6 +233,8 @@ Unhold Order
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |orderId||no||
+
+
 
 Create Order Invoice
 --------------------
@@ -211,6 +248,8 @@ Create Order Invoice
 |sendEmail||yes|false|
 |includeCommentInEmail||yes|false|
 
+
+
 Add Order Invoice Comment
 -------------------------
 
@@ -222,6 +261,8 @@ Add Order Invoice Comment
 |sendEmail||yes|false|
 |includeCommentInEmail||yes|false|
 
+
+
 Capture Order Invoice
 ---------------------
 
@@ -229,6 +270,8 @@ Capture Order Invoice
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |invoiceId||no||
+
+
 
 Void Order Invoice
 ------------------
@@ -238,6 +281,8 @@ Void Order Invoice
 |config-ref|Specify which configuration to use for this invocation|yes||
 |invoiceId||no||
 
+
+
 Cancel Order Invoice
 --------------------
 
@@ -246,14 +291,18 @@ Cancel Order Invoice
 |config-ref|Specify which configuration to use for this invocation|yes||
 |invoiceId||no||
 
-Create Cusomer Address
-----------------------
+
+
+Create Customer Address
+-----------------------
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |customerId||no||
 |attributes||no||
+
+
 
 Create Customer
 ---------------
@@ -263,6 +312,8 @@ Create Customer
 |config-ref|Specify which configuration to use for this invocation|yes||
 |attributes||no||
 
+
+
 Delete Customer
 ---------------
 
@@ -271,6 +322,8 @@ Delete Customer
 |config-ref|Specify which configuration to use for this invocation|yes||
 |customerId||no||
 
+
+
 Delete Customer Address
 -----------------------
 
@@ -278,6 +331,8 @@ Delete Customer Address
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |addressId||no||
+
+
 
 Get Customer
 ------------
@@ -288,6 +343,8 @@ Get Customer
 |customerId||no||
 |attributeNames||no||
 
+
+
 Get Customer Address
 --------------------
 
@@ -295,6 +352,8 @@ Get Customer Address
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |addressId||no||
+
+
 
 List Customer Addresses
 -----------------------
@@ -304,12 +363,16 @@ List Customer Addresses
 |config-ref|Specify which configuration to use for this invocation|yes||
 |customerId||no||
 
+
+
 List Customer Groups
 --------------------
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
+
+
 
 List Customers
 --------------
@@ -318,6 +381,8 @@ List Customers
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |filters||no||
+
+
 
 Update Customer
 ---------------
@@ -328,6 +393,8 @@ Update Customer
 |customerId||no||
 |attributes||no||
 
+
+
 Update Customer Address
 -----------------------
 
@@ -336,6 +403,320 @@ Update Customer Address
 |config-ref|Specify which configuration to use for this invocation|yes||
 |addressId||no||
 |addressData||no||
+
+
+
+List Stock Items
+----------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|productIdsOrSkus||no||
+
+
+
+Update Stock Item
+-----------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|productIdOrSku||no||
+|attributes||no||
+
+
+
+List Directory Countries
+------------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+
+
+
+List Directory Regions
+----------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|countryId||no||
+
+
+
+Assign Product Link
+-------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|type||no||
+|product||no||
+|linkedProduct||no||
+|attributes||no||
+|productIdentifierType||no||
+
+
+
+Create Product Attribute Media
+------------------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|product||no||
+|attributes||no||
+|storeView||no||
+|productIdentifierType||no||
+
+
+
+Delete Product Attribute Media
+------------------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|product||no||
+|file||no||
+|productIdentifierType||no||
+
+
+
+Delete Product Link
+-------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|type||no||
+|product||no||
+|linkedProduct||no||
+|productIdentifierType||no||
+
+
+
+
+
+Get Product Attribute Media
+---------------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|product||no||
+|file||no||
+|storeView||no||
+|productIdentifierType||no||
+
+
+
+
+
+
+
+List Category Attributes
+------------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+
+
+
+List Category Attributes Options
+--------------------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|attributeId||no||
+|storeView||no||
+
+
+
+List Product Attribute Media
+----------------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|product||no||
+|storeView||no||
+|productIdentifierType||no||
+
+
+
+List Product Attribute Media Types
+----------------------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|setId||no||
+
+
+
+List Product Attribute Options
+------------------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|attributeId||no||
+|storeView||no||
+
+
+
+List Product Attributes
+-----------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|setId||no||
+
+
+
+List Product Attribute Sets
+---------------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+
+
+
+List Product Attribute Tier Prices
+----------------------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|product||no||
+|productIdentifierType||no||
+
+
+
+List Product Link
+-----------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|type||no||
+|product||no||
+|productIdentifierType||no||
+
+
+
+List Product Link Attributes
+----------------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|type||no||
+
+
+
+List Product Link Types
+-----------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+
+
+
+List Product Types
+------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+
+
+
+Update Category Attribute Store View
+------------------------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|storeView||no||
+
+
+
+Update Product Attribute Media
+------------------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|product||no||
+|file||no||
+|attributes||no||
+|storeView||no||
+|productIdentifierType||no||
+
+
+
+Update Product Attribute Media Store View
+-----------------------------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|storeView||no||
+
+
+
+Update Product Attribute Store View
+-----------------------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|storeView||no||
+
+
+
+
+
+Update Product Link
+-------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|type||no||
+|product||no||
+|linkedProduct||no||
+|attributes||no||
+|productIdentifierType||no||
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
