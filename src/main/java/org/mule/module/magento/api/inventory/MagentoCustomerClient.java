@@ -25,17 +25,15 @@ public interface MagentoCustomerClient<AttributesType, AttributesCollectionType,
      * @return the new customer id
      * @throws ExceptionType
      */
-    public int createCustomer(@NotNull Map<String, Object> attributes) throws ExceptionType;
+    int createCustomer(@NotNull Map<String, Object> attributes) throws ExceptionType;
 
     /**
      * Deletes a customer given its id
      * 
      * @param customerId
-     * @return if the customer has effectively been deleted TODO verify this
-     *         postcondition
      * @throws ExceptionType
      */
-    public boolean deleteCustomer(int customerId) throws ExceptionType;
+    void deleteCustomer(int customerId) throws ExceptionType;
 
     /**
      * Answers customer attributes for the given id. Only the selected attributes are
@@ -47,8 +45,7 @@ public interface MagentoCustomerClient<AttributesType, AttributesCollectionType,
      * @throws ExceptionType
      */
     @NotNull
-    public AttributesType getCustomer(int customerId, @NotNull List<String> attributeNames)
-        throws ExceptionType;
+    AttributesType getCustomer(int customerId, @NotNull List<String> attributeNames) throws ExceptionType;
 
     /**
      * Answers a list of customer attributes for the given filter expression.
@@ -58,7 +55,7 @@ public interface MagentoCustomerClient<AttributesType, AttributesCollectionType,
      * @throws ExceptionType
      */
     @NotNull
-    public AttributesCollectionType listCustomers(String filters) throws ExceptionType;
+    AttributesCollectionType listCustomers(String filters) throws ExceptionType;
 
     /**
      * Updates the given customer attributes, for the given customer id. Password can
@@ -66,11 +63,9 @@ public interface MagentoCustomerClient<AttributesType, AttributesCollectionType,
      * 
      * @param customerId
      * @param attributes the attributes map
-     * @return if the customer attributes have been effectively updated
      * @throws ExceptionType
      */
-    public boolean updateCustomer(int customerId, @NotNull Map<String, Object> attributes)
-        throws ExceptionType;
+    void updateCustomer(int customerId, @NotNull Map<String, Object> attributes) throws ExceptionType;
 
     /**
      * Creates a new address for the given customer using the given address
@@ -81,18 +76,16 @@ public interface MagentoCustomerClient<AttributesType, AttributesCollectionType,
      * @return a new customer address id
      * @throws ExceptionType
      */
-    public int createCusomerAddress(int customerId, @NotNull Map<String, Object> attributes)
-        throws ExceptionType;
+    int createCustomerAddress(int customerId, @NotNull Map<String, Object> attributes) throws ExceptionType;
 
-    public boolean deleteCustomerAddress(int addressId) throws ExceptionType;
+    void deleteCustomerAddress(int addressId) throws ExceptionType;
 
-    public AttributesType getCustomerAddress(int addressId) throws ExceptionType;
+    AttributesType getCustomerAddress(int addressId) throws ExceptionType;
 
-    public AttributesCollectionType listCustomerAddresses(int customerId) throws ExceptionType;
+    AttributesCollectionType listCustomerAddresses(int customerId) throws ExceptionType;
 
-    public boolean updateCustomerAddress(int addressId, @NotNull Map<String, Object> addressData)
-        throws ExceptionType;
+    void updateCustomerAddress(int addressId, @NotNull Map<String, Object> addressData) throws ExceptionType;
 
-    public AttributesCollectionType listCustomerGroups() throws ExceptionType;
+    AttributesCollectionType listCustomerGroups() throws ExceptionType;
 
 }

@@ -10,8 +10,7 @@
 
 package org.mule.module.magento.api.customer;
 
-import static org.apache.commons.lang.BooleanUtils.toBoolean;
-import static org.mule.module.magento.api.MagentoMap.fromMap;
+import static org.mule.module.magento.api.util.MagentoObject.fromMap;
 
 import org.mule.module.magento.api.AbstractMagentoClient;
 import org.mule.module.magento.api.AxisPortProvider;
@@ -41,13 +40,13 @@ public class AxisMagentoInventoryClient extends AbstractMagentoClient
             toArray(productIdsOrSkus, String.class));
     }
 
-    public boolean updateStockItem(@NotNull String productIdOrSkus, @NotNull Map<String, Object> attributes)
+    public void updateStockItem(@NotNull String productIdOrSkus, @NotNull Map<String, Object> attributes)
         throws RemoteException
     {
         Validate.notNull(productIdOrSkus);
         Validate.notNull(attributes);
-        return toBoolean(getPort().catalogInventoryStockItemUpdate(getSessionId(), productIdOrSkus,
-            fromMap(CatalogInventoryStockItemUpdateEntity.class, attributes)));
+        getPort().catalogInventoryStockItemUpdate(getSessionId(), productIdOrSkus,
+            fromMap(CatalogInventoryStockItemUpdateEntity.class, attributes));
     }
 
 }

@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.module.magento.api;
+package org.mule.module.magento.api.util;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
@@ -17,6 +17,7 @@ import static org.junit.Assert.assertThat;
 
 import org.mule.module.magento.api.internal.SalesOrderEntity;
 import org.mule.module.magento.api.internal.SalesOrderStatusHistoryEntity;
+import org.mule.module.magento.api.util.MagentoMap;
 
 import java.util.List;
 import java.util.Map;

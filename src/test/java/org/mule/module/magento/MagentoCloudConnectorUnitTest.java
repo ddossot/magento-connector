@@ -212,5 +212,7 @@ public class MagentoCloudConnectorUnitTest
     {
         fail("Not yet implemented");
     }
+    
+    //TODO reflectively test all methods. It is a nonses to write individual tests for them all
 
 }

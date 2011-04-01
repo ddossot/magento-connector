@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
 /**
  * Test for {@link MagentoClientAdaptor}
  */
-public class AxisFaultExceptionHandlerUnitTest
+public class MagentoClientAdaptorUnitTest
 {
     private static final String MESSAGE = "Ups!";
     private FooBar handled = MagentoClientAdaptor.adapt(FooBar.class, new FooBarImp());

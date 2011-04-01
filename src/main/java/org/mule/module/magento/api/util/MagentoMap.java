@@ -8,7 +8,10 @@
  * LICENSE.txt file.
  */
 
-package org.mule.module.magento.api;
+package org.mule.module.magento.api.util;
+
+import static org.mule.module.magento.api.util.MagentoClass.isMagentoArrayClass;
+import static org.mule.module.magento.api.util.MagentoClass.isMagentoClass;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +21,6 @@ import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.lang.Validate;
-
 /**
  * A delayed map that converts a magento object into a map. The logic is the
  * following: Null attributes are converted into null - FIXME error prone -, arrays
@@ -28,7 +30,7 @@ import org.apache.commons.lang.Validate;
  */
 public class MagentoMap extends BeanMap
 {
-    private static final Package MAGENTO_PACKAGE = Package.getPackage("org.mule.module.magento.api.internal");
+    
     private static final Transformer TO_MAP = new ToMapTransformer();
 
     public MagentoMap(Object bean)
@@ -49,32 +51,17 @@ public class MagentoMap extends BeanMap
 
     private Object transformValue(Object value, Class<?> valueClazz)
     {
-        if (isMagentoArray(value, valueClazz))
+        if (isMagentoArrayClass(valueClazz))
         {
             return toMap((Object[]) value);
         }
-        if (isMagentoObject(value, valueClazz))
+        if (isMagentoClass(valueClazz))
         {
             return toMap(value);
         }
         return value;
     }
 
-    private boolean isMagentoObject(Object value, Class<?> valueClazz)
-    {
-        return !value.getClass().isArray() && isMagentoClass(valueClazz);
-    }
-
-    private boolean isMagentoArray(Object value, Class<?> valueClazz)
-    {
-        return value.getClass().isArray() && isMagentoClass(valueClazz.getComponentType());
-    }
-    
-    private static boolean isMagentoClass(Class<?> clazz)
-    {
-        return clazz.getPackage().equals(MAGENTO_PACKAGE);
-    }
-    
     @SuppressWarnings("unchecked")
     public static Map<String, Object> toMap(Object magentoObject)
     {
@@ -88,20 +75,12 @@ public class MagentoMap extends BeanMap
         return (List<Map<String, Object>>) CollectionUtils.collect(Arrays.asList(magentoObjects), TO_MAP);
     }
 
-
     private static final class ToMapTransformer implements Transformer
     {
         public Object transform(Object input)
         {
             return toMap(input);
         }
-    }
-
-    public static <T> T fromMap(Class<T> clazz, Map<String, Object> attributes)
-    {
-        // TODO type conversions? this map is formed by integers instead of booleans?
-        // TODO convert everything primitive into string?
-        throw new UnsupportedOperationException();
     }
 
 }

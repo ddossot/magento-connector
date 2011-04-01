@@ -22,22 +22,21 @@ public interface MagentoInventoryClient<AttributesCollectionType, ExceptionType 
     /**
      * Retrieve stock data by product ids
      * 
-     * @param productIdsOrSkus not empty
+     * @param productIdsOrSkus a not empty list of product ids or skus whose attributes to list
      * @return a list of stock items attributes
      * @throws RemoteException
      */
-    public AttributesCollectionType listStockItems(@NotNull List<String> productIdsOrSkus)
+    AttributesCollectionType listStockItems(@NotNull List<String> productIdsOrSkus)
         throws RemoteException;
 
     /**
      * Update product stock data given its id or sku
      * 
-     * @param productIdOrSkus a list
+     * @param productIdOrSku the product id or sku of the product to update
      * @param the attributes to update of the given product
-     * @return if the product was effectively updated TODO verify
      * @throws RemoteException
      */
-    public boolean updateStockItem(@NotNull String productIdOrSkus, @NotNull Map<String, Object> attributes)
+    void updateStockItem(@NotNull String productIdOrSku, @NotNull Map<String, Object> attributes)
         throws RemoteException;
 
 }

@@ -10,13 +10,18 @@
 
 package org.mule.module.magento;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import org.mule.module.magento.api.MagentoException;
 
+import java.rmi.RemoteException;
+import java.util.HashMap;
 import java.util.Map;
+
+import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.junit.Before;
@@ -25,6 +30,7 @@ import org.junit.Test;
 /**
  * Integration test of the {@link MagentoCloudConnector}
  */
+@SuppressWarnings("serial")
 public class MagentoCloudConnectorTestDriver
 {
     private static final String ORDER_ID = "100000001";
@@ -72,7 +78,7 @@ public class MagentoCloudConnectorTestDriver
     @Test
     public void addOrderComment() throws Exception
     {
-        assertTrue(connector.addOrderComment(ORDER_ID, "status", "A comment", false));
+        connector.addOrderComment(ORDER_ID, "status", "A comment", false);
     }
 
     @Test
@@ -88,6 +94,18 @@ public class MagentoCloudConnectorTestDriver
     public void getOrderInexistent()
     {
         connector.getOrder("899966");
+    }
+
+    @Test
+    public void updateStockItem() throws Exception
+    {
+        connector.updateStockItem("1", new HashMap<String, Object>()
+        {
+            {
+                put("manage_stock", "0");
+                put("use_config_manage_stock", "0");
+            }
+        });
     }
 
 }

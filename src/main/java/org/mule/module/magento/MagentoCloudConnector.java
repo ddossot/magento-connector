@@ -30,6 +30,7 @@ import org.mule.tools.cloudconnect.annotations.Operation;
 import org.mule.tools.cloudconnect.annotations.Parameter;
 import org.mule.tools.cloudconnect.annotations.Property;
 
+import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Map;
 
@@ -92,48 +93,48 @@ public class MagentoCloudConnector implements Initialisable
         if (orderClient == null)
         {
             setOrderClient(MagentoClientAdaptor.adapt(MagentoOrderClient.class, new AxisMagentoOrderClient(
-                initializer.getPorProvider())));
+                initializer.getPortProvider())));
         }
         if (customerClient == null)
         {
             setCustomerClient(MagentoClientAdaptor.adapt(MagentoCustomerClient.class,
-                new AxisMagentoCustomerClient(initializer.getPorProvider())));
+                new AxisMagentoCustomerClient(initializer.getPortProvider())));
         }
         if (inventoryClient == null)
         {
             setInventoryClient(MagentoClientAdaptor.adapt(MagentoInventoryClient.class,
-                new AxisMagentoInventoryClient(initializer.getPorProvider())));
+                new AxisMagentoInventoryClient(initializer.getPortProvider())));
         }
         if (directoryClient == null)
         {
             setDirectoryClient(MagentoClientAdaptor.adapt(MagentoDirectoryClient.class,
-                new AxisMagentoDirectoryClient(initializer.getPorProvider())));
+                new AxisMagentoDirectoryClient(initializer.getPortProvider())));
         }
     }
 
     @Operation
-    public int addOrderShipmentComment(@Parameter String shipmentId,
+    public void addOrderShipmentComment(@Parameter String shipmentId,
                                        @Parameter String comment,
                                        @Parameter(optional = true, defaultValue = "false") boolean sendEmail,
                                        @Parameter(optional = true, defaultValue = "false") boolean includeCommentInEmail)
 
     {
-        return orderClient.addOrderShipmentComment(shipmentId, comment, sendEmail, includeCommentInEmail);
+        orderClient.addOrderShipmentComment(shipmentId, comment, sendEmail, includeCommentInEmail);
     }
 
     @Operation
     public int addOrderShipmentTrack(@Parameter String shipmentId,
-                                     @Parameter String carrier,
+                                     @Parameter String carrierCode,
                                      @Parameter String title,
                                      @Parameter String trackId)
     {
-        return orderClient.addOrderShipmentTrack(shipmentId, carrier, title, trackId);
+        return orderClient.addOrderShipmentTrack(shipmentId, carrierCode, title, trackId);
     }
 
     @Operation
-    public boolean cancelOrder(@Parameter String orderId)
+    public void cancelOrder(@Parameter String orderId)
     {
-        return orderClient.cancelOrder(orderId);
+        orderClient.cancelOrder(orderId);
     }
 
     @Operation
@@ -142,7 +143,6 @@ public class MagentoCloudConnector implements Initialisable
                                       @Parameter(optional = true) String comment,
                                       @Parameter(optional = true, defaultValue = "false") boolean sendEmail,
                                       @Parameter(optional = true, defaultValue = "false") boolean includeCommentInEmail)
-
     {
         return orderClient.createOrderShipment(orderId, itemsQuantities, comment, sendEmail,
             includeCommentInEmail);
@@ -173,9 +173,9 @@ public class MagentoCloudConnector implements Initialisable
     }
 
     @Operation
-    public boolean holdOrder(@Parameter String orderId)
+    public void holdOrder(@Parameter String orderId)
     {
-        return orderClient.holdOrder(orderId);
+        orderClient.holdOrder(orderId);
     }
 
     @Operation
@@ -186,39 +186,35 @@ public class MagentoCloudConnector implements Initialisable
 
     @Operation
     public List<Map<String, Object>> listOrdersInvoices(@Parameter(optional = true) String filter)
-
     {
         return orderClient.listOrdersInvoices(filter);
     }
 
     @Operation
     public List<Map<String, Object>> listOrdersShipments(@Parameter(optional = true) String filter)
-
     {
         return orderClient.listOrdersShipments(filter);
     }
 
     @Operation
-    public int deleteOrderShipmentTrack(@Parameter String shipmentId, @Parameter String trackId)
-
+    public void deleteOrderShipmentTrack(@Parameter String shipmentId, @Parameter String trackId)
     {
-        return orderClient.deleteOrderShipmentTrack(shipmentId, trackId);
+        orderClient.deleteOrderShipmentTrack(shipmentId, trackId);
     }
 
     @Operation
-    public boolean addOrderComment(@Parameter String orderId,
+    public void addOrderComment(@Parameter String orderId,
                                    @Parameter String status,
                                    @Parameter String comment,
                                    @Parameter(optional = true, defaultValue = "false") boolean sendEmail)
-
     {
-        return orderClient.addOrderComment(orderId, status, comment, sendEmail);
+        orderClient.addOrderComment(orderId, status, comment, sendEmail);
     }
 
     @Operation
-    public boolean unholdOrder(@Parameter String orderId)
+    public void unholdOrder(@Parameter String orderId)
     {
-        return orderClient.unholdOrder(orderId);
+        orderClient.unholdOrder(orderId);
     }
 
     @Operation
@@ -227,106 +223,128 @@ public class MagentoCloudConnector implements Initialisable
                                      @Parameter(optional = true) String comment,
                                      @Parameter(optional = true, defaultValue = "false") boolean sendEmail,
                                      @Parameter(optional = true, defaultValue = "false") boolean includeCommentInEmail)
-
     {
         return orderClient.createOrderInvoice(orderId, itemsQuantities, comment, sendEmail,
             includeCommentInEmail);
     }
 
     @Operation
-    public String addOrderInvoiceComment(@Parameter String invoiceId,
+    public void addOrderInvoiceComment(@Parameter String invoiceId,
                                          @Parameter String comment,
                                          @Parameter(optional = true, defaultValue = "false") boolean sendEmail,
                                          @Parameter(optional = true, defaultValue = "false") boolean includeCommentInEmail)
-
     {
-        return orderClient.addOrderInvoiceComment(invoiceId, comment, sendEmail, includeCommentInEmail);
+        orderClient.addOrderInvoiceComment(invoiceId, comment, sendEmail, includeCommentInEmail);
     }
 
     @Operation
-    public boolean captureOrderInvoice(@Parameter String invoiceId)
+    public void captureOrderInvoice(@Parameter String invoiceId)
     {
-        return orderClient.captureOrderInvoice(invoiceId);
+        orderClient.captureOrderInvoice(invoiceId);
     }
 
     @Operation
-    public String voidOrderInvoice(@Parameter String invoiceId)
+    public void voidOrderInvoice(@Parameter String invoiceId)
     {
-        return orderClient.voidOrderInvoice(invoiceId);
+        orderClient.voidOrderInvoice(invoiceId);
     }
 
     @Operation
-    public String cancelOrderInvoice(@Parameter String invoiceId)
+    public void cancelOrderInvoice(@Parameter String invoiceId)
     {
-        return orderClient.cancelOrderInvoice(invoiceId);
+        orderClient.cancelOrderInvoice(invoiceId);
     }
 
     @Operation
-    public int createCusomerAddress(int customerId, Map<String, Object> attributes) throws MagentoException
+    public int createCustomerAddress(@Parameter int customerId, @Parameter Map<String, Object> attributes)
     {
-        return customerClient.createCusomerAddress(customerId, attributes);
+        return customerClient.createCustomerAddress(customerId, attributes);
     }
 
     @Operation
-    public int createCustomer(Map<String, Object> attributes) throws MagentoException
+    public int createCustomer(@Parameter Map<String, Object> attributes)
     {
         return customerClient.createCustomer(attributes);
     }
 
     @Operation
-    public boolean deleteCustomer(int customerId) throws MagentoException
+    public void deleteCustomer(@Parameter int customerId)
     {
-        return customerClient.deleteCustomer(customerId);
+        customerClient.deleteCustomer(customerId);
     }
 
     @Operation
-    public boolean deleteCustomerAddress(int addressId) throws MagentoException
+    public void deleteCustomerAddress(@Parameter int addressId)
     {
-        return customerClient.deleteCustomerAddress(addressId);
+        customerClient.deleteCustomerAddress(addressId);
     }
 
     @Operation
-    public Map<String, String> getCustomer(int customerId, List<String> attributeNames)
-        throws MagentoException
+    public Map<String, String> getCustomer(@Parameter int customerId, @Parameter List<String> attributeNames)
+
     {
         return customerClient.getCustomer(customerId, attributeNames);
     }
 
     @Operation
-    public Map<String, String> getCustomerAddress(int addressId) throws MagentoException
+    public Map<String, String> getCustomerAddress(@Parameter int addressId)
     {
         return customerClient.getCustomerAddress(addressId);
     }
 
     @Operation
-    public List<Map<String, Object>> listCustomerAddresses(int customerId) throws MagentoException
+    public List<Map<String, Object>> listCustomerAddresses(@Parameter int customerId)
     {
         return customerClient.listCustomerAddresses(customerId);
     }
 
     @Operation
-    public List<Map<String, Object>> listCustomerGroups() throws MagentoException
+    public List<Map<String, Object>> listCustomerGroups()
     {
         return customerClient.listCustomerGroups();
     }
 
     @Operation
-    public List<Map<String, Object>> listCustomers(String filters) throws MagentoException
+    public List<Map<String, Object>> listCustomers(@Parameter String filters)
     {
         return customerClient.listCustomers(filters);
     }
 
     @Operation
-    public boolean updateCustomer(int customerId, Map<String, Object> attributes) throws MagentoException
+    public void updateCustomer(@Parameter int customerId, @Parameter Map<String, Object> attributes)
     {
-        return customerClient.updateCustomer(customerId, attributes);
+        customerClient.updateCustomer(customerId, attributes);
     }
 
     @Operation
-    public boolean updateCustomerAddress(int addressId, Map<String, Object> addressData)
-        throws MagentoException
+    public void updateCustomerAddress(@Parameter int addressId, @Parameter Map<String, Object> addressData)
     {
-        return customerClient.updateCustomerAddress(addressId, addressData);
+        customerClient.updateCustomerAddress(addressId, addressData);
+    }
+    
+    @Operation
+    public List<Map<String, Object>> listStockItems(@Parameter List<String> productIdsOrSkus) throws RemoteException
+    {
+        return inventoryClient.listStockItems(productIdsOrSkus);
+    }
+
+    @Operation
+    public void updateStockItem(@Parameter String productIdOrSku, @Parameter Map<String, Object> attributes)
+        throws RemoteException
+    {
+        inventoryClient.updateStockItem(productIdOrSku, attributes);
+    }
+
+    @Operation
+    public List<Map<String, Object>> listDirectoryCountries() throws MagentoException
+    {
+        return directoryClient.listDirectoryCountries();
+    }
+
+    @Operation
+    public List<Map<String, Object>> listDirectoryRegions(@Parameter String countryId) throws MagentoException
+    {
+        return directoryClient.listDirectoryRegions(countryId);
     }
 
     @SuppressWarnings("unchecked")
@@ -346,21 +364,20 @@ public class MagentoCloudConnector implements Initialisable
     {
         this.inventoryClient = (MagentoInventoryClient<List<Map<String, Object>>, MagentoException>) inventoryClient;
     }
-    
+
     @SuppressWarnings("unchecked")
-    public void setDirectoryClient(MagentoDirectoryClient<?,?> directoryClient)
+    public void setDirectoryClient(MagentoDirectoryClient<?, ?> directoryClient)
     {
         this.directoryClient = (MagentoDirectoryClient<List<Map<String, Object>>, MagentoException>) directoryClient;
     }
 
-    // TODO ids shoudl be integrals
     private class PortProviderInitializer
     {
         private DefaultAxisPortProvider provider;
 
-        public AxisPortProvider getPorProvider()
+        public AxisPortProvider getPortProvider()
         {
-            if (provider != null)
+            if (provider == null)
             {
                 provider = new DefaultAxisPortProvider(username, password, address);
             }

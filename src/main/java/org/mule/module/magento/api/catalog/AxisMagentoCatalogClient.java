@@ -1,6 +1,6 @@
-/*
- * $Id$
- * --------------------------------------------------------------------------------------
+/**
+ * Mule Magento Cloud Connector
+ *
  * Copyright (c) MuleSoft, Inc.  All rights reserved.  http://www.mulesoft.com
  *
  * The software in this package is published under the terms of the CPAL v1.0
@@ -9,8 +9,7 @@
  */
 
 package org.mule.module.magento.api.catalog;
-
-import static org.mule.module.magento.api.MagentoMap.fromMap;
+import static org.mule.module.magento.api.util.MagentoObject.fromMap;
 
 import org.mule.module.magento.api.AbstractMagentoClient;
 import org.mule.module.magento.api.AxisPortProvider;

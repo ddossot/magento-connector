@@ -10,6 +10,8 @@
 
 package org.mule.module.magento.api;
 
+import org.mule.module.magento.api.util.MagentoMap;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

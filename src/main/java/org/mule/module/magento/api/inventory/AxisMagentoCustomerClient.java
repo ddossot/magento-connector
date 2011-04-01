@@ -10,12 +10,11 @@
 
 package org.mule.module.magento.api.inventory;
 
-import static org.mule.module.magento.api.MagentoMap.fromMap;
+import static org.mule.module.magento.api.util.MagentoObject.fromMap;
 import static org.mule.module.magento.filters.FiltersParser.parse;
 
 import org.mule.module.magento.api.AbstractMagentoClient;
 import org.mule.module.magento.api.AxisPortProvider;
-import org.mule.module.magento.api.MagentoMap;
 import org.mule.module.magento.api.internal.CustomerAddressEntityCreate;
 import org.mule.module.magento.api.internal.CustomerCustomerEntityToCreate;
 
@@ -47,7 +46,7 @@ public class AxisMagentoCustomerClient extends AbstractMagentoClient
     public int createCustomer(@NotNull Map<String, Object> attributes) throws RemoteException
     {
         return getPort().customerCustomerCreate(getSessionId(),
-            MagentoMap.fromMap(CustomerCustomerEntityToCreate.class, attributes));
+            fromMap(CustomerCustomerEntityToCreate.class, attributes));
     }
 
     /**
@@ -58,9 +57,9 @@ public class AxisMagentoCustomerClient extends AbstractMagentoClient
      *         postcondition
      * @throws RemoteException
      */
-    public boolean deleteCustomer(int customerId) throws RemoteException
+    public void deleteCustomer(int customerId) throws RemoteException
     {
-        return getPort().customerCustomerDelete(getSessionId(), customerId);
+        getPort().customerCustomerDelete(getSessionId(), customerId);
     }
 
     /**
@@ -103,11 +102,11 @@ public class AxisMagentoCustomerClient extends AbstractMagentoClient
      * @return if the customer attributes have been effectively updated
      * @throws RemoteException
      */
-    public boolean updateCustomer(int customerId, @NotNull Map<String, Object> attributes)
+    public void updateCustomer(int customerId, @NotNull Map<String, Object> attributes)
         throws RemoteException
     {
         Validate.notNull(attributes);
-        return getPort().customerCustomerUpdate(getSessionId(), customerId,
+        getPort().customerCustomerUpdate(getSessionId(), customerId,
             fromMap(CustomerCustomerEntityToCreate.class, attributes));
     }
 
@@ -120,15 +119,15 @@ public class AxisMagentoCustomerClient extends AbstractMagentoClient
      * @return a new customer address id
      * @throws RemoteException
      */
-    public int createCusomerAddress(int customerId, Map<String, Object> attributes) throws RemoteException
+    public int createCustomerAddress(int customerId, Map<String, Object> attributes) throws RemoteException
     {
         return getPort().customerAddressCreate(getSessionId(), customerId,
             fromMap(CustomerAddressEntityCreate.class, attributes));
     }
 
-    public boolean deleteCustomerAddress(int addressId) throws RemoteException
+    public void deleteCustomerAddress(int addressId) throws RemoteException
     {
-        return getPort().customerAddressDelete(getSessionId(), addressId);
+        getPort().customerAddressDelete(getSessionId(), addressId);
     }
 
     public Object getCustomerAddress(int addressId) throws RemoteException
@@ -141,10 +140,10 @@ public class AxisMagentoCustomerClient extends AbstractMagentoClient
         return getPort().customerAddressList(getSessionId(), customerId);
     }
 
-    public boolean updateCustomerAddress(int addressId, Map<String, Object> attributes)
+    public void updateCustomerAddress(int addressId, Map<String, Object> attributes)
         throws RemoteException
     {
-        return getPort().customerAddressUpdate(getSessionId(), addressId,
+        getPort().customerAddressUpdate(getSessionId(), addressId,
             fromMap(CustomerAddressEntityCreate.class, attributes));
     }
 
