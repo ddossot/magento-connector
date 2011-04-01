@@ -16,6 +16,8 @@ import org.mule.module.magento.api.AxisPortProvider;
 import org.mule.module.magento.api.DefaultAxisPortProvider;
 import org.mule.module.magento.api.MagentoClientAdaptor;
 import org.mule.module.magento.api.MagentoException;
+import org.mule.module.magento.api.catalog.AxisMagentoCatalogClient;
+import org.mule.module.magento.api.catalog.MagentoCatalogClient;
 import org.mule.module.magento.api.customer.AxisMagentoInventoryClient;
 import org.mule.module.magento.api.customer.MagentoInventoryClient;
 import org.mule.module.magento.api.directory.AxisMagentoDirectoryClient;
@@ -52,10 +54,11 @@ public class MagentoCloudConnector implements Initialisable
     @Property
     private String address;
 
-    private MagentoOrderClient<MagentoException> orderClient;
-    private MagentoCustomerClient<Map<String, String>, List<Map<String, Object>>, MagentoException> customerClient;
+    private MagentoOrderClient<Map<String, Object>, List<Map<String, Object>>, MagentoException> orderClient;
+    private MagentoCustomerClient<Map<String, Object>, List<Map<String, Object>>, MagentoException> customerClient;
     private MagentoInventoryClient<List<Map<String, Object>>, MagentoException> inventoryClient;
     private MagentoDirectoryClient<List<Map<String, Object>>, MagentoException> directoryClient;
+    private MagentoCatalogClient<Map<String, Object>, List<Map<String, Object>>, MagentoException> catalogClient;
 
     public String getUsername()
     {
@@ -92,31 +95,31 @@ public class MagentoCloudConnector implements Initialisable
         PortProviderInitializer initializer = new PortProviderInitializer();
         if (orderClient == null)
         {
-            setOrderClient(MagentoClientAdaptor.adapt(MagentoOrderClient.class, new AxisMagentoOrderClient(
-                initializer.getPortProvider())));
+            setOrderClient(new AxisMagentoOrderClient(initializer.getPortProvider()));
         }
         if (customerClient == null)
         {
-            setCustomerClient(MagentoClientAdaptor.adapt(MagentoCustomerClient.class,
-                new AxisMagentoCustomerClient(initializer.getPortProvider())));
+            setCustomerClient(new AxisMagentoCustomerClient(initializer.getPortProvider()));
         }
         if (inventoryClient == null)
         {
-            setInventoryClient(MagentoClientAdaptor.adapt(MagentoInventoryClient.class,
-                new AxisMagentoInventoryClient(initializer.getPortProvider())));
+            setInventoryClient(new AxisMagentoInventoryClient(initializer.getPortProvider()));
         }
         if (directoryClient == null)
         {
-            setDirectoryClient(MagentoClientAdaptor.adapt(MagentoDirectoryClient.class,
-                new AxisMagentoDirectoryClient(initializer.getPortProvider())));
+            setDirectoryClient(new AxisMagentoDirectoryClient(initializer.getPortProvider()));
+        }
+        if (catalogClient == null)
+        {
+            setCatalogClient(new AxisMagentoCatalogClient(initializer.getPortProvider()));
         }
     }
 
     @Operation
     public void addOrderShipmentComment(@Parameter String shipmentId,
-                                       @Parameter String comment,
-                                       @Parameter(optional = true, defaultValue = "false") boolean sendEmail,
-                                       @Parameter(optional = true, defaultValue = "false") boolean includeCommentInEmail)
+                                        @Parameter String comment,
+                                        @Parameter(optional = true, defaultValue = "false") boolean sendEmail,
+                                        @Parameter(optional = true, defaultValue = "false") boolean includeCommentInEmail)
 
     {
         orderClient.addOrderShipmentComment(shipmentId, comment, sendEmail, includeCommentInEmail);
@@ -204,9 +207,9 @@ public class MagentoCloudConnector implements Initialisable
 
     @Operation
     public void addOrderComment(@Parameter String orderId,
-                                   @Parameter String status,
-                                   @Parameter String comment,
-                                   @Parameter(optional = true, defaultValue = "false") boolean sendEmail)
+                                @Parameter String status,
+                                @Parameter String comment,
+                                @Parameter(optional = true, defaultValue = "false") boolean sendEmail)
     {
         orderClient.addOrderComment(orderId, status, comment, sendEmail);
     }
@@ -230,9 +233,9 @@ public class MagentoCloudConnector implements Initialisable
 
     @Operation
     public void addOrderInvoiceComment(@Parameter String invoiceId,
-                                         @Parameter String comment,
-                                         @Parameter(optional = true, defaultValue = "false") boolean sendEmail,
-                                         @Parameter(optional = true, defaultValue = "false") boolean includeCommentInEmail)
+                                       @Parameter String comment,
+                                       @Parameter(optional = true, defaultValue = "false") boolean sendEmail,
+                                       @Parameter(optional = true, defaultValue = "false") boolean includeCommentInEmail)
     {
         orderClient.addOrderInvoiceComment(invoiceId, comment, sendEmail, includeCommentInEmail);
     }
@@ -280,14 +283,14 @@ public class MagentoCloudConnector implements Initialisable
     }
 
     @Operation
-    public Map<String, String> getCustomer(@Parameter int customerId, @Parameter List<String> attributeNames)
+    public Map<String, Object> getCustomer(@Parameter int customerId, @Parameter List<String> attributeNames)
 
     {
         return customerClient.getCustomer(customerId, attributeNames);
     }
 
     @Operation
-    public Map<String, String> getCustomerAddress(@Parameter int addressId)
+    public Map<String, Object> getCustomerAddress(@Parameter int addressId)
     {
         return customerClient.getCustomerAddress(addressId);
     }
@@ -321,9 +324,10 @@ public class MagentoCloudConnector implements Initialisable
     {
         customerClient.updateCustomerAddress(addressId, addressData);
     }
-    
+
     @Operation
-    public List<Map<String, Object>> listStockItems(@Parameter List<String> productIdsOrSkus) throws RemoteException
+    public List<Map<String, Object>> listStockItems(@Parameter List<String> productIdsOrSkus)
+        throws RemoteException
     {
         return inventoryClient.listStockItems(productIdsOrSkus);
     }
@@ -342,33 +346,232 @@ public class MagentoCloudConnector implements Initialisable
     }
 
     @Operation
-    public List<Map<String, Object>> listDirectoryRegions(@Parameter String countryId) throws MagentoException
+    public List<Map<String, Object>> listDirectoryRegions(@Parameter String countryId)
+        throws MagentoException
     {
         return directoryClient.listDirectoryRegions(countryId);
     }
 
-    @SuppressWarnings("unchecked")
-    public void setOrderClient(MagentoOrderClient<?> magentoOrderClient)
+    @Operation
+    public String assignProductLink(String type,
+                                    String product,
+                                    String linkedProduct,
+                                    Map<String, Object> attributes,
+                                    String productIdentifierType) throws RemoteException
     {
-        this.orderClient = (MagentoOrderClient<MagentoException>) magentoOrderClient;
+        return catalogClient.assignProductLink(type, product, linkedProduct, attributes,
+            productIdentifierType);
+    }
+
+    @Operation
+    public String createProductAttributeMedia(String product,
+                                              Map<String, Object> attributes,
+                                              String storeView,
+                                              String productIdentifierType) throws RemoteException
+    {
+        return catalogClient.createProductAttributeMedia(product, attributes, storeView,
+            productIdentifierType);
+    }
+
+    @Operation
+    public int deleteProductAttributeMedia(String product, String file, String productIdentifierType)
+        throws RemoteException
+    {
+        return catalogClient.deleteProductAttributeMedia(product, file, productIdentifierType);
+    }
+
+    @Operation
+    public String deleteProductLink(String type,
+                                    String product,
+                                    String linkedProduct,
+                                    String productIdentifierType) throws RemoteException
+    {
+        return catalogClient.deleteProductLink(type, product, linkedProduct, productIdentifierType);
+    }
+
+    @Operation
+    public int getCategoryAttributeStoreView() throws RemoteException
+    {
+        return catalogClient.getCategoryAttributeStoreView();
+    }
+
+    @Operation
+    public Map<String, Object> getProductAttributeMedia(String product,
+                                                        String file,
+                                                        String storeView,
+                                                        String productIdentifierType) throws RemoteException
+    {
+        return catalogClient.getProductAttributeMedia(product, file, storeView, productIdentifierType);
+    }
+
+    @Operation
+    public int getProductAttributeMediaStoreView() throws RemoteException
+    {
+        return catalogClient.getProductAttributeMediaStoreView();
+    }
+
+    @Operation
+    public int getProductAttributeStoreView() throws RemoteException
+    {
+        return catalogClient.getProductAttributeStoreView();
+    }
+
+    @Operation
+    public List<Map<String, Object>> listCategoryAttributes() throws RemoteException
+    {
+        return catalogClient.listCategoryAttributes();
+    }
+
+    @Operation
+    public List<Map<String, Object>> listCategoryAttributesOptions(String attributeId, String storeView)
+        throws RemoteException
+    {
+        return catalogClient.listCategoryAttributesOptions(attributeId, storeView);
+    }
+
+    @Operation
+    public List<Map<String, Object>> listProductAttributeMedia(String product,
+                                                               String storeView,
+                                                               String productIdentifierType)
+        throws RemoteException
+    {
+        return catalogClient.listProductAttributeMedia(product, storeView, productIdentifierType);
+    }
+
+    @Operation
+    public List<Map<String, Object>> listProductAttributeMediaTypes(String setId) throws RemoteException
+    {
+        return catalogClient.listProductAttributeMediaTypes(setId);
+    }
+
+    @Operation
+    public List<Map<String, Object>> listProductAttributeOptions(String attributeId, String storeView)
+        throws RemoteException
+    {
+        return catalogClient.listProductAttributeOptions(attributeId, storeView);
+    }
+
+    @Operation
+    public List<Map<String, Object>> listProductAttributes(int setId) throws RemoteException
+    {
+        return catalogClient.listProductAttributes(setId);
+    }
+
+    @Operation
+    public List<Map<String, Object>> listProductAttributeSets() throws RemoteException
+    {
+        return catalogClient.listProductAttributeSets();
+    }
+
+    @Operation
+    public List<Map<String, Object>> listProductAttributeTierPrices(String product,
+                                                                    String productIdentifierType)
+        throws RemoteException
+    {
+        return catalogClient.listProductAttributeTierPrices(product, productIdentifierType);
+    }
+
+    @Operation
+    public List<Map<String, Object>> listProductLink(String type, String product, String productIdentifierType)
+        throws RemoteException
+    {
+        return catalogClient.listProductLink(type, product, productIdentifierType);
+    }
+
+    @Operation
+    public List<Map<String, Object>> listProductLinkAttributes(String type) throws RemoteException
+    {
+        return catalogClient.listProductLinkAttributes(type);
+    }
+
+    @Operation
+    public String[] listProductLinkTypes() throws RemoteException
+    {
+        return catalogClient.listProductLinkTypes();
+    }
+
+    @Operation
+    public List<Map<String, Object>> listProductTypes() throws RemoteException
+    {
+        return catalogClient.listProductTypes();
+    }
+
+    @Operation
+    public void updateCategoryAttributeStoreView(String storeView) throws RemoteException
+    {
+        catalogClient.updateCategoryAttributeStoreView(storeView);
+    }
+
+    @Operation
+    public int updateProductAttributeMedia(String product,
+                                           String file,
+                                           Map<String, Object> attributes,
+                                           String storeView,
+                                           String productIdentifierType) throws RemoteException
+    {
+        return catalogClient.updateProductAttributeMedia(product, file, attributes, storeView,
+            productIdentifierType);
+    }
+
+    @Operation
+    public void updateProductAttributeMediaStoreView(String storeView) throws RemoteException
+    {
+        catalogClient.updateProductAttributeMediaStoreView(storeView);
+    }
+
+    @Operation
+    public void updateProductAttributeStoreView(String storeView) throws RemoteException
+    {
+        catalogClient.updateProductAttributeStoreView(storeView);
+    }
+
+    /** FIXME */
+    public void updateProductAttributeTierPrices(String product,
+                                                 List<Map<String, Object>> attributes,
+                                                 String productIdentifierType) throws RemoteException
+    {
+        catalogClient.updateProductAttributeTierPrices(product, attributes, productIdentifierType);
+    }
+
+    @Operation
+    public String updateProductLink(String type,
+                                    String product,
+                                    String linkedProduct,
+                                    Map<String, Object> attributes,
+                                    String productIdentifierType) throws RemoteException
+    {
+        return catalogClient.updateProductLink(type, product, linkedProduct, attributes,
+            productIdentifierType);
+    }
+
+    @SuppressWarnings("unchecked")
+    public void setOrderClient(MagentoOrderClient<?, ?, ?> magentoOrderClient)
+    {
+        this.orderClient = MagentoClientAdaptor.adapt(MagentoOrderClient.class, magentoOrderClient);
     }
 
     @SuppressWarnings("unchecked")
     public void setCustomerClient(MagentoCustomerClient<?, ?, ?> customerClient)
     {
-        this.customerClient = (MagentoCustomerClient<Map<String, String>, List<Map<String, Object>>, MagentoException>) customerClient;
+        this.customerClient = MagentoClientAdaptor.adapt(MagentoCustomerClient.class, customerClient);
     }
 
     @SuppressWarnings("unchecked")
     public void setInventoryClient(MagentoInventoryClient<?, ?> inventoryClient)
     {
-        this.inventoryClient = (MagentoInventoryClient<List<Map<String, Object>>, MagentoException>) inventoryClient;
+        this.inventoryClient = MagentoClientAdaptor.adapt(MagentoInventoryClient.class, inventoryClient);
     }
 
     @SuppressWarnings("unchecked")
     public void setDirectoryClient(MagentoDirectoryClient<?, ?> directoryClient)
     {
-        this.directoryClient = (MagentoDirectoryClient<List<Map<String, Object>>, MagentoException>) directoryClient;
+        this.directoryClient = MagentoClientAdaptor.adapt(MagentoDirectoryClient.class, directoryClient);
+    }
+
+    @SuppressWarnings("unchecked")
+    public void setCatalogClient(MagentoCatalogClient<?, ?, ?> catalogClient)
+    {
+        this.catalogClient = MagentoClientAdaptor.adapt(MagentoCatalogClient.class, catalogClient);
     }
 
     private class PortProviderInitializer

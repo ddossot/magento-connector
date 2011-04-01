@@ -18,16 +18,18 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.mule.module.magento.api.MagentoClientAdaptor;
 import org.mule.module.magento.api.AxisPortProvider;
+import org.mule.module.magento.api.catalog.AxisMagentoCatalogClient;
+import org.mule.module.magento.api.customer.AxisMagentoInventoryClient;
+import org.mule.module.magento.api.directory.AxisMagentoDirectoryClient;
 import org.mule.module.magento.api.internal.AssociativeEntity;
 import org.mule.module.magento.api.internal.ComplexFilter;
 import org.mule.module.magento.api.internal.Filters;
 import org.mule.module.magento.api.internal.Mage_Api_Model_Server_V2_HandlerPortType;
 import org.mule.module.magento.api.internal.SalesOrderEntity;
 import org.mule.module.magento.api.internal.SalesOrderShipmentEntity;
+import org.mule.module.magento.api.inventory.AxisMagentoCustomerClient;
 import org.mule.module.magento.api.order.AxisMagentoOrderClient;
-import org.mule.module.magento.api.order.MagentoOrderClient;
 import org.mule.module.magento.api.order.model.Carrier;
 
 import java.rmi.RemoteException;
@@ -51,8 +53,11 @@ public class MagentoCloudConnectorUnitTest
         connector = new MagentoCloudConnector();
         portProvider = mock(AxisPortProvider.class);
         port = mock(Mage_Api_Model_Server_V2_HandlerPortType.class);
-        connector.setOrderClient(MagentoClientAdaptor.adapt(MagentoOrderClient.class,
-            new AxisMagentoOrderClient(portProvider)));
+        connector.setOrderClient(new AxisMagentoOrderClient(portProvider));
+        connector.setCatalogClient(new AxisMagentoCatalogClient(portProvider));
+        connector.setCustomerClient(new AxisMagentoCustomerClient(portProvider));
+        connector.setDirectoryClient(new AxisMagentoDirectoryClient(portProvider));
+        connector.setInventoryClient(new AxisMagentoInventoryClient(portProvider));
         connector.initialise();
         when(portProvider.getPort()).thenReturn(port);
     }
@@ -212,7 +217,8 @@ public class MagentoCloudConnectorUnitTest
     {
         fail("Not yet implemented");
     }
-    
-    //TODO reflectively test all methods. It is a nonses to write individual tests for them all
+
+    // TODO reflectively test all methods. It is a nonses to write individual tests
+    // for them all
 
 }

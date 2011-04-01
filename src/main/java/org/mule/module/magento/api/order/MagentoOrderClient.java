@@ -27,7 +27,7 @@ import javax.validation.constraints.NotNull;
  * @author flbulgarelli
  * @param <ExceptionType> the type of exception that this client throws
  */
-public interface MagentoOrderClient<ExceptionType extends Exception>
+public interface MagentoOrderClient<AttributesType, AttributesCollectionType, ExceptionType extends Exception>
 {
 
     /**
@@ -37,7 +37,7 @@ public interface MagentoOrderClient<ExceptionType extends Exception>
      * @return list of sales orders
      */
     @NotNull
-    List<Map<String, Object>> listOrders(@NotNull String filter) throws ExceptionType;
+    AttributesCollectionType listOrders(@NotNull String filter) throws ExceptionType;
 
     /**
      * Answers the order properties for the given orderId
@@ -46,7 +46,7 @@ public interface MagentoOrderClient<ExceptionType extends Exception>
      * @return the order properties
      */
     @NotNull
-    Map<String, Object> getOrder(@NotNull String orderId) throws ExceptionType;
+    AttributesType getOrder(@NotNull String orderId) throws ExceptionType;
 
     /**
      * Puts order on hold
@@ -89,7 +89,7 @@ public interface MagentoOrderClient<ExceptionType extends Exception>
      * @return list of sales order shipments attributes
      */
     @NotNull
-    List<Map<String, Object>> listOrdersShipments(String filter) throws ExceptionType;
+    AttributesCollectionType listOrdersShipments(String filter) throws ExceptionType;
 
     /**
      * Retrieves order shipment information
@@ -98,7 +98,7 @@ public interface MagentoOrderClient<ExceptionType extends Exception>
      * @return sales order shipment information
      */
     @NotNull
-    Map<String, Object> getOrderShipment(String shipmentId) throws ExceptionType;
+    AttributesType getOrderShipment(String shipmentId) throws ExceptionType;
 
     /**
      * Adds a comment to the shipment
@@ -168,7 +168,7 @@ public interface MagentoOrderClient<ExceptionType extends Exception>
      * @return list of sales order invoices
      */
     @NotNull
-    List<Map<String, Object>> listOrdersInvoices(String filter) throws ExceptionType;
+    AttributesCollectionType listOrdersInvoices(String filter) throws ExceptionType;
 
     /**
      * Retrieves order invoice information
@@ -177,7 +177,7 @@ public interface MagentoOrderClient<ExceptionType extends Exception>
      * @return sales order invoice attributes
      */
     @NotNull
-    Map<String, Object> getOrderInvoice(@NotNull String invoiceId) throws ExceptionType;
+    AttributesType getOrderInvoice(@NotNull String invoiceId) throws ExceptionType;
 
     /**
      * Creates an invoice for the given order
@@ -205,9 +205,9 @@ public interface MagentoOrderClient<ExceptionType extends Exception>
      * @param includeCommentInEmail if the comment must be sent in the email
      */
     void addOrderInvoiceComment(@NotNull String invoiceId,
-                                  @NotNull String comment,
-                                  boolean sendEmail,
-                                  boolean includeCommentInEmail) throws ExceptionType;
+                                @NotNull String comment,
+                                boolean sendEmail,
+                                boolean includeCommentInEmail) throws ExceptionType;
 
     /**
      * Captures and invoice

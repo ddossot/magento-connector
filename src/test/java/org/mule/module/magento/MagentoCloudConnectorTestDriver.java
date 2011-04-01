@@ -10,18 +10,13 @@
 
 package org.mule.module.magento;
 
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import org.mule.module.magento.api.MagentoException;
 
-import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.junit.Before;
@@ -107,5 +102,6 @@ public class MagentoCloudConnectorTestDriver
             }
         });
     }
+    
 
 }

@@ -10,162 +10,319 @@
 
 package org.mule.module.magento.api.catalog;
 
-import org.mule.module.magento.api.internal.CatalogProductTierPriceEntity;
-
 import java.rmi.RemoteException;
+import java.util.List;
 import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
-public interface MagentoCatalogClient<T1, T2, ExceptionType extends Exception>
+public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, ExceptionType extends Exception>
 {
 
-    public Object[] getCategoryAssignedProducts(int categoryId) throws RemoteException;
+    /**
+     * Creates a new product media. See catalog-product-attribute-media-create SOAP
+     * method.
+     * 
+     * @param product
+     * @param attributes
+     * @param storeView
+     * @param productIdentifierType
+     * @return
+     * @throws RemoteException
+     */
+    String createProductAttributeMedia(@NotNull String product,
+                                       @NotNull Map<String, Object> attributes,
+                                       String storeView,
+                                       String productIdentifierType) throws RemoteException;
 
-    public boolean addCategoryProduct(int categoryId,
-                                         String product,
-                                         String position,
-                                         String productIdentifierType) throws RemoteException;
+    /**
+     * Set current store view. See catalog-product-attribute-media-currentStore SOAP
+     * method. TODO verify
+     * 
+     * @param storeView
+     * @return
+     * @throws RemoteException
+     */
+    void updateProductAttributeMediaStoreView(@NotNull String storeView) throws RemoteException;
 
-    public int getCategoryAttributeCurrentStore(String storeView) throws RemoteException;
+    /**
+     * Gets current store view. See catalog-product-attribute-media-currentStore SOAP
+     * method. TODO verify
+     * 
+     * @param storeView
+     * @return
+     * @throws RemoteException
+     */
+    int getProductAttributeMediaStoreView() throws RemoteException;
 
-    public Object[] listCategoryAttributes() throws RemoteException;
+    /**
+     * 66.catalog-product-attribute-media-info Retrieve product image
+     * 
+     * @param product
+     * @param file
+     * @param storeView
+     * @param productIdentifierType
+     * @return
+     * @throws RemoteException
+     */
+    AttributesType getProductAttributeMedia(@NotNull String product,
+                                            @NotNull String file,
+                                            String storeView,
+                                            @NotNull String productIdentifierType) throws RemoteException;
 
-    public Object[] listCategoryAttributesOptions(String attributeId, String storeView)
+    /**
+     * Retrieves product image list. See catalog-product-attribute-media-list SOAP
+     * method
+     * 
+     * @param product
+     * @param storeView
+     * @param productIdentifierType
+     * @return the list of product images attributes
+     * @throws RemoteException
+     */
+    AttributesCollectionType listProductAttributeMedia(String product,
+                                                       String storeView,
+                                                       String productIdentifierType) throws RemoteException;
+
+    /**
+     * Removes a product image. See catalog-product-attribute-media-remove SOAP
+     * method.
+     * 
+     * @param product
+     * @param file
+     * @param productIdentifierType
+     * @return
+     * @throws RemoteException
+     */
+    int deleteProductAttributeMedia(String product, String file, String productIdentifierType)
         throws RemoteException;
 
-    public int createCategory(int parentId, @NotNull Map<String, Object> attributes, String storeView)
+    /**
+     * Retrieve product image types. See catalog-product-attribute-media-types SOAP
+     * method.
+     * 
+     * @param setId
+     * @return
+     * @throws RemoteException
+     */
+    AttributesCollectionType listProductAttributeMediaTypes(String setId) throws RemoteException;
+
+    /**
+     * Updates product media. See catalog-product-attribute-media-update
+     * 
+     * @param product
+     * @param file
+     * @param attributes
+     * @param storeView
+     * @param productIdentifierType
+     * @return
+     * @throws RemoteException
+     */
+    int updateProductAttributeMedia(String product,
+                                    String file,
+                                    @NotNull Map<String, Object> attributes,
+                                    String storeView,
+                                    String productIdentifierType) throws RemoteException;
+
+    /**
+     * Retrieves category attributes. See catalog-category-attribute-list SOAP
+     * method.
+     * 
+     * @return the list of attributes
+     * @throws RemoteException
+     */
+    AttributesCollectionType listCategoryAttributes() throws RemoteException;
+
+    /**
+     * TODO verify
+     * 
+     * @param storeView
+     * @throws RemoteException
+     */
+    void updateCategoryAttributeStoreView(String storeView) throws RemoteException;
+
+    /**
+     * TODO verify
+     * 
+     * @return
+     * @throws RemoteException
+     */
+    int getCategoryAttributeStoreView() throws RemoteException;
+
+    /**
+     * Retrieves attribute options. See catalog-category-attribute-options SOAP
+     * method.
+     * 
+     * @param attributeId
+     * @param storeView optinal
+     * @return the list of attributes
+     * @throws RemoteException
+     */
+    AttributesCollectionType listCategoryAttributesOptions(@NotNull String attributeId, String storeView)
         throws RemoteException;
 
-    public int catalogCategoryCurrentStore(String storeView) throws RemoteException;
+    /**
+     * Sets the product attribute store. TODO verify
+     * 
+     * @param storeView
+     * @throws RemoteException
+     */
+    void updateProductAttributeStoreView(@NotNull String storeView) throws RemoteException;
 
-    public boolean deleteCategory(int categoryId) throws RemoteException;
+    /**
+     * Gets the product attribute store view. TODO verify
+     * 
+     * @return the current store
+     * @throws RemoteException
+     */
+    int getProductAttributeStoreView() throws RemoteException;
 
-    public Object getCategory(int categoryId, String storeView, String[] attributes)
+    /**
+     * Retrieves product attributes list. See catalog-product-attribute-list SOAP
+     * methods
+     * 
+     * @param setId
+     * @return the list of product attributes
+     * @throws RemoteException
+     */
+    AttributesCollectionType listProductAttributes(int setId) throws RemoteException;
+
+    /**
+     * Answers the product attribute options. See catalog-product-attribute-options
+     * SOAP method.
+     * 
+     * @param attributeId
+     * @param storeView optional
+     * @return the attributes list
+     * @throws RemoteException
+     */
+    @NotNull
+    AttributesCollectionType listProductAttributeOptions(@NotNull String attributeId, String storeView)
         throws RemoteException;
 
-    public Object[] catalogCategoryLevel(String website, String storeView, String parentCategory)
+    /**
+     * Retrieves product attribute sets. See catalog-product-attribute-set-list SOAP
+     * method.
+     * 
+     * @return The list of product attributes sets
+     * @throws RemoteException
+     */
+    @NotNull
+    AttributesCollectionType listProductAttributeSets() throws RemoteException;
+
+    /**
+     * Retrieves product types. See catalog-product-type-list SOAP method
+     * 
+     * @return the list of product types
+     * @throws RemoteException
+     */
+    @NotNull
+    AttributesCollectionType listProductTypes() throws RemoteException;
+
+    /**
+     * Retrieve product tier prices. See catalog-product-attribute-tier-price-info
+     * SOAP Method.
+     * 
+     * @param product
+     * @param productIdentifierType
+     * @return the list of product attributes
+     * @throws RemoteException
+     */
+    @NotNull
+    AttributesCollectionType listProductAttributeTierPrices(@NotNull String product,
+                                                            @NotNull String productIdentifierType)
         throws RemoteException;
 
-    public boolean catalogCategoryMove(int categoryId, int parentId, String afterId) throws RemoteException;
+    /**
+     * Updates product tier prices. See catalog-product-attribute-tier-price-update
+     * SOAP method.
+     * 
+     * @param product
+     * @param attributes
+     * @param productIdentifierType
+     * @throws RemoteException
+     */
+    void updateProductAttributeTierPrices(@NotNull String product,
+                                          @NotNull List<Map<String, Object>> attributes,
+                                          @NotNull String productIdentifierType) throws RemoteException;
 
-    public boolean deleteCategoryProduct(int categoryId, String product, String productIdentifierType)
-        throws RemoteException;
+    /**
+     * Assigns a link to a product
+     * 
+     * @param type
+     * @param product
+     * @param linkedProduct
+     * @param attributes
+     * @param productIdentifierType
+     * @return TODO
+     * @throws RemoteException
+     */
+    String assignProductLink(@NotNull String type,
+                             @NotNull String product,
+                             @NotNull String linkedProduct,
+                             @NotNull Map<String, Object> attributes,
+                             @NotNull String productIdentifierType) throws RemoteException;
 
-    public Object catalogCategoryTree(String parentId, String storeView) throws RemoteException;
+    /**
+     * Retrieve product link type attributes
+     * 
+     * @param type
+     * @return
+     * @throws RemoteException
+     */
+    AttributesCollectionType listProductLinkAttributes(String type) throws RemoteException;
 
-    public boolean updateCategory(int categoryId,
-                                         @NotNull Map<String, Object> attributes,
-                                         String storeView) throws RemoteException;
+    /**
+     * Retrieve linked products
+     * 
+     * @param type
+     * @param product
+     * @param productIdentifierType
+     * @return the list of links to the product
+     * @throws RemoteException
+     */
+    AttributesCollectionType listProductLink(@NotNull String type,
+                                             @NotNull String product,
+                                             @NotNull String productIdentifierType) throws RemoteException;
 
-    public boolean catalogCategoryUpdateProduct(int categoryId,
-                                                String product,
-                                                String position,
-                                                String productIdentifierType) throws RemoteException;
+    /**
+     * Deletes a link in a product
+     * 
+     * @param type
+     * @param product
+     * @param linkedProduct
+     * @param productIdentifierType
+     * @return TODO
+     * @throws RemoteException
+     */
+    String deleteProductLink(@NotNull String type,
+                             @NotNull String product,
+                             @NotNull String linkedProduct,
+                             @NotNull String productIdentifierType) throws RemoteException;
 
-    public Object[] catalogInventoryStockItemList(String[] products) throws RemoteException;
+    /**
+     * Retrieve product link types
+     * 
+     * @return the list of product link types
+     * @throws RemoteException
+     */
+    String[] listProductLinkTypes() throws RemoteException;
 
-    public int catalogInventoryStockItemUpdate(String product, @NotNull Map<String, Object> attributes)
-        throws RemoteException;
-
-    public int catalogProductAttributeCurrentStore(String storeView) throws RemoteException;
-
-    public Object[] catalogProductAttributeList(int setId) throws RemoteException;
-
-    public String catalogProductAttributeMediaCreate(String product,
-                                                     @NotNull Map<String, Object> attributes,
-                                                     String storeView,
-                                                     String productIdentifierType) throws RemoteException;
-
-    public int catalogProductAttributeMediaCurrentStore(String storeView) throws RemoteException;
-
-    public Object catalogProductAttributeMediaInfo(String product,
-                                                   String file,
-                                                   String storeView,
-                                                   String productIdentifierType) throws RemoteException;
-
-    public Object[] catalogProductAttributeMediaList(String product,
-                                                     String storeView,
-                                                     String productIdentifierType) throws RemoteException;
-
-    public int catalogProductAttributeMediaRemove(String product, String file, String productIdentifierType)
-        throws RemoteException;
-
-    public Object[] catalogProductAttributeMediaTypes(String setId) throws RemoteException;
-
-    public int catalogProductAttributeMediaUpdate(String product,
-                                                  String file,
-                                                  @NotNull Map<String, Object> attributes,
-                                                  String storeView,
-                                                  String productIdentifierType) throws RemoteException;
-
-    public Object[] catalogProductAttributeOptions(String attributeId, String storeView)
-        throws RemoteException;
-
-    public Object[] catalogProductAttributeSetList() throws RemoteException;
-
-    public Object[] catalogProductAttributeTierPriceInfo(String product, String productIdentifierType)
-        throws RemoteException;
-
-    public int catalogProductAttributeTierPriceUpdate(String product,
-                                                      CatalogProductTierPriceEntity[] tierPrice,
-                                                      String productIdentifierType) throws RemoteException;
-
-    public int catalogProductCreate(String type,
-                                    String set,
-                                    String sku,
-                                    @NotNull Map<String, Object> attributes) throws RemoteException;
-
-    public int catalogProductCurrentStore(String storeView) throws RemoteException;
-
-    public int catalogProductDelete(String product, String productIdentifierType) throws RemoteException;
-
-    public Object catalogProductGetSpecialPrice(String product, String storeView, String productIdentifierType)
-        throws RemoteException;
-
-    public Object catalogProductInfo(String product,
-                                     String storeView,
-                                     @NotNull Map<String, Object> attributes,
-                                     String productIdentifierType) throws RemoteException;
-
-    public String catalogProductLinkAssign(String type,
-                                           String product,
-                                           String linkedProduct,
-                                           @NotNull Map<String, Object> attributes,
-                                           String productIdentifierType) throws RemoteException;
-
-    public Object[] catalogProductLinkAttributes(String type) throws RemoteException;
-
-    public Object[] catalogProductLinkList(String type, String product, String productIdentifierType)
-        throws RemoteException;
-
-    public String catalogProductLinkRemove(String type,
-                                           String product,
-                                           String linkedProduct,
-                                           String productIdentifierType) throws RemoteException;
-
-    public String[] catalogProductLinkTypes() throws RemoteException;
-
-    public String catalogProductLinkUpdate(String type,
-                                           String product,
-                                           String linkedProduct,
-                                           @NotNull Map<String, Object> attributes,
-                                           String productIdentifierType) throws RemoteException;
-
-    public Object[] listCatalogProducts(String filters, String storeView) throws RemoteException;
-
-    public int catalogProductSetSpecialPrice(String product,
-                                             String specialPrice,
-                                             String fromDate,
-                                             String toDate,
-                                             String storeView,
-                                             String productIdentifierType) throws RemoteException;
-
-    public Object[] listProductTypes() throws RemoteException;
-
-    public boolean updateProduct(String product,
-                                        Map<String, Object> attributes,
-                                        String storeView,
-                                        String productIdentifierType) throws RemoteException;
+    /**
+     * Update product link
+     * 
+     * @param type
+     * @param product
+     * @param linkedProduct
+     * @param attributes
+     * @param productIdentifierType
+     * @return TODO
+     * @throws RemoteException
+     */
+    String updateProductLink(@NotNull String type,
+                             @NotNull String product,
+                             @NotNull String linkedProduct,
+                             @NotNull Map<String, Object> attributes,
+                             @NotNull String productIdentifierType) throws RemoteException;
 
 }

@@ -21,16 +21,17 @@ import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.lang.Validate;
+
 /**
  * A delayed map that converts a magento object into a map. The logic is the
- * following: Null attributes are converted into null - FIXME error prone -, arrays
- * of magento object attributes are converted into collections of magento maps,
- * magento object attributes are converted into magento maps, and any other attribute
- * is left unchanged.
+ * following: Null attributes are converted into null, arrays of magento object
+ * attributes are converted into collections of magento maps, magento object
+ * attributes are converted into magento maps, and any other attribute is left
+ * unchanged.
  */
 public class MagentoMap extends BeanMap
 {
-    
+
     private static final Transformer TO_MAP = new ToMapTransformer();
 
     public MagentoMap(Object bean)

@@ -29,48 +29,22 @@ import org.apache.commons.lang.Validate;
 public class AxisMagentoCustomerClient extends AbstractMagentoClient
     implements MagentoCustomerClient<Object, Object[], RemoteException>
 {
-    // TODO creation operation return ids?
-
     public AxisMagentoCustomerClient(AxisPortProvider provider)
     {
         super(provider);
     }
 
-    /**
-     * Creates a customer with th given attributes
-     * 
-     * @param attributes the attributes of the new customer
-     * @return the new customer id
-     * @throws RemoteException
-     */
     public int createCustomer(@NotNull Map<String, Object> attributes) throws RemoteException
     {
         return getPort().customerCustomerCreate(getSessionId(),
             fromMap(CustomerCustomerEntityToCreate.class, attributes));
     }
 
-    /**
-     * Deletes a customer given its id
-     * 
-     * @param customerId
-     * @return if the customer has effectively been deleted TODO verify this
-     *         postcondition
-     * @throws RemoteException
-     */
     public void deleteCustomer(int customerId) throws RemoteException
     {
         getPort().customerCustomerDelete(getSessionId(), customerId);
     }
 
-    /**
-     * Answers customer attributes for the given id. Only the selected attributes are
-     * retrieved
-     * 
-     * @param customerId
-     * @param attributeNames the attributes to retrieve. Not empty
-     * @return the attributes map
-     * @throws RemoteException
-     */
     @NotNull
     public Object getCustomer(int customerId, @NotNull List<String> attributeNames)
         throws RemoteException
@@ -80,28 +54,12 @@ public class AxisMagentoCustomerClient extends AbstractMagentoClient
             toArray(attributeNames, String.class));
     }
 
-    /**
-     * Answers a list of customer attributes for the given filter expression.
-     * 
-     * @param filters a filtering expression.
-     * @return the attributes map
-     * @throws RemoteException
-     */
     @NotNull
     public Object[] listCustomers(String filters) throws RemoteException
     {
         return getPort().customerCustomerList(getSessionId(), parse(filters));
     }
 
-    /**
-     * Updates the given customer attributes, for the given customer id. Password can
-     * not be updated using this method
-     * 
-     * @param customerId
-     * @param attributes the attributes map
-     * @return if the customer attributes have been effectively updated
-     * @throws RemoteException
-     */
     public void updateCustomer(int customerId, @NotNull Map<String, Object> attributes)
         throws RemoteException
     {
@@ -110,15 +68,6 @@ public class AxisMagentoCustomerClient extends AbstractMagentoClient
             fromMap(CustomerCustomerEntityToCreate.class, attributes));
     }
 
-    /**
-     * Creates a new address for the given customer using the given address
-     * attributes
-     * 
-     * @param customerId
-     * @param attributes
-     * @return a new customer address id
-     * @throws RemoteException
-     */
     public int createCustomerAddress(int customerId, Map<String, Object> attributes) throws RemoteException
     {
         return getPort().customerAddressCreate(getSessionId(), customerId,
