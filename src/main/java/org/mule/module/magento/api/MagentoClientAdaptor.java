@@ -10,8 +10,6 @@
 
 package org.mule.module.magento.api;
 
-import org.mule.module.magento.api.util.MagentoMap;
-
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -19,6 +17,10 @@ import java.lang.reflect.Proxy;
 
 import org.apache.axis.AxisFault;
 import org.apache.commons.lang.Validate;
+import org.mule.module.magento.MagentoCloudConnector;
+import org.mule.module.magento.api.util.MagentoMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An utility class for creating proxies that handle {@link AxisFault}s by converting
@@ -27,6 +29,7 @@ import org.apache.commons.lang.Validate;
  */
 public final class MagentoClientAdaptor
 {
+	private static Logger log = LoggerFactory.getLogger(MagentoCloudConnector.class);
 
     private MagentoClientAdaptor()
     {
@@ -43,12 +46,16 @@ public final class MagentoClientAdaptor
                 {
                     try
                     {
-                        return new MagentoMap(new Holder(method.invoke(receptor, args))).get("value");
+                    	log.debug("Entering {} with args {}", method.getName(), args);
+                        Object ret = new MagentoMap(new Holder(method.invoke(receptor, args))).get("value");
+                        log.debug("Returning from {} with value {}", method.getName(), ret);
+						return ret;
                     }
                     catch (InvocationTargetException e)
                     {
                         if (e.getCause() instanceof AxisFault)
                         {
+                        	log.warn("An exception was thrown while invoking {}: {}", method.getName(), e.getCause());
                             throw toMagentoException((AxisFault) e.getCause());
                         }
                         throw e;
