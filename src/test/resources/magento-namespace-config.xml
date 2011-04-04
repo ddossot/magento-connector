@@ -131,7 +131,7 @@
 	</flow>
 	
 	<flow name="VoidOrderInvoice">
-		<inbound-endpoint address="vm://voidOrderInvoice"
+		<inbound-endpoint address="vm://VoidOrderInvoice"
 			exchange-pattern="request-response" />
 		<magento:void-order-invoice
 			invoiceId="#[map-payload:invoiceId]"  />
@@ -158,12 +158,21 @@
 			orderId="#[map-payload:orderId]"  />
 	</flow>
 	
+	<flow name="CancelOrderInvoice">
+		<inbound-endpoint address="vm://CancelOrderInvoice"
+			exchange-pattern="request-response" />
+		<magento:cancel-order-invoice
+			invoiceId="#[map-payload:invoiceId]"  />
+	</flow>
 	
-<!-- TODO
+	<flow name="CaptureOrderInvoice">
+		<inbound-endpoint address="vm://CaptureOrderInvoice"
+			exchange-pattern="request-response" />
+		<magento:capture-order-invoice
+			invoiceId="#[map-payload:invoiceId]"  />
+	</flow>
 	
-CaptureOrderInvoiceOperationDefinitionParser	
 	
- -->
 	<!-- Customer API -->
 	
 	<flow name="CreateCustomerAddress">

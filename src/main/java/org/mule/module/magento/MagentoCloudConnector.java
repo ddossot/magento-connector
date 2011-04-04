@@ -485,30 +485,67 @@ public class MagentoCloudConnector implements Initialisable
         orderClient.cancelOrderInvoice(invoiceId);
     }
 
+    //XXX add examples from here 
+    
+    /**
+     * Creates a new address for the given customer using the given address
+     * attributes
+     * 
+     * @param customerId
+     * @param attributes
+     * @return a new customer address id
+     * @throws ExceptionType
+     */
     @Operation
     public int createCustomerAddress(@Parameter int customerId, @Parameter Map<String, Object> attributes)
     {
         return customerClient.createCustomerAddress(customerId, attributes);
     }
 
+    /**
+     * Creates a customer with th given attributes
+     * 
+     * @param attributes the attributes of the new customer
+     * @return the new customer id
+     * @throws ExceptionType
+     */
     @Operation
     public int createCustomer(@Parameter Map<String, Object> attributes)
     {
         return customerClient.createCustomer(attributes);
     }
 
+    /**
+     * Deletes a customer given its id
+     * 
+     * @param customerId
+     */
     @Operation
     public void deleteCustomer(@Parameter int customerId)
     {
         customerClient.deleteCustomer(customerId);
     }
 
+    /**
+     * Deletes a Customer Address
+     * 
+     * @param addressId
+     */
     @Operation
     public void deleteCustomerAddress(@Parameter int addressId)
     {
         customerClient.deleteCustomerAddress(addressId);
     }
 
+    /**
+     * Answers customer attributes for the given id. Only the selected attributes are
+     * retrieved
+     * 
+     * @param customerId
+     * @param attributeNames the attributes to retrieve. Not empty
+     * @return the attributes map
+     * 
+     */
     @Operation
     public Map<String, Object> getCustomer(@Parameter int customerId, @Parameter List<String> attributeNames)
 
@@ -516,41 +553,81 @@ public class MagentoCloudConnector implements Initialisable
         return customerClient.getCustomer(customerId, attributeNames);
     }
 
+    /**
+     * Answers the customer address attributes
+     * @param addressId
+     * @return the customer address attributes
+     * 
+     */
     @Operation
     public Map<String, Object> getCustomerAddress(@Parameter int addressId)
     {
         return customerClient.getCustomerAddress(addressId);
     }
 
+    /**
+     * Lists the customer address for a given customer id
+     * 
+     * @param customerId the id of the customer
+     * @return a listing of addresses
+     */
     @Operation
     public List<Map<String, Object>> listCustomerAddresses(@Parameter int customerId)
     {
         return customerClient.listCustomerAddresses(customerId);
     }
 
+    /**
+     * Lists all the customer groups
+     * 
+     * @return a listing of groups attributes
+     */
     @Operation
     public List<Map<String, Object>> listCustomerGroups()
     {
         return customerClient.listCustomerGroups();
     }
 
+    /**
+     * Answers a list of customer attributes for the given filter expression.
+     * 
+     * @param filters a filtering expression.
+     * @return the attributes map
+     * 
+     */
     @Operation
     public List<Map<String, Object>> listCustomers(@Parameter String filters)
     {
         return customerClient.listCustomers(filters);
     }
 
+    /**
+     * Updates the given customer attributes, for the given customer id. Password can
+     * not be updated using this method
+     * 
+     * @param customerId
+     * @param attributes the attributes map
+     * 
+     */
     @Operation
     public void updateCustomer(@Parameter int customerId, @Parameter Map<String, Object> attributes)
     {
         customerClient.updateCustomer(customerId, attributes);
     }
 
+    /**
+     * Updates the given map of customer address attributes, for the given customer address
+     * 
+     * @param addressId the customer address to update
+     * @param attributes  the address attributes to update
+     */
     @Operation
     public void updateCustomerAddress(@Parameter int addressId, @Parameter Map<String, Object> addressData)
     {
         customerClient.updateCustomerAddress(addressId, addressData);
     }
+    
+    // XXX to here
 
     @Operation
     public List<Map<String, Object>> listStockItems(@Parameter List<String> productIdsOrSkus)

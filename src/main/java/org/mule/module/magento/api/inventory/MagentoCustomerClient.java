@@ -23,7 +23,7 @@ public interface MagentoCustomerClient<AttributesType, AttributesCollectionType,
      * 
      * @param attributes the attributes of the new customer
      * @return the new customer id
-     * @throws ExceptionType
+     * 
      */
     int createCustomer(@NotNull Map<String, Object> attributes) throws ExceptionType;
 
@@ -31,7 +31,7 @@ public interface MagentoCustomerClient<AttributesType, AttributesCollectionType,
      * Deletes a customer given its id
      * 
      * @param customerId
-     * @throws ExceptionType
+     * 
      */
     void deleteCustomer(int customerId) throws ExceptionType;
 
@@ -42,7 +42,7 @@ public interface MagentoCustomerClient<AttributesType, AttributesCollectionType,
      * @param customerId
      * @param attributeNames the attributes to retrieve. Not empty
      * @return the attributes map
-     * @throws ExceptionType
+     * 
      */
     @NotNull
     AttributesType getCustomer(int customerId, @NotNull List<String> attributeNames) throws ExceptionType;
@@ -52,7 +52,7 @@ public interface MagentoCustomerClient<AttributesType, AttributesCollectionType,
      * 
      * @param filters a filtering expression.
      * @return the attributes map
-     * @throws ExceptionType
+     * 
      */
     @NotNull
     AttributesCollectionType listCustomers(String filters) throws ExceptionType;
@@ -63,7 +63,7 @@ public interface MagentoCustomerClient<AttributesType, AttributesCollectionType,
      * 
      * @param customerId
      * @param attributes the attributes map
-     * @throws ExceptionType
+     * 
      */
     void updateCustomer(int customerId, @NotNull Map<String, Object> attributes) throws ExceptionType;
 
@@ -74,18 +74,46 @@ public interface MagentoCustomerClient<AttributesType, AttributesCollectionType,
      * @param customerId
      * @param attributes
      * @return a new customer address id
-     * @throws ExceptionType
+     * 
      */
     int createCustomerAddress(int customerId, @NotNull Map<String, Object> attributes) throws ExceptionType;
 
+    /**
+     * Deletes a Customer Address
+     * 
+     * @param addressId
+     */
     void deleteCustomerAddress(int addressId) throws ExceptionType;
 
+    /**
+     * Answers the customer address attributes
+     * @param addressId
+     * @return the customer address attributes
+     * 
+     */
     AttributesType getCustomerAddress(int addressId) throws ExceptionType;
 
+    /**
+     * Lists the customer address for a given customer id
+     * 
+     * @param customerId the id of the customer
+     * @return a listing of addresses
+     */
     AttributesCollectionType listCustomerAddresses(int customerId) throws ExceptionType;
 
-    void updateCustomerAddress(int addressId, @NotNull Map<String, Object> addressData) throws ExceptionType;
+    /**
+     * Updates the given map of customer address attributes, for the given customer address
+     * 
+     * @param addressId the customer address to update
+     * @param attributes  the address attributes to update
+     */
+    void updateCustomerAddress(int addressId, @NotNull Map<String, Object> attributes) throws ExceptionType;
 
+    /**
+     * Lists all the customer groups
+     * 
+     * @return a listing of groups attributes
+     */
     AttributesCollectionType listCustomerGroups() throws ExceptionType;
 
 }
