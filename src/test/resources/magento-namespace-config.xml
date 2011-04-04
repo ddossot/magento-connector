@@ -24,42 +24,42 @@
 		password="testPassword" address="testAddress" />
 
 
-	<flow name="MagentoOrdersList">
+	<flow name="ListOrders">
 		<inbound-endpoint address="vm://getSalesOrdersList"
 			exchange-pattern="request-response" />
 		<magento:list-orders
 			filter="#[map-payload:operator](#[map-payload:filterKey], #[map-payload:orderId])" />
 	</flow>
 
-	<flow name="MagentoOrderInfo">
+	<flow name="OrderInfo">
 		<inbound-endpoint address="vm://getSalesOrderInfo"
 			exchange-pattern="request-response" />
 		<magento:get-order orderId="#[map-payload:orderId]"
 			config-ref="MagentoTest" />
 	</flow>
 
-	<flow name="MagentoOrderHold">
+	<flow name="OrderHold">
 		<inbound-endpoint address="vm://salesOrderHold"
 			exchange-pattern="request-response" />
 		<magento:hold-order orderId="#[map-payload:orderId]"
 			config-ref="MagentoTest" />
 	</flow>
 
-	<flow name="MagentoOrderUnhold">
+	<flow name="OrderUnhold">
 		<inbound-endpoint address="vm://salesOrderUnhold"
 			exchange-pattern="request-response" />
 		<magento:unhold-order orderId="#[map-payload:orderId]"
 			config-ref="MagentoTest" />
 	</flow>
 
-	<flow name="MagentoOrderCancel">
+	<flow name="OrderCancel">
 		<inbound-endpoint address="vm://salesOrderCancel"
 			exchange-pattern="request-response" />
 		<magento:cancel-order orderId="#[map-payload:orderId]"
 			config-ref="MagentoTest" />
 	</flow>
 
-	<flow name="MagentoOrderComment">
+	<flow name="OrderComment">
 		<inbound-endpoint address="vm://salesOrderComment"
 			exchange-pattern="request-response" />
 		<magento:add-order-comment orderId="#[map-payload:orderId]"
@@ -67,20 +67,20 @@
 			sendEmail="true" config-ref="MagentoTest" />
 	</flow>
 
-	<flow name="MagentoOrderShipmentsList">
+	<flow name="OrderShipmentsList">
 		<inbound-endpoint address="vm://getSalesOrderShipmentsList"
 			exchange-pattern="request-response" />
 		<magento:list-orders-shipments filter="eq(order_id, #[map-payload:orderId])" />
 	</flow>
 
-	<flow name="MagentoOrderShipmentInfo">
+	<flow name="GetOrderShipment">
 		<inbound-endpoint address="vm://getSalesOrderShipmentInfo"
 			exchange-pattern="request-response" />
 		<magento:get-order-shipment
 			shipmentId="#[map-payload:orderShipmentId]" config-ref="MagentoTest" />
 	</flow>
 
-	<flow name="MagentoCreateOrderShipment">
+	<flow name="CreateOrderShipment">
 
 		<inbound-endpoint address="vm://createOrderShipment"
 			exchange-pattern="request-response" />
@@ -92,14 +92,14 @@
 		</magento:create-order-shipment>
 	</flow>
 
-	<flow name="MagentoListOrdersInvoices">
+	<flow name="ListOrdersInvoices">
 		<inbound-endpoint address="vm://listOrdersInvoices"
 			exchange-pattern="request-response" />
 		<magento:list-orders-invoices
 			filter="#[map-payload:operator](#[map-payload:filterKey], #[map-payload:orderId])" />
 	</flow>
 
-	<flow name="MagentoAddOrderShipmentTrack">
+	<flow name="AddOrderShipmentTrack">
 		<inbound-endpoint address="vm://addOrderShipmentTrack"
 			exchange-pattern="request-response" />
 		<magento:add-order-shipment-track
@@ -107,14 +107,14 @@
 			title="#[map-payload:title]" trackId="#[map-payload:trackId]" />
 	</flow>
 
-	<flow name="MagentoDeleteOrdersShipmentTrack">
+	<flow name="DeleteOrdersShipmentTrack">
 		<inbound-endpoint address="vm://deleteOrdersShipmentTrack"
 			exchange-pattern="request-response" />
 		<magento:delete-order-shipment-track
 			shipmentId="#[map-payload:shipmentId]" trackId="#[map-payload:trackId]" />
 	</flow>
 	
-	<flow name="MagentoAddOrderShipmentComment">
+	<flow name="AddOrderShipmentComment">
 		<inbound-endpoint address="vm://addOrderShipmentComment"
 			exchange-pattern="request-response" />
 		<magento:add-order-shipment-comment
@@ -122,7 +122,7 @@
 			comment="#[map-payload:comment]" />
 	</flow>
 	
-	<flow name="MagentoAddOrderInvoiceComment">
+	<flow name="AddOrderInvoiceComment">
 		<inbound-endpoint address="vm://addOrderInvoiceComment"
 			exchange-pattern="request-response" />
 		<magento:add-order-invoice-comment
@@ -130,19 +130,39 @@
 			comment="#[map-payload:comment]" />
 	</flow>
 	
-	<flow name="MagentoVoidOrderInvoice">
+	<flow name="VoidOrderInvoice">
 		<inbound-endpoint address="vm://voidOrderInvoice"
 			exchange-pattern="request-response" />
 		<magento:void-order-invoice
 			invoiceId="#[map-payload:invoiceId]"  />
 	</flow>
 	
+	<flow name="CancelOrder">
+		<inbound-endpoint address="vm://CancelOrder"
+			exchange-pattern="request-response" />
+		<magento:cancel-order
+			orderId="#[map-payload:orderId]"  />
+	</flow>
+	
+	<flow name="GetOrderInvoice">
+		<inbound-endpoint address="vm://GetOrderInvoice"
+			exchange-pattern="request-response" />
+		<magento:get-order-invoice
+			invoiceId="#[map-payload:invoiceId]"  />
+	</flow>
+	
+	<flow name="GetOrderShipmentCarriers">
+		<inbound-endpoint address="vm://GetOrderShipmentCarriers"
+			exchange-pattern="request-response" />
+		<magento:get-order-shipment-carriers
+			orderId="#[map-payload:orderId]"  />
+	</flow>
+	
+	
 <!-- TODO
 	
 CaptureOrderInvoiceOperationDefinitionParser	
-GetOrderInvoiceInfoOperationDefinitionParser	
-CancelOrderInvoiceOperationDefinitionParser	
-GetOrderShipmentCarriersOperationDefinitionParser
+	
  -->
 	<!-- Customer API -->
 	

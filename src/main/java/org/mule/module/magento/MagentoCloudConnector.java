@@ -45,8 +45,6 @@ import java.util.Map;
 @Connector(namespacePrefix = "magento", namespaceUri = "http://www.mulesoft.org/schema/mule/magento")
 public class MagentoCloudConnector implements Initialisable
 {
-    // private Logger log = LoggerFactory.getLogger(MagentoCloudConnector.class);
-
     @Property
     private String username;
     @Property
@@ -114,7 +112,21 @@ public class MagentoCloudConnector implements Initialisable
             setCatalogClient(new AxisMagentoCatalogClient(initializer.getPortProvider()));
         }
     }
-
+    /**
+     * Adds a comment to the shipment. 
+     * 
+     * Example:
+     * 
+     * {@code <magento:add-order-shipment-comment 
+     * 			shipmentId="#[map-payload:shipmentId]" 
+     *        	comment="#[map-payload:comment]" 
+     *          sendEmail="true" />}
+     * 
+     * @param shipmentId the shipment's increment id
+     * @param comment the comment to add
+     * @param sendEmail if an email must be sent after shipment creation
+     * @param includeCommentInEmail if the comment must be sent in the email
+     */
     @Operation
     public void addOrderShipmentComment(@Parameter String shipmentId,
                                         @Parameter String comment,
@@ -125,6 +137,24 @@ public class MagentoCloudConnector implements Initialisable
         orderClient.addOrderShipmentComment(shipmentId, comment, sendEmail, includeCommentInEmail);
     }
 
+    /**
+     * Adds a new tracking number
+     * 
+     * Example:
+     * 
+     * {@code <magento:add-order-shipment-track
+	 * 			shipmentId="#[map-payload:shipmentId]" 
+	 * 			carrierCode="#[map-payload:carrierCode]"
+	 *			title="#[map-payload:title]" 
+	 *			trackId="#[map-payload:trackId]" />}
+     * 
+     * 
+     * @param shipmentId the shipment id
+     * @param carrierCode the new track's carrier code
+     * @param title the new track's title
+     * @param trackNumber the new track's number
+     * @return the new track's id
+     */
     @Operation
     public int addOrderShipmentTrack(@Parameter String shipmentId,
                                      @Parameter String carrierCode,
@@ -134,12 +164,44 @@ public class MagentoCloudConnector implements Initialisable
         return orderClient.addOrderShipmentTrack(shipmentId, carrierCode, title, trackId);
     }
 
+    /**
+     * Cancels an order
+     * 
+     * Example:
+     * 
+     * {@code <magento:cancel-order
+     *  	   orderId="#[map-payload:orderId]"/>}
+     * 
+     * @param orderId the order to cancel
+     */
     @Operation
     public void cancelOrder(@Parameter String orderId)
     {
         orderClient.cancelOrder(orderId);
     }
 
+    /**
+     * Creates a shipment for order
+     * 
+     * Example:
+     * 
+     * {@code <magento:create-order-shipment 
+     * 			orderId="#[map-payload:orderId]"
+	 * 			comment="#[map-payload:comment]">
+	 *			<magento:itemsQuantities>
+	 *				<magento:itemsQuantity key="#[map-payload:orderItemId1]" value="#[map-payload:Quantity1]"/>
+	 *				<magento:itemsQuantity key="#[map-payload:orderItemId2]" value="#[map-payload:Quantity2]"/>
+	 *			</magento:itemsQuantities>
+	 *		</magento:create-order-shipment>}
+     * 
+     * @param orderId the order increment id
+     * @param itemsQuantities a map containing an entry per each (orderItemId,
+     *            quantity) pair
+     * @param comment an optional comment
+     * @param sendEmail if an email must be sent after shipment creation
+     * @param includeCommentInEmail if the comment must be sent in the email
+     * @return the new shipment's id
+     */
     @Operation
     public String createOrderShipment(@Parameter String orderId,
                                       @Parameter Map<Integer, Double> itemsQuantities,
@@ -151,36 +213,106 @@ public class MagentoCloudConnector implements Initialisable
             includeCommentInEmail);
     }
 
+    /**
+     * Answers the order properties for the given orderId
+     * 
+     * Example:
+     * 
+     * {@code  <magento:get-order orderId="#[map-payload:orderId]" />}
+     * 
+     * @param orderId the order whose properties to fetch
+     * @return a string-object map of order properties
+     */
     @Operation
     public Map<String, Object> getOrder(@Parameter String orderId)
     {
         return orderClient.getOrder(orderId);
     }
 
+    /**
+     * Retrieves order invoice information
+     * 
+     * Example:
+     * 
+     * {@code  	<magento:get-order-invoice invoiceId="#[map-payload:invoiceId]"  />}
+     * 
+     * @param invoiceId
+     * @return the invoice attributes
+     */
     @Operation
     public Map<String, Object> getOrderInvoice(@Parameter String invoiceId)
     {
         return orderClient.getOrderInvoice(invoiceId);
     }
 
+    /**
+     * Creates an invoice for the given order
+     * 
+     * Example:
+     * 
+     * {@code  <magento:get-order-shipment-carriers  orderId="#[map-payload:orderId]"  />}
+     * 
+     * @param orderId
+     * @param itemsQuantities a map containing an entry per each (orderItemId,
+     *            quantity) pair
+     * @param comment an optional comment
+     * @param sendEmail if an email must be sent after shipment creation
+     * @param includeCommentInEmail if the comment must be sent in the email
+     * @return the new invoice's id
+     */
     @Operation
     public List<Carrier> getOrderShipmentCarriers(@Parameter String orderId)
     {
         return orderClient.getOrderShipmentCarriers(orderId);
     }
 
+    /**
+     * Adds a comment to the given order's invoice
+     * 
+     * Example:
+     * 
+     * {@code  <magento:get-order-shipment 
+     * 			shipmentId="#[map-payload:orderShipmentId]" /> }
+     * 
+     * @param invoiceId the invoice id
+     * @param comment the comment to add
+     * @param sendEmail if an email must be sent after shipment creation
+     * @param includeCommentInEmail if the comment must be sent in the email
+     */
     @Operation
     public Map<String, Object> getOrderShipment(@Parameter String shipmentId)
     {
         return orderClient.getOrderShipment(shipmentId);
     }
 
+    /**
+     * Puts order on hold
+     * 
+     * Example:
+     * 
+     * {@code  <magento:hold-order orderId="#[map-payload:orderId]"/>}
+     * 
+     * @param order id
+     */
     @Operation
     public void holdOrder(@Parameter String orderId)
     {
         orderClient.holdOrder(orderId);
     }
 
+    
+    /**
+     * Lists order attributes that match the 
+     * given filtering expression
+     * 
+     * Example
+     * 
+     * {@code <magento:list-orders 
+     * 			filter="gt(subtotal, #[map-payload:minSubtotal])"/>}	
+     * 
+     * @param filters optional filtering expression
+     * @return a list of string-object maps
+     */
     @Operation
     public List<Map<String, Object>> listOrders(@Parameter(optional = true) String filter)
     {
@@ -214,6 +346,15 @@ public class MagentoCloudConnector implements Initialisable
         orderClient.addOrderComment(orderId, status, comment, sendEmail);
     }
 
+    /**
+     * Releases order
+     * 
+     * Example:
+     * 
+     * {@code  <magento:unhold-order orderId="#[map-payload:orderId]" />}
+     * 
+     * @param order id
+     */
     @Operation
     public void unholdOrder(@Parameter String orderId)
     {
@@ -257,6 +398,8 @@ public class MagentoCloudConnector implements Initialisable
     {
         orderClient.cancelOrderInvoice(invoiceId);
     }
+    
+    //XXX up to here
 
     @Operation
     public int createCustomerAddress(@Parameter int customerId, @Parameter Map<String, Object> attributes)

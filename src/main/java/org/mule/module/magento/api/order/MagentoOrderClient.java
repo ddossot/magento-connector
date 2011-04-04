@@ -63,9 +63,9 @@ public interface MagentoOrderClient<AttributesType, AttributesCollectionType, Ex
     void unholdOrder(String orderId) throws ExceptionType;
 
     /**
-     * Cancels order
+     * Cancels an order
      * 
-     * @param order id
+     * @param orderId the order to cancel
      */
     void cancelOrder(@NotNull String orderId) throws ExceptionType;
 
@@ -103,13 +103,13 @@ public interface MagentoOrderClient<AttributesType, AttributesCollectionType, Ex
     /**
      * Adds a comment to the shipment
      * 
-     * @param shipmentId
-     * @param comment
+     * @param shipmentId the shipment's increment id
+     * @param comment the comment to add
      * @param sendEmail if an email must be sent after shipment creation
      * @param includeCommentInEmail if the comment must be sent in the email
      */
     void addOrderShipmentComment(@NotNull String shipmentId,
-                                 String comment,
+                                 @NotNull String comment,
                                  boolean sendEmail,
                                  boolean includeCommentInEmail) throws ExceptionType;
 
@@ -173,8 +173,8 @@ public interface MagentoOrderClient<AttributesType, AttributesCollectionType, Ex
     /**
      * Retrieves order invoice information
      * 
-     * @param Order invoice ID
-     * @return sales order invoice attributes
+     * @param invoiceId
+     * @return the invoice attributes
      */
     @NotNull
     AttributesType getOrderInvoice(@NotNull String invoiceId) throws ExceptionType;
