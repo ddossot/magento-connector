@@ -31,10 +31,11 @@ public interface MagentoOrderClient<AttributesType, AttributesCollectionType, Ex
 {
 
     /**
-     * Returns list of Magento sales orders
+     * Lists order attributes that match the 
+     * given filtering expression
      * 
-     * @param filters optional list of filters
-     * @return list of sales orders
+     * @param filters optional filtering expression
+     * @return a list of order attributes
      */
     @NotNull
     AttributesCollectionType listOrders(@NotNull String filter) throws ExceptionType;
@@ -83,10 +84,11 @@ public interface MagentoOrderClient<AttributesType, AttributesCollectionType, Ex
                          boolean sendEmail) throws ExceptionType;
 
     /**
-     * Returns list of Magento sales order shipments
+     * Lists order shipment atrributes that match the given 
+     * optional filtering expression
      * 
      * @param filters optional list of filters
-     * @return list of sales order shipments attributes
+     * @return list of string-object map order shipments attributes
      */
     @NotNull
     AttributesCollectionType listOrdersShipments(String filter) throws ExceptionType;
@@ -162,10 +164,10 @@ public interface MagentoOrderClient<AttributesType, AttributesCollectionType, Ex
                                boolean includeCommentInEmail) throws ExceptionType;
 
     /**
-     * Returns list of Magento sales order invoices
+     * Lists order invoices that match the given filtering expression
      * 
      * @param filters optional list of filters
-     * @return list of sales order invoices
+     * @return list of string-object maps order attributes
      */
     @NotNull
     AttributesCollectionType listOrdersInvoices(String filter) throws ExceptionType;
@@ -212,7 +214,7 @@ public interface MagentoOrderClient<AttributesType, AttributesCollectionType, Ex
     /**
      * Captures and invoice
      * 
-     * @param invoiceId
+     * @param invoiceId the invoice to capture
      */
     void captureOrderInvoice(@NotNull String invoiceId) throws ExceptionType;
 

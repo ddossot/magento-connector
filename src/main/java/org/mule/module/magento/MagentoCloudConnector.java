@@ -319,24 +319,67 @@ public class MagentoCloudConnector implements Initialisable
         return orderClient.listOrders(filter);
     }
 
+    /**
+     * Lists order invoices that match the given filtering expression
+     * 
+     * Example:
+     * 
+     * {@code <magento:list-orders-invoices filter="notnull(parent_id)" />}	
+     * 
+     * @param filters optional list of filters
+     * @return list of string-object maps order attributes
+     */
     @Operation
     public List<Map<String, Object>> listOrdersInvoices(@Parameter(optional = true) String filter)
     {
         return orderClient.listOrdersInvoices(filter);
     }
 
+    /**
+     * Lists order shipment atrributes that match the given 
+     * optional filtering expression
+     * 
+     * Example:
+     * 
+     * {@code <magento:list-orders-shipments filter="null(parent_id)" />}
+     * 
+     * @param filters optional list of filters
+     * @return list of string-object map order shipments attributes
+     */
     @Operation
     public List<Map<String, Object>> listOrdersShipments(@Parameter(optional = true) String filter)
     {
         return orderClient.listOrdersShipments(filter);
     }
 
+    /**
+     * Deletes the given track of the given order's shipment
+     * 
+     * <magento:delete-order-shipment-track
+	 *		shipmentId="#[map-payload:shipmentId]" trackId="#[map-payload:trackId]" />
+     * 
+     * @param shipmentId the target shipment id
+     * @param trackId the id of the track to delete
+     */
     @Operation
     public void deleteOrderShipmentTrack(@Parameter String shipmentId, @Parameter String trackId)
     {
         orderClient.deleteOrderShipmentTrack(shipmentId, trackId);
     }
 
+    /**
+     * Adds a comment to the given order id
+     * 
+     * {@code <magento:add-order-comment 
+     * 				orderId="#[map-payload:orderId]"
+	 *				status="#[map-payload:status]" 
+	 *				comment="#[map-payload:comment]" />}	
+     * 
+     * @param orderId the order id
+     * @param status TODO possible values?
+     * @param comment
+     * @param sendEmail if an email must be sent after shipment creation
+     */
     @Operation
     public void addOrderComment(@Parameter String orderId,
                                 @Parameter String status,
@@ -361,6 +404,7 @@ public class MagentoCloudConnector implements Initialisable
         orderClient.unholdOrder(orderId);
     }
 
+    //TODO generic creation?
     @Operation
     public String createOrderInvoice(@Parameter String orderId,
                                      @Parameter Map<Integer, Double> itemsQuantities,
@@ -372,6 +416,21 @@ public class MagentoCloudConnector implements Initialisable
             includeCommentInEmail);
     }
 
+    /**
+     * Adds a comment to the given order's invoice
+     * 
+     * Example: 
+     * 
+     * {@code  <magento:add-order-comment 
+     * 			orderId="#[map-payload:orderId]"
+     * 			status="#[map-payload:status]" 
+     * 			comment="#[map-payload:comment]" }
+     * 
+     * @param invoiceId the invoice id
+     * @param comment the comment to add
+     * @param sendEmail if an email must be sent after shipment creation
+     * @param includeCommentInEmail if the comment must be sent in the email
+     */
     @Operation
     public void addOrderInvoiceComment(@Parameter String invoiceId,
                                        @Parameter String comment,
@@ -381,25 +440,50 @@ public class MagentoCloudConnector implements Initialisable
         orderClient.addOrderInvoiceComment(invoiceId, comment, sendEmail, includeCommentInEmail);
     }
 
+    /**
+     * Captures and invoice
+     * 
+     * Example: 
+     * 
+     * {@code  <magento:capture-order-invoice invoiceId="#[map-payload:invoiceId]"  />}
+     * 
+     * @param invoiceId the invoice to capture
+     */
     @Operation
     public void captureOrderInvoice(@Parameter String invoiceId)
     {
         orderClient.captureOrderInvoice(invoiceId);
     }
 
+    /**
+     * Voids an invoice
+     * 
+     * Example: 
+     * 
+     * {@code  <magento:void-order-invoice invoiceId="#[map-payload:invoiceId]"/>}
+     * 
+     * @param invoiceId the invoice id
+     */
     @Operation
     public void voidOrderInvoice(@Parameter String invoiceId)
     {
         orderClient.voidOrderInvoice(invoiceId);
     }
 
+    /**
+     * Cancels an order's invoice
+     * 
+     * Example: 
+     * 
+     * {@code  <magento:cancel-order-invoice invoiceId="#[map-payload:invoiceId]"  />}
+     * 
+     * @param invoiceId the invoice id
+     */
     @Operation
     public void cancelOrderInvoice(@Parameter String invoiceId)
     {
         orderClient.cancelOrderInvoice(invoiceId);
     }
-    
-    //XXX up to here
 
     @Operation
     public int createCustomerAddress(@Parameter int customerId, @Parameter Map<String, Object> attributes)

@@ -7,7 +7,8 @@ PARSER_BEGIN(FiltersParser)
     import  org.mule.module.magento.api.internal.Filters;
 
 	/**
-	 * A Magento's filter expression parser
+	 * A Magento's filter expression parser.
+	 * TODO support a true operator? Example: true(is_active)
 	 */    
 	public class FiltersParser {
 	
