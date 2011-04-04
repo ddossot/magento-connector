@@ -10,12 +10,13 @@
 
 package org.mule.module.magento;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertNotNull;
 
 import org.mule.module.magento.api.MagentoException;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -103,5 +104,29 @@ public class MagentoCloudConnectorTestDriver
         });
     }
     
-
+    /**
+     * Tests that filtering expressions
+     * are interpreted properly the the webservice when passing numeric arguments 
+     */
+    @Test
+    public void getWithNumericFilter() throws Exception
+    {
+		assertEquals(connector.listOrders("").size(),
+			connector.listOrders("gt(subtotal, 800)").size() 
+		  + connector.listOrders("lteq(subtotal, 800)").size()); 
+    }
+    
+    /**
+     * Tests that filtering expressions
+     * are interpreted properly the the webservice when passing string 
+     * arguments 
+     */
+    @Test
+    public void getWithStringFilter() throws Exception
+    {
+		assertEquals(connector.listOrders("").size(),
+			connector.listOrders("eq(customer_firstname, 'John')").size() 
+		  + connector.listOrders("neq(customer_firstname, 'John')").size()); 
+    }
+    
 }
