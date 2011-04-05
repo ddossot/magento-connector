@@ -10,6 +10,12 @@
 
 package org.mule.module.magento;
 
+import static org.mule.module.magento.api.catalog.model.ProductIdentifiers.from;
+
+import java.rmi.RemoteException;
+import java.util.List;
+import java.util.Map;
+
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.module.magento.api.AxisPortProvider;
@@ -31,11 +37,6 @@ import org.mule.tools.cloudconnect.annotations.Connector;
 import org.mule.tools.cloudconnect.annotations.Operation;
 import org.mule.tools.cloudconnect.annotations.Parameter;
 import org.mule.tools.cloudconnect.annotations.Property;
-
-import java.rmi.RemoteException;
-import java.util.List;
-import java.util.Map;
-
 /**
  * A Cloud Connector for the Magento Order Sales API.
  * 
@@ -717,40 +718,40 @@ public class MagentoCloudConnector implements Initialisable
     }
 
     @Operation
-    public String assignProductLink(String type,
-                                    String product,
-                                    String linkedProduct,
-                                    Map<String, Object> attributes,
-                                    String productIdentifierType) throws RemoteException
+    public String assignProductLink(@Parameter String type,
+    								@Parameter(optional=true) Integer productId,
+    								@Parameter(optional=true) String productSku,
+                                    @Parameter String linkedProduct,
+                                    @Parameter Map<String, Object> attributes) throws RemoteException
     {
-        return catalogClient.assignProductLink(type, product, linkedProduct, attributes,
-            productIdentifierType);
+        return catalogClient.assignProductLink(type, from(productSku, productId), linkedProduct, attributes);
     }
 
     @Operation
-    public String createProductAttributeMedia(String product,
+    public String createProductAttributeMedia(@Parameter(optional=true) Integer productId,
+											  @Parameter(optional=true) String productSku,
                                               Map<String, Object> attributes,
-                                              String storeView,
-                                              String productIdentifierType) throws RemoteException
+                                              String storeView) throws RemoteException
     {
-        return catalogClient.createProductAttributeMedia(product, attributes, storeView,
-            productIdentifierType);
+        return catalogClient.createProductAttributeMedia(from(productSku, productId), attributes, storeView);
     }
 
     @Operation
-    public int deleteProductAttributeMedia(String product, String file, String productIdentifierType)
+    public int deleteProductAttributeMedia(@Parameter(optional=true) Integer productId,
+										   @Parameter(optional=true) String productSku,
+										   String file)
         throws RemoteException
     {
-        return catalogClient.deleteProductAttributeMedia(product, file, productIdentifierType);
+        return catalogClient.deleteProductAttributeMedia(from(productSku, productId), file);
     }
 
     @Operation
     public String deleteProductLink(String type,
-                                    String product,
-                                    String linkedProduct,
-                                    String productIdentifierType) throws RemoteException
+						    		@Parameter(optional=true) Integer productId,
+									@Parameter(optional=true) String productSku,
+                                    String linkedProduct) throws RemoteException
     {
-        return catalogClient.deleteProductLink(type, product, linkedProduct, productIdentifierType);
+        return catalogClient.deleteProductLink(type, from(productSku, productId), linkedProduct);
     }
 
     @Operation
@@ -760,12 +761,12 @@ public class MagentoCloudConnector implements Initialisable
     }
 
     @Operation
-    public Map<String, Object> getProductAttributeMedia(String product,
-                                                        String file,
-                                                        String storeView,
-                                                        String productIdentifierType) throws RemoteException
+    public Map<String, Object> getProductAttributeMedia(@Parameter(optional=true) Integer productId,
+														@Parameter(optional=true) String productSku,
+                                                        @Parameter String file,
+                                                        @Parameter(optional=true) String storeView) throws RemoteException
     {
-        return catalogClient.getProductAttributeMedia(product, file, storeView, productIdentifierType);
+        return catalogClient.getProductAttributeMedia(from(productSku, productId), file, storeView);
     }
 
     @Operation
@@ -794,12 +795,12 @@ public class MagentoCloudConnector implements Initialisable
     }
 
     @Operation
-    public List<Map<String, Object>> listProductAttributeMedia(String product,
-                                                               String storeView,
-                                                               String productIdentifierType)
+    public List<Map<String, Object>> listProductAttributeMedia(@Parameter(optional=true) Integer productId,
+															   @Parameter(optional=true) String productSku,
+                                                               String storeView)
         throws RemoteException
     {
-        return catalogClient.listProductAttributeMedia(product, storeView, productIdentifierType);
+        return catalogClient.listProductAttributeMedia(from(productSku, productId), storeView);
     }
 
     @Operation
@@ -828,18 +829,20 @@ public class MagentoCloudConnector implements Initialisable
     }
 
     @Operation
-    public List<Map<String, Object>> listProductAttributeTierPrices(String product,
-                                                                    String productIdentifierType)
+    public List<Map<String, Object>> listProductAttributeTierPrices(@Parameter(optional=true) Integer productId,
+																	@Parameter(optional=true) String productSku)
         throws RemoteException
     {
-        return catalogClient.listProductAttributeTierPrices(product, productIdentifierType);
+        return catalogClient.listProductAttributeTierPrices(from(productSku, productId));
     }
 
     @Operation
-    public List<Map<String, Object>> listProductLink(String type, String product, String productIdentifierType)
+    public List<Map<String, Object>> listProductLink(String type,	
+    												@Parameter(optional=true) Integer productId,
+    												@Parameter(optional=true) String productSku)
         throws RemoteException
     {
-        return catalogClient.listProductLink(type, product, productIdentifierType);
+        return catalogClient.listProductLink(type, from(productSku, productId));
     }
 
     @Operation
@@ -867,14 +870,13 @@ public class MagentoCloudConnector implements Initialisable
     }
 
     @Operation
-    public int updateProductAttributeMedia(String product,
+    public int updateProductAttributeMedia(@Parameter(optional=true) Integer productId,
+										   @Parameter(optional=true) String productSku,
                                            String file,
                                            Map<String, Object> attributes,
-                                           String storeView,
-                                           String productIdentifierType) throws RemoteException
+                                           String storeView) throws RemoteException
     {
-        return catalogClient.updateProductAttributeMedia(product, file, attributes, storeView,
-            productIdentifierType);
+        return catalogClient.updateProductAttributeMedia(from(productSku, productId), file, attributes, storeView);
     }
 
     @Operation
@@ -890,22 +892,21 @@ public class MagentoCloudConnector implements Initialisable
     }
 
     /** FIXME */
-    public void updateProductAttributeTierPrices(String product,
-                                                 List<Map<String, Object>> attributes,
-                                                 String productIdentifierType) throws RemoteException
+    public void updateProductAttributeTierPrices(@Parameter(optional=true) Integer productId,
+												 @Parameter(optional=true) String productSku,
+                                                 List<Map<String, Object>> attributes) throws RemoteException
     {
-        catalogClient.updateProductAttributeTierPrices(product, attributes, productIdentifierType);
+        catalogClient.updateProductAttributeTierPrices(from(productSku, productId), attributes);
     }
 
     @Operation
     public String updateProductLink(String type,
-                                    String product,
+									@Parameter(optional=true) Integer productId,
+									@Parameter(optional=true) String productSku,
                                     String linkedProduct,
-                                    Map<String, Object> attributes,
-                                    String productIdentifierType) throws RemoteException
+                                    Map<String, Object> attributes) throws RemoteException
     {
-        return catalogClient.updateProductLink(type, product, linkedProduct, attributes,
-            productIdentifierType);
+        return catalogClient.updateProductLink(type, from(productSku, productId), linkedProduct, attributes);
     }
 
     @SuppressWarnings("unchecked")

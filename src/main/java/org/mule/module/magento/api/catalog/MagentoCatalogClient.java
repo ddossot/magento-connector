@@ -16,6 +16,8 @@ import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
+import org.mule.module.magento.api.catalog.model.ProductIdentifier;
+
 public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, ExceptionType extends Exception>
 {
 
@@ -26,14 +28,12 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * @param product
      * @param attributes
      * @param storeView
-     * @param productIdentifierType
      * @return
-     * @throws RemoteException
+     * 
      */
-    String createProductAttributeMedia(@NotNull String product,
+    String createProductAttributeMedia(@NotNull ProductIdentifier productId,
                                        @NotNull Map<String, Object> attributes,
-                                       String storeView,
-                                       String productIdentifierType) throws RemoteException;
+                                       String storeView) throws RemoteException;
 
     /**
      * Set current store view. See catalog-product-attribute-media-currentStore SOAP
@@ -41,7 +41,7 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * 
      * @param storeView
      * @return
-     * @throws RemoteException
+     * 
      */
     void updateProductAttributeMediaStoreView(@NotNull String storeView) throws RemoteException;
 
@@ -51,24 +51,20 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * 
      * @param storeView
      * @return
-     * @throws RemoteException
+     * 
      */
     int getProductAttributeMediaStoreView() throws RemoteException;
 
     /**
-     * 66.catalog-product-attribute-media-info Retrieve product image
-     * 
-     * @param product
+     * Answers product image attributes. See catalog-product-attribute-media-info SOAP method 
+     * @param productId
      * @param file
      * @param storeView
-     * @param productIdentifierType
-     * @return
-     * @throws RemoteException
+     * @return the product attributes
      */
-    AttributesType getProductAttributeMedia(@NotNull String product,
+    AttributesType getProductAttributeMedia(@NotNull ProductIdentifier productId,
                                             @NotNull String file,
-                                            String storeView,
-                                            @NotNull String productIdentifierType) throws RemoteException;
+                                            String storeView) throws RemoteException;
 
     /**
      * Retrieves product image list. See catalog-product-attribute-media-list SOAP
@@ -76,13 +72,11 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * 
      * @param product
      * @param storeView
-     * @param productIdentifierType
      * @return the list of product images attributes
-     * @throws RemoteException
+     * 
      */
-    AttributesCollectionType listProductAttributeMedia(String product,
-                                                       String storeView,
-                                                       String productIdentifierType) throws RemoteException;
+    AttributesCollectionType listProductAttributeMedia(@NotNull ProductIdentifier productId,
+                                                       String storeView) throws RemoteException;
 
     /**
      * Removes a product image. See catalog-product-attribute-media-remove SOAP
@@ -90,11 +84,10 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * 
      * @param product
      * @param file
-     * @param productIdentifierType
      * @return
-     * @throws RemoteException
+     * 
      */
-    int deleteProductAttributeMedia(String product, String file, String productIdentifierType)
+    int deleteProductAttributeMedia(@NotNull ProductIdentifier productId, @NotNull String file)
         throws RemoteException;
 
     /**
@@ -103,7 +96,7 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * 
      * @param setId
      * @return
-     * @throws RemoteException
+     * 
      */
     AttributesCollectionType listProductAttributeMediaTypes(String setId) throws RemoteException;
 
@@ -114,22 +107,20 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * @param file
      * @param attributes
      * @param storeView
-     * @param productIdentifierType
      * @return
-     * @throws RemoteException
+     * 
      */
-    int updateProductAttributeMedia(String product,
+    int updateProductAttributeMedia(@NotNull ProductIdentifier productId,
                                     String file,
                                     @NotNull Map<String, Object> attributes,
-                                    String storeView,
-                                    String productIdentifierType) throws RemoteException;
+                                    String storeView) throws RemoteException;
 
     /**
      * Retrieves category attributes. See catalog-category-attribute-list SOAP
      * method.
      * 
      * @return the list of attributes
-     * @throws RemoteException
+     * 
      */
     AttributesCollectionType listCategoryAttributes() throws RemoteException;
 
@@ -137,7 +128,7 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * TODO verify
      * 
      * @param storeView
-     * @throws RemoteException
+     * 
      */
     void updateCategoryAttributeStoreView(String storeView) throws RemoteException;
 
@@ -145,7 +136,7 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * TODO verify
      * 
      * @return
-     * @throws RemoteException
+     * 
      */
     int getCategoryAttributeStoreView() throws RemoteException;
 
@@ -156,7 +147,7 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * @param attributeId
      * @param storeView optinal
      * @return the list of attributes
-     * @throws RemoteException
+     * 
      */
     AttributesCollectionType listCategoryAttributesOptions(@NotNull String attributeId, String storeView)
         throws RemoteException;
@@ -165,7 +156,7 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * Sets the product attribute store. TODO verify
      * 
      * @param storeView
-     * @throws RemoteException
+     * 
      */
     void updateProductAttributeStoreView(@NotNull String storeView) throws RemoteException;
 
@@ -173,7 +164,7 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * Gets the product attribute store view. TODO verify
      * 
      * @return the current store
-     * @throws RemoteException
+     * 
      */
     int getProductAttributeStoreView() throws RemoteException;
 
@@ -183,7 +174,7 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * 
      * @param setId
      * @return the list of product attributes
-     * @throws RemoteException
+     * 
      */
     AttributesCollectionType listProductAttributes(int setId) throws RemoteException;
 
@@ -194,7 +185,7 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * @param attributeId
      * @param storeView optional
      * @return the attributes list
-     * @throws RemoteException
+     * 
      */
     @NotNull
     AttributesCollectionType listProductAttributeOptions(@NotNull String attributeId, String storeView)
@@ -205,7 +196,7 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * method.
      * 
      * @return The list of product attributes sets
-     * @throws RemoteException
+     * 
      */
     @NotNull
     AttributesCollectionType listProductAttributeSets() throws RemoteException;
@@ -214,7 +205,7 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * Retrieves product types. See catalog-product-type-list SOAP method
      * 
      * @return the list of product types
-     * @throws RemoteException
+     * 
      */
     @NotNull
     AttributesCollectionType listProductTypes() throws RemoteException;
@@ -223,52 +214,44 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * Retrieve product tier prices. See catalog-product-attribute-tier-price-info
      * SOAP Method.
      * 
-     * @param product
-     * @param productIdentifierType
+     * @param productId
      * @return the list of product attributes
-     * @throws RemoteException
+     * 
      */
     @NotNull
-    AttributesCollectionType listProductAttributeTierPrices(@NotNull String product,
-                                                            @NotNull String productIdentifierType)
+    AttributesCollectionType listProductAttributeTierPrices(@NotNull ProductIdentifier productId)
         throws RemoteException;
 
     /**
      * Updates product tier prices. See catalog-product-attribute-tier-price-update
      * SOAP method.
      * 
-     * @param product
+     * @param productId
      * @param attributes
-     * @param productIdentifierType
-     * @throws RemoteException
      */
-    void updateProductAttributeTierPrices(@NotNull String product,
-                                          @NotNull List<Map<String, Object>> attributes,
-                                          @NotNull String productIdentifierType) throws RemoteException;
+    void updateProductAttributeTierPrices(@NotNull ProductIdentifier productId,
+                                          @NotNull List<Map<String, Object>> attributes) throws RemoteException;
 
     /**
      * Assigns a link to a product
      * 
      * @param type
-     * @param product
+     * @param productId
      * @param linkedProduct
      * @param attributes
-     * @param productIdentifierType
      * @return TODO
-     * @throws RemoteException
      */
     String assignProductLink(@NotNull String type,
-                             @NotNull String product,
+    						 @NotNull ProductIdentifier productId,
                              @NotNull String linkedProduct,
-                             @NotNull Map<String, Object> attributes,
-                             @NotNull String productIdentifierType) throws RemoteException;
+                             @NotNull Map<String, Object> attributes) throws RemoteException;
 
     /**
      * Retrieve product link type attributes
      * 
      * @param type
      * @return
-     * @throws RemoteException
+     * 
      */
     AttributesCollectionType listProductLinkAttributes(String type) throws RemoteException;
 
@@ -276,35 +259,30 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * Retrieve linked products
      * 
      * @param type
-     * @param product
-     * @param productIdentifierType
+     * @param productId
      * @return the list of links to the product
-     * @throws RemoteException
+     * 
      */
     AttributesCollectionType listProductLink(@NotNull String type,
-                                             @NotNull String product,
-                                             @NotNull String productIdentifierType) throws RemoteException;
+    										 @NotNull ProductIdentifier productId) throws RemoteException;
 
     /**
      * Deletes a link in a product
      * 
      * @param type
-     * @param product
+     * @param productId
      * @param linkedProduct
-     * @param productIdentifierType
      * @return TODO
-     * @throws RemoteException
      */
     String deleteProductLink(@NotNull String type,
-                             @NotNull String product,
-                             @NotNull String linkedProduct,
-                             @NotNull String productIdentifierType) throws RemoteException;
+    						 @NotNull ProductIdentifier productId,
+                             @NotNull String linkedProduct) throws RemoteException;
 
     /**
      * Retrieve product link types
      * 
      * @return the list of product link types
-     * @throws RemoteException
+     * 
      */
     String[] listProductLinkTypes() throws RemoteException;
 
@@ -315,14 +293,11 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * @param product
      * @param linkedProduct
      * @param attributes
-     * @param productIdentifierType
      * @return TODO
-     * @throws RemoteException
      */
     String updateProductLink(@NotNull String type,
-                             @NotNull String product,
+    						 @NotNull ProductIdentifier productId,
                              @NotNull String linkedProduct,
-                             @NotNull Map<String, Object> attributes,
-                             @NotNull String productIdentifierType) throws RemoteException;
+                             @NotNull Map<String, Object> attributes) throws RemoteException;
 
 }

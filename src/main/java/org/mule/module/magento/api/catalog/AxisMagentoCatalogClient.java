@@ -14,6 +14,7 @@ import static org.mule.module.magento.api.util.MagentoObject.fromMap;
 
 import org.mule.module.magento.api.AbstractMagentoClient;
 import org.mule.module.magento.api.AxisPortProvider;
+import org.mule.module.magento.api.catalog.model.ProductIdentifier;
 import org.mule.module.magento.api.internal.CatalogCategoryEntityCreate;
 import org.mule.module.magento.api.internal.CatalogInventoryStockItemUpdateEntity;
 import org.mule.module.magento.api.internal.CatalogProductAttributeMediaCreateEntity;
@@ -47,12 +48,11 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
     }
 
     public boolean addCategoryProduct(int categoryId,
-                                      String product,
-                                      String position,
-                                      String productIdentifierType) throws RemoteException
+                                      @NotNull ProductIdentifier productId,
+                                      String position) throws RemoteException
     {
-        return getPort().catalogCategoryAssignProduct(getSessionId(), categoryId, product, position,
-            productIdentifierType);
+        return getPort().catalogCategoryAssignProduct(getSessionId(), categoryId, productId.getIdentifierAsString(), position,
+            productId.getIdentifierType());
     }
 
     public int createCategory(int parentId, @NotNull Map<String, Object> attributes, String storeView)
@@ -90,11 +90,11 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
         getPort().catalogCategoryMove(getSessionId(), categoryId, parentId, afterId);
     }
 
-    public boolean deleteCategoryProduct(int categoryId, String product, String productIdentifierType)
+    public boolean deleteCategoryProduct(int categoryId, @NotNull ProductIdentifier productId)
         throws RemoteException
     {
-        return getPort().catalogCategoryRemoveProduct(getSessionId(), categoryId, product,
-            productIdentifierType);
+        return getPort().catalogCategoryRemoveProduct(getSessionId(), categoryId, productId.getIdentifierAsString(),
+            productId.getIdentifierType());
     }
 
     // TODO naming
@@ -112,12 +112,11 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
     }
 
     public boolean catalogCategoryUpdateProduct(int categoryId,
-                                                String product,
-                                                String position,
-                                                String productIdentifierType) throws RemoteException
+                                                @NotNull ProductIdentifier productId,
+                                                String position) throws RemoteException
     {
-        return getPort().catalogCategoryUpdateProduct(getSessionId(), categoryId, product, position,
-            productIdentifierType);
+        return getPort().catalogCategoryUpdateProduct(getSessionId(), categoryId, productId.getIdentifierAsString(), position,
+            productId.getIdentifierType());
     }
 
     public Object[] listInventoryStockItems(String[] products) throws RemoteException
@@ -125,86 +124,13 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
         return getPort().catalogInventoryStockItemList(getSessionId(), products);
     }
 
-    public int catalogInventoryStockItemUpdate(String product, @NotNull Map<String, Object> attributes)
+    public int catalogInventoryStockItemUpdate(@NotNull ProductIdentifier productId, @NotNull Map<String, Object> attributes)
         throws RemoteException
     {
         Validate.notNull(attributes);
-        return getPort().catalogInventoryStockItemUpdate(getSessionId(), product,
+        return getPort().catalogInventoryStockItemUpdate(getSessionId(), productId.getIdentifierAsString(),
             fromMap(CatalogInventoryStockItemUpdateEntity.class, attributes));
     }
-
-    public int createProduct(String type, String set, String sku, @NotNull Map<String, Object> attributes)
-        throws RemoteException
-    {
-        Validate.notNull(attributes);
-        return getPort().catalogProductCreate(getSessionId(), type, set, sku,
-            fromMap(CatalogProductCreateEntity.class, attributes));
-    }
-
-    public int updateProductStore(String storeView) throws RemoteException
-    {
-        return getPort().catalogProductCurrentStore(getSessionId(), storeView);
-    }
-
-    public int deleteProduct(String product, String productIdentifierType) throws RemoteException
-    {
-        return getPort().catalogProductDelete(getSessionId(), product, productIdentifierType);
-    }
-
-    public Object getProductSpecialPrice(String product, String storeView, String productIdentifierType)
-        throws RemoteException
-    {
-        return getPort().catalogProductGetSpecialPrice(getSessionId(), product, storeView,
-            productIdentifierType);
-    }
-
-    public Object getProduct(String product,
-                             String storeView,
-                             @NotNull Map<String, Object> attributes,
-                             String productIdentifierType) throws RemoteException
-    {
-        Validate.notNull(attributes);
-        return getPort().catalogProductInfo(getSessionId(), product, storeView,
-            fromMap(CatalogProductRequestAttributes.class, attributes), productIdentifierType);
-    }
-
-    public Object[] listCatalogProducts(String filters, String storeView) throws RemoteException
-    {
-        return getPort().catalogProductList(getSessionId(), FiltersParser.parse(filters), storeView);
-    }
-
-    public int updateProductSpecialPrice(String product,
-                                         String specialPrice,
-                                         String fromDate,
-                                         String toDate,
-                                         String storeView,
-                                         String productIdentifierType) throws RemoteException
-    {
-        return getPort().catalogProductSetSpecialPrice(getSessionId(), product, specialPrice, fromDate,
-            toDate, storeView, productIdentifierType);
-    }
-
-    /**
-     * Updates a product
-     * 
-     * @param productIdOrSku the product id or sku to update
-     * @param attributes
-     * @param storeViewIdOrCode optional store view
-     * @param productIdentifierType
-     * @throws RemoteException
-     */
-    public void updateProduct(@NotNull String productIdOrSku,
-                              @NotNull Map<String, Object> attributes,
-                              String storeViewIdOrCode,
-                              @NotNull String productIdentifierType) throws RemoteException
-    {
-        Validate.notNull(productIdOrSku);
-        Validate.notNull(attributes);
-        Validate.notNull(productIdentifierType);
-        getPort().catalogProductUpdate(getSessionId(), productIdOrSku,
-            fromMap(CatalogProductCreateEntity.class, attributes), storeViewIdOrCode, productIdentifierType);
-    }
-
     /*
      * . Category 36.catalog-category-assignedProducts Retrieve list of assigned
      * products 37.catalog-category-assignProduct Assign product to category
@@ -218,29 +144,172 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
      * from admin interface then 43.catalog-category-move Move category in tree
      * 44.catalog-category-removeProduct Remove product assignment
      * 45.catalog-category-tree Retrieve hierarchical tree 46.catalog-category-update
-     * Update category 47.catalog-category-updateProduct Update assigned product c.
-     * Product 51.catalog-product-create Create new product
-     * 52.catalog-product-currentStore Set/Get current store view
-     * 53.catalog-product-delete Delete product 54.catalog-product-getSpecialPrice
-     * Get special price for product 55.catalog-product-info Retrieve product
-     * 56.catalog-product-list Retrieve products list by filters
-     * 57.catalog-product-setSpecialPrice Set special price for product
-     * 58.catalog-product-update Update product
-     */
+     * Update category 
+     * 
+     **/
+    
+    /*Product*/
+    
+   /**
+    * Creates a new product
+    * 
+    * @param type the new product's type
+    * @param set the new product's set
+    * @param sku the new product's sku
+    * @param attributes the attributes of the new product
+    * @return the new product's id
+    */
+	public int createProduct(@NotNull String type, @NotNull int set, @NotNull String sku, @NotNull Map<String, Object> attributes)
+        throws RemoteException
+    {
+        Validate.notNull(type);
+        Validate.notNull(set);
+        Validate.notNull(sku);
+        Validate.notNull(attributes);
+        
+        return getPort().catalogProductCreate(getSessionId(), type, String.valueOf(set), sku,
+            fromMap(CatalogProductCreateEntity.class, attributes));
+    }
 
+    /**
+     * @param storeView
+     * @return
+     * 
+     */
+    public void updateProductStoreView(String storeView) throws RemoteException
+    {
+        getPort().catalogProductCurrentStore(getSessionId(), storeView);
+    }
+    
+    /**
+     * TODO
+     * 
+     * @param storeView
+     * @return
+     * 
+     */
+    public void getProductStoreView(String storeView) throws RemoteException
+    {
+        getPort().catalogProductCurrentStore(getSessionId(), storeView);
+    }
+
+    /**
+     * Deletes a product.
+     *  See catalog-product-delete SOAP method. 
+     * 
+     * @param productId the product identifier
+     */
+    public void deleteProduct(ProductIdentifier productId) throws RemoteException
+    {
+		getPort().catalogProductDelete(getSessionId(),
+				productId.getIdentifierAsString(),
+				productId.getIdentifierType());
+    }
+
+    /**
+     * Answers a product special price. 
+     * 
+     * See catalog-product-getSpecialPrice SOAP method.
+     * @param product
+     * @param storeView
+     * @param productId.getIdentifierType()
+     * @return
+     * 
+     */
+    public Object getProductSpecialPrice(@NotNull ProductIdentifier productId, String storeView)
+        throws RemoteException
+    {
+        return getPort().catalogProductGetSpecialPrice(getSessionId(), productId.getIdentifierAsString(), storeView,
+            productId.getIdentifierType());
+    }
+
+    /**
+     * Answers a product's attributes. See catalog-product-info SOAP method. 
+     *
+     * @param product
+     * @param storeView
+     * @param attributes
+     * @param productId.getIdentifierType()
+     * @return the product attributes
+     */
+    public Object getProduct(@NotNull ProductIdentifier productId,
+                             String storeView,
+                             @NotNull Map<String, Object> attributes) throws RemoteException
+    {
+        Validate.notNull(attributes);
+        Validate.notNull(productId);
+        return getPort().catalogProductInfo(getSessionId(), productId.getIdentifierAsString(), storeView,
+            fromMap(CatalogProductRequestAttributes.class, attributes), productId.getIdentifierType());
+    }
+    
+    //TODO store view or code
+
+    /**
+     * Retrieve products list by filters
+     * See catalog-product-list SOAP method. 
+     * @param filters an optional filtering expression
+     * @param storeView an optional storeView
+     * @return the list of product attributes that match the given optional filtering expression
+     */
+    public Object[] listProducts(String filters, String storeView) throws RemoteException
+    {
+        return getPort().catalogProductList(getSessionId(), FiltersParser.parse(filters), storeView);
+    }
+
+    /**
+     * Sets a product special price. See catalog-product-setSpecialPrice  SOAP method
+     * 
+     * @param product
+     * @param specialPrice
+     * @param fromDate
+     * @param toDate
+     * @param storeView
+     * @param productId.getIdentifierType()
+     * @return
+     * @throws RemoteException
+     */
+    public int updateProductSpecialPrice(@NotNull ProductIdentifier productId,
+                                         @NotNull String specialPrice,
+                                         String fromDate,
+                                         String toDate,
+                                         String storeView) throws RemoteException
+    {
+    	Validate.notNull(specialPrice);
+    	Validate.notNull(productId);
+        return getPort().catalogProductSetSpecialPrice(getSessionId(), productId.getIdentifierAsString(), specialPrice, fromDate,
+            toDate, storeView, productId.getIdentifierType());
+    }
+    
+    /**
+     * Updates a product. See catalog-category-updateProduct SOAP method 
+     * 
+     * @param attributes
+     * @param storeViewIdOrCode optional store view
+     */
+    public void updateProduct(@NotNull ProductIdentifier productId,
+                              @NotNull Map<String, Object> attributes,
+                              String storeViewIdOrCode) throws RemoteException
+    {
+        Validate.notNull(productId);
+        Validate.notNull(attributes);
+        getPort().catalogProductUpdate(getSessionId(), productId.getIdentifierAsString(),
+            fromMap(CatalogProductCreateEntity.class, attributes), storeViewIdOrCode, productId.getIdentifierType());
+    }
+    
+    
     /*
      * Product Images
      */
 
-    public String createProductAttributeMedia(@NotNull String product,
+    public String createProductAttributeMedia(@NotNull ProductIdentifier productId,
                                               @NotNull Map<String, Object> attributes,
-                                              String storeView,
-                                              String productIdentifierType) throws RemoteException
+                                              String storeView
+                                              ) throws RemoteException
     {
         Validate.notNull(attributes);
-        return getPort().catalogProductAttributeMediaCreate(getSessionId(), product,
+        return getPort().catalogProductAttributeMediaCreate(getSessionId(), productId.getIdentifierAsString(),
             fromMap(CatalogProductAttributeMediaCreateEntity.class, attributes), storeView,
-            productIdentifierType);
+            productId.getIdentifierType());
     }
 
     public void updateProductAttributeMediaStoreView(@NotNull String storeView) throws RemoteException
@@ -254,27 +323,27 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
         return getPort().catalogProductAttributeMediaCurrentStore(getSessionId(), null);
     }
 
-    public Object getProductAttributeMedia(@NotNull String product,
+    public Object getProductAttributeMedia(@NotNull ProductIdentifier productId,
                                            @NotNull String file,
-                                           String storeView,
-                                           @NotNull String productIdentifierType) throws RemoteException
+                                           String storeView
+                                           ) throws RemoteException
     {
-        return getPort().catalogProductAttributeMediaInfo(getSessionId(), product, file, storeView,
-            productIdentifierType);
+        return getPort().catalogProductAttributeMediaInfo(getSessionId(), productId.getIdentifierAsString(), file, storeView,
+            productId.getIdentifierType());
     }
 
-    public Object[] listProductAttributeMedia(String product, String storeView, String productIdentifierType)
+    public Object[] listProductAttributeMedia(@NotNull ProductIdentifier productId, String storeView )
         throws RemoteException
     {
-        return getPort().catalogProductAttributeMediaList(getSessionId(), product, storeView,
-            productIdentifierType);
+        return getPort().catalogProductAttributeMediaList(getSessionId(), productId.getIdentifierAsString(), storeView,
+            productId.getIdentifierType());
     }
 
-    public int deleteProductAttributeMedia(String product, String file, String productIdentifierType)
+    public int deleteProductAttributeMedia(@NotNull ProductIdentifier productId, String file )
         throws RemoteException
     {
-        return getPort().catalogProductAttributeMediaRemove(getSessionId(), product, file,
-            productIdentifierType);
+        return getPort().catalogProductAttributeMediaRemove(getSessionId(), productId.getIdentifierAsString(), file,
+            productId.getIdentifierType());
     }
 
     public Object[] listProductAttributeMediaTypes(String setId) throws RemoteException
@@ -282,16 +351,16 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
         return getPort().catalogProductAttributeMediaTypes(getSessionId(), setId);
     }
 
-    public int updateProductAttributeMedia(String product,
+    public int updateProductAttributeMedia(@NotNull ProductIdentifier productId,
                                            String file,
                                            @NotNull Map<String, Object> attributes,
-                                           String storeView,
-                                           String productIdentifierType) throws RemoteException
+                                           String storeView
+                                           ) throws RemoteException
     {
         Validate.notNull(attributes);
-        return getPort().catalogProductAttributeMediaUpdate(getSessionId(), product, file,
+        return getPort().catalogProductAttributeMediaUpdate(getSessionId(), productId.getIdentifierAsString(), file,
             fromMap(CatalogProductAttributeMediaCreateEntity.class, attributes), storeView,
-            productIdentifierType);
+            productId.getIdentifierType());
     }
 
     /*
@@ -354,47 +423,45 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
 
     /* Product Type */
 
-    @NotNull
-    public Object[] listProductTypes() throws RemoteException
-    {
-        return getPort().catalogProductTypeList(getSessionId());
-    }
+	@NotNull
+	public Object[] listProductTypes() throws RemoteException
+	{
+		return getPort().catalogProductTypeList(getSessionId());
+	}
 
     /* Product Tier Price */
 
     @NotNull
-    public Object[] listProductAttributeTierPrices(@NotNull String product,
-                                                   @NotNull String productIdentifierType)
+    public Object[] listProductAttributeTierPrices(@NotNull ProductIdentifier productId
+                                                   )
         throws RemoteException
     {
-        Validate.notNull(product);
-        Validate.notNull(productIdentifierType);
-        return getPort().catalogProductAttributeTierPriceInfo(getSessionId(), product, productIdentifierType);
+        Validate.notNull(productId);
+        
+        return getPort().catalogProductAttributeTierPriceInfo(getSessionId(), productId.getIdentifierAsString(), productId.getIdentifierType());
     }
 
-    public void updateProductAttributeTierPrices(@NotNull String product,
-                                                 @NotNull List<Map<String, Object>> attributes,
-                                                 @NotNull String productIdentifierType)
+    public void updateProductAttributeTierPrices(@NotNull ProductIdentifier productId,
+                                                 @NotNull List<Map<String, Object>> attributes)
         throws RemoteException
     {
-        Validate.notNull(product);
+        Validate.notNull(productId);
         Validate.notNull(attributes);
-        Validate.notNull(productIdentifierType);
-        getPort().catalogProductAttributeTierPriceUpdate(getSessionId(), product,
-            MagentoObject.fromMap(CatalogProductTierPriceEntity.class, attributes), productIdentifierType);
+        
+        getPort().catalogProductAttributeTierPriceUpdate(getSessionId(), productId.getIdentifierAsString(),
+            MagentoObject.fromMap(CatalogProductTierPriceEntity.class, attributes), productId.getIdentifierType());
     }
 
     /* h. Product Link (related, cross sells, up sells, grouped) */
 
     public String assignProductLink(@NotNull String type,
-                                    @NotNull String product,
+                                    @NotNull ProductIdentifier productId,
                                     @NotNull String linkedProduct,
-                                    @NotNull Map<String, Object> attributes,
-                                    @NotNull String productIdentifierType) throws RemoteException
+                                    @NotNull Map<String, Object> attributes) throws RemoteException
     {
         Validate.notNull(attributes);
-        return getPort().catalogProductLinkAssign(getSessionId(), type, product, linkedProduct,
-            fromMap(CatalogProductLinkEntity.class, attributes), productIdentifierType);
+        return getPort().catalogProductLinkAssign(getSessionId(), type, productId.getIdentifierAsString(), linkedProduct,
+            fromMap(CatalogProductLinkEntity.class, attributes), productId.getIdentifierType());
     }
 
     public Object[] listProductLinkAttributes(String type) throws RemoteException
@@ -403,19 +470,17 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
     }
 
     public Object[] listProductLink(@NotNull String type,
-                                    @NotNull String product,
-                                    @NotNull String productIdentifierType) throws RemoteException
+                                    @NotNull ProductIdentifier productId) throws RemoteException
     {
-        return getPort().catalogProductLinkList(getSessionId(), type, product, productIdentifierType);
+        return getPort().catalogProductLinkList(getSessionId(), type, productId.getIdentifierAsString(), productId.getIdentifierType());
     }
 
     public String deleteProductLink(@NotNull String type,
-                                    @NotNull String product,
-                                    @NotNull String linkedProduct,
-                                    @NotNull String productIdentifierType) throws RemoteException
+                                    @NotNull ProductIdentifier productId,
+                                    @NotNull String linkedProduct) throws RemoteException
     {
-        return getPort().catalogProductLinkRemove(getSessionId(), type, product, linkedProduct,
-            productIdentifierType);
+        return getPort().catalogProductLinkRemove(getSessionId(), type, productId.getIdentifierAsString(), linkedProduct,
+            productId.getIdentifierType());
     }
 
     public String[] listProductLinkTypes() throws RemoteException
@@ -424,17 +489,15 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
     }
 
     public String updateProductLink(@NotNull String type,
-                                    @NotNull String product,
+                                    @NotNull ProductIdentifier productId,
                                     @NotNull String linkedProduct,
-                                    @NotNull Map<String, Object> attributes,
-                                    @NotNull String productIdentifierType) throws RemoteException
+                                    @NotNull Map<String, Object> attributes) throws RemoteException
     {
         Validate.notNull(attributes);
         Validate.notNull(type);
         Validate.notNull(linkedProduct);
-        Validate.notNull(productIdentifierType);
 
-        return getPort().catalogProductLinkUpdate(getSessionId(), type, product, linkedProduct,
-            fromMap(CatalogProductLinkEntity.class, attributes), productIdentifierType);
+        return getPort().catalogProductLinkUpdate(getSessionId(), type, productId.getIdentifierAsString(), linkedProduct,
+            fromMap(CatalogProductLinkEntity.class, attributes), productId.getIdentifierType());
     }
 }
