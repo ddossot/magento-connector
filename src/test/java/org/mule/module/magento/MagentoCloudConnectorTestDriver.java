@@ -146,4 +146,17 @@ public class MagentoCloudConnectorTestDriver
     		connector.deleteCustomer(customerId);
     	}
     }
+    
+	/**
+	 * Tests that the XXXCurrentStore SOAP methods can be used like a getter -
+	 * they are not very well documented
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void storeView() throws Exception 
+	{
+		assertEquals(connector.getCategoryAttributeStoreView(), connector.getCategoryAttributeStoreView());
+	}
+
 }
