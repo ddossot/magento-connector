@@ -42,19 +42,42 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
         super(provider);
     }
 
-    public Object[] listCategoryAssignedProducts(int categoryId) throws RemoteException
+    /*Category*/
+    
+    /**
+     * Lists product of a given category. See  catalog-category-assignedProducts SOAP method.   
+     *  
+     * @param categoryId
+     * @return the listing of category products
+     */
+    public Object[] listCategoryProducts(int categoryId) throws RemoteException
     {
-        return getPort().catalogCategoryAssignedProducts(getSessionId(), categoryId);
+    	return getPort().catalogCategoryAssignedProducts(getSessionId(), categoryId);
     }
-
-    public boolean addCategoryProduct(int categoryId,
-                                      @NotNull ProductIdentifier productId,
-                                      String position) throws RemoteException
+    
+    /**
+     * Assign product to category. See catalog-category-assignProduct SOAP method
+     *  
+     * @param categoryId
+     * @param productId
+     * @param position
+     */
+    public void addCategoryProduct(int categoryId,
+                                   @NotNull ProductIdentifier productId,
+                                   String position) throws RemoteException
     {
-        return getPort().catalogCategoryAssignProduct(getSessionId(), categoryId, productId.getIdentifierAsString(), position,
+        getPort().catalogCategoryAssignProduct(getSessionId(), categoryId, productId.getIdentifierAsString(), position,
             productId.getIdentifierType());
     }
 
+    /**
+     * Creates a new category. See catalog-category-create SOAP method.
+     *  
+     * @param parentId
+     * @param attributes
+     * @param storeView
+     * @return the new category id
+     */
     public int createCategory(int parentId, @NotNull Map<String, Object> attributes, String storeView)
         throws RemoteException
     {
@@ -63,90 +86,156 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
             fromMap(CatalogCategoryEntityCreate.class, attributes), storeView);
     }
 
-    // TODO naming
+    /**
+     * TODO naming
+     * catalog-category-currentStore
+     */
     public int catalogCategoryCurrentStore(String storeView) throws RemoteException
     {
         return getPort().catalogCategoryCurrentStore(getSessionId(), storeView);
     }
 
-    public boolean deleteCategory(int categoryId) throws RemoteException
+    /**
+     * Deletes a category. See  catalog-category-delete SOAP method
+     *  
+     * @param categoryId
+     */
+    public void deleteCategory(int categoryId) throws RemoteException
     {
-        return getPort().catalogCategoryDelete(getSessionId(), categoryId);
+        getPort().catalogCategoryDelete(getSessionId(), categoryId);
     }
 
-    public Object getCategory(int categoryId, String storeView, String[] attributes) throws RemoteException
+    /**
+     * Answers category attributes. See catalog-category-info  SOAP method.  
+     * 
+     * @param categoryId
+     * @param storeView
+     * @param attributeNames
+     * @return the category attributes
+     */
+    public Object getCategory(int categoryId, String storeView, List<String> attributeNames) throws RemoteException
     {
-        return getPort().catalogCategoryInfo(getSessionId(), categoryId, storeView, attributes);
+        return getPort().catalogCategoryInfo(getSessionId(), categoryId, storeView, toArray(attributeNames, String.class));
     }
-
+    
+    /** TODO 
+    42.catalog-category-level Retrieve one level of categories by
+        * website/store view/parent category NOTE Please make sure that you are not
+        * moving category to any of its own children. There are no extra checks to
+        * prevent doing it through webservices API, and you won’t be able to fix this
+        * from admin interface then 
+     * 
+     * @param website
+     * @param storeView
+     * @param parentCategory
+     * @return
+     * @throws RemoteException
+     */
     public Object[] listCategoryLevels(String website, String storeView, String parentCategory)
         throws RemoteException
     {
         return getPort().catalogCategoryLevel(getSessionId(), website, storeView, parentCategory);
     }
 
+    /**
+     * Move category in tree. See  catalog-category-move SOAP method. 
+     *  
+     * @param categoryId
+     * @param parentId
+     * @param afterId
+     * 
+     */
     public void moveCategory(int categoryId, int parentId, String afterId) throws RemoteException
     {
         getPort().catalogCategoryMove(getSessionId(), categoryId, parentId, afterId);
     }
 
-    public boolean deleteCategoryProduct(int categoryId, @NotNull ProductIdentifier productId)
+    /**
+     * Remove a product assignment. See catalog-category-removeProduct SOAP method. 
+     *   
+     * @param categoryId
+     * @param productId
+     * @return
+     * 
+     */
+    public void deleteCategoryProduct(int categoryId, @NotNull ProductIdentifier productId)
         throws RemoteException
     {
-        return getPort().catalogCategoryRemoveProduct(getSessionId(), categoryId, productId.getIdentifierAsString(),
+        getPort().catalogCategoryRemoveProduct(getSessionId(), categoryId, productId.getIdentifierAsString(),
             productId.getIdentifierType());
     }
 
-    // TODO naming
-    public Object catalogCategoryTree(String parentId, String storeView) throws RemoteException
+    /**
+     * TODO return something else 
+     * 
+     * Retrieve hierarchical tree. See  catalog-category-tree SOAP method. 
+     * @param parentId
+     * @param storeView
+     * @return
+     * 
+     */
+    public Object getCategoryTree(String parentId, String storeView) throws RemoteException
     {
         return getPort().catalogCategoryTree(getSessionId(), parentId, storeView);
     }
 
-    public boolean updateCategory(int categoryId, @NotNull Map<String, Object> attributes, String storeView)
+    /**
+     * Updates a category. See catalog-category-update SOAP method
+     * 
+     * @param categoryId
+     * @param attributes
+     * @param storeView
+     * @return
+     */
+    public void updateCategory(int categoryId, @NotNull Map<String, Object> attributes, String storeView)
         throws RemoteException
     {
         Validate.notNull(attributes);
-        return getPort().catalogCategoryUpdate(getSessionId(), categoryId,
+        getPort().catalogCategoryUpdate(getSessionId(), categoryId,
             fromMap(CatalogCategoryEntityCreate.class, attributes), storeView);
     }
 
-    public boolean catalogCategoryUpdateProduct(int categoryId,
-                                                @NotNull ProductIdentifier productId,
-                                                String position) throws RemoteException
+    /**
+     * 
+     * @param categoryId
+     * @param productId
+     * @param position
+     * @return
+     * 
+     */
+    public void updateCategoryProduct(int categoryId,
+                                      @NotNull ProductIdentifier productId,
+                                      String position) throws RemoteException
     {
-        return getPort().catalogCategoryUpdateProduct(getSessionId(), categoryId, productId.getIdentifierAsString(), position,
+        getPort().catalogCategoryUpdateProduct(getSessionId(), categoryId, productId.getIdentifierAsString(), position,
             productId.getIdentifierType());
     }
 
+    /**
+     * 
+     * @param products
+     * @return
+     */
     public Object[] listInventoryStockItems(String[] products) throws RemoteException
     {
         return getPort().catalogInventoryStockItemList(getSessionId(), products);
     }
 
-    public int catalogInventoryStockItemUpdate(@NotNull ProductIdentifier productId, @NotNull Map<String, Object> attributes)
+    /**
+     * 
+     * @param productId
+     * @param attributes
+     * @return
+     * 
+     */
+    public int updateInventoryStockItem(@NotNull ProductIdentifier productId, @NotNull Map<String, Object> attributes)
         throws RemoteException
     {
         Validate.notNull(attributes);
         return getPort().catalogInventoryStockItemUpdate(getSessionId(), productId.getIdentifierAsString(),
             fromMap(CatalogInventoryStockItemUpdateEntity.class, attributes));
     }
-    /*
-     * . Category 36.catalog-category-assignedProducts Retrieve list of assigned
-     * products 37.catalog-category-assignProduct Assign product to category
-     * 38.catalog-category-create Create new category
-     * 39.catalog-category-currentStore Set/Get current store view
-     * 40.catalog-category-delete Delete category 41.catalog-category-info Retrieve
-     * category data 42.catalog-category-level Retrieve one level of categories by
-     * website/store view/parent category NOTE Please make sure that you are not
-     * moving category to any of its own children. There are no extra checks to
-     * prevent doing it through webservices API, and you won’t be able to fix this
-     * from admin interface then 43.catalog-category-move Move category in tree
-     * 44.catalog-category-removeProduct Remove product assignment
-     * 45.catalog-category-tree Retrieve hierarchical tree 46.catalog-category-update
-     * Update category 
-     * 
-     **/
+ 
     
     /*Product*/
     
@@ -266,7 +355,6 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
      * @param storeView
      * @param productId.getIdentifierType()
      * @return
-     * @throws RemoteException
      */
     public int updateProductSpecialPrice(@NotNull ProductIdentifier productId,
                                          @NotNull String specialPrice,

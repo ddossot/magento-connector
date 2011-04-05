@@ -662,10 +662,10 @@ Assign Product Link
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |type||no||
-|product||no||
+|productId||yes||
+|productSku||yes||
 |linkedProduct||no||
 |attributes||no||
-|productIdentifierType||no||
 
 Create Product Attribute Media
 ------------------------------
@@ -673,10 +673,10 @@ Create Product Attribute Media
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|product||no||
+|productId||yes||
+|productSku||yes||
 |attributes||no||
 |storeView||no||
-|productIdentifierType||no||
 
 Delete Product Attribute Media
 ------------------------------
@@ -684,9 +684,9 @@ Delete Product Attribute Media
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|product||no||
+|productId||yes||
+|productSku||yes||
 |file||no||
-|productIdentifierType||no||
 
 Delete Product Link
 -------------------
@@ -695,9 +695,9 @@ Delete Product Link
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |type||no||
-|product||no||
+|productId||yes||
+|productSku||yes||
 |linkedProduct||no||
-|productIdentifierType||no||
 
 
 Get Product Attribute Media
@@ -706,10 +706,10 @@ Get Product Attribute Media
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|product||no||
+|productId||yes||
+|productSku||yes||
 |file||no||
-|storeView||no||
-|productIdentifierType||no||
+|storeView||yes||
 
 
 
@@ -735,9 +735,9 @@ List Product Attribute Media
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|product||no||
+|productId||yes||
+|productSku||yes||
 |storeView||no||
-|productIdentifierType||no||
 
 List Product Attribute Media Types
 ----------------------------------
@@ -777,8 +777,8 @@ List Product Attribute Tier Prices
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|product||no||
-|productIdentifierType||no||
+|productId||yes||
+|productSku||yes||
 
 List Product Link
 -----------------
@@ -787,8 +787,8 @@ List Product Link
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |type||no||
-|product||no||
-|productIdentifierType||no||
+|productId||yes||
+|productSku||yes||
 
 List Product Link Attributes
 ----------------------------
@@ -826,11 +826,11 @@ Update Product Attribute Media
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|product||no||
+|productId||yes||
+|productSku||yes||
 |file||no||
 |attributes||no||
 |storeView||no||
-|productIdentifierType||no||
 
 Update Product Attribute Media Store View
 -----------------------------------------
@@ -856,10 +856,233 @@ Update Product Link
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |type||no||
-|product||no||
+|productId||yes||
+|productSku||yes||
 |linkedProduct||no||
 |attributes||no||
-|productIdentifierType||no||
+
+List Category Products
+----------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|categoryId||no||
+
+Add Category Product
+--------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|categoryId||no||
+|productId||yes||
+|productSku||yes||
+|position||no||
+
+Create Category
+---------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|parentId||no||
+|attributes||no||
+|storeView||no||
+
+Catalog Category Current Store
+------------------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|storeView||no||
+
+Delete Category
+---------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|categoryId||no||
+
+Get Category
+------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|categoryId||no||
+|storeView||no||
+|attributeNames||no||
+
+List Category Levels
+--------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|website||no||
+|storeView||no||
+|parentCategory||no||
+
+Move Category
+-------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|categoryId||no||
+|parentId||no||
+|afterId||no||
+
+Delete Category Product
+-----------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|categoryId||no||
+|productId||yes||
+|productSku||yes||
+
+Get Category Tree
+-----------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|parentId||no||
+|storeView||no||
+
+Update Category
+---------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|categoryId||no||
+|attributes||no||
+|storeView||no||
+
+Update Category Product
+-----------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|categoryId||no||
+|productId||yes||
+|productSku||yes||
+|position||no||
+
+List Inventory Stock Items
+--------------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|products||no||
+
+Update Inventory Stock Item
+---------------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|productId||yes||
+|productSku||yes||
+|attributes||no||
+
+Create Product
+--------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|type||no||
+|set||no||
+|sku||no||
+|attributes||no||
+
+Update Product Store View
+-------------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|storeView||no||
+
+Get Product Store View
+----------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|storeView||no||
+
+Delete Product
+--------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|productId||yes||
+|productSku||yes||
+
+Get Product Special Price
+-------------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|productId||yes||
+|productSku||yes||
+|storeView||no||
+
+Get Product
+-----------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|productId||yes||
+|productSku||yes||
+|storeView||no||
+|attributes||no||
+
+List Products
+-------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|filters||no||
+|storeView||no||
+
+Update Product Special Price
+----------------------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|productId||yes||
+|productSku||yes||
+|specialPrice||no||
+|fromDate||no||
+|toDate||no||
+|storeView||no||
+
+Update Product
+--------------
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|productId||yes||
+|productSku||yes||
+|attributes||no||
+|storeViewIdOrCode||no||
 
 
 

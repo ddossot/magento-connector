@@ -24,6 +24,7 @@ import org.mule.module.magento.api.MagentoClientAdaptor;
 import org.mule.module.magento.api.MagentoException;
 import org.mule.module.magento.api.catalog.AxisMagentoCatalogClient;
 import org.mule.module.magento.api.catalog.MagentoCatalogClient;
+import org.mule.module.magento.api.catalog.model.ProductIdentifier;
 import org.mule.module.magento.api.customer.AxisMagentoInventoryClient;
 import org.mule.module.magento.api.customer.MagentoInventoryClient;
 import org.mule.module.magento.api.directory.AxisMagentoDirectoryClient;
@@ -868,7 +869,7 @@ public class MagentoCloudConnector implements Initialisable
     {
         catalogClient.updateCategoryAttributeStoreView(storeView);
     }
-
+    
     @Operation
     public int updateProductAttributeMedia(@Parameter(optional=true) Integer productId,
 										   @Parameter(optional=true) String productSku,
@@ -908,8 +909,181 @@ public class MagentoCloudConnector implements Initialisable
     {
         return catalogClient.updateProductLink(type, from(productSku, productId), linkedProduct, attributes);
     }
+    
+    
+    @Operation
+    public List<Map<String, Object>> listCategoryProducts(int categoryId)
+			throws MagentoException
+	{
+		return catalogClient.listCategoryProducts(categoryId);
+	}
+    
+    @Operation
+	public void addCategoryProduct(int categoryId, @Parameter(optional=true) Integer productId, @Parameter(optional=true) String productSku,
+			String position) throws MagentoException
+	{
+		catalogClient.addCategoryProduct(categoryId, from(productSku, productId), position);
+	}
+	
+	@Operation
+	public int createCategory(int parentId, Map<String, Object> attributes,
+			String storeView) throws MagentoException
+	{
+		return catalogClient.createCategory(parentId, attributes, storeView);
+	}
+	
+	@Operation
+	public int catalogCategoryCurrentStore(String storeView)
+			throws MagentoException
+	{
+		return catalogClient.catalogCategoryCurrentStore(storeView);
+	}
 
-    @SuppressWarnings("unchecked")
+	@Operation
+	public void deleteCategory(int categoryId) throws MagentoException
+	{
+		catalogClient.deleteCategory(categoryId);
+	}
+
+	@Operation
+	public Map<String, Object> getCategory(int categoryId, String storeView,
+			List<String> attributeNames) throws MagentoException
+	{
+		return catalogClient.getCategory(categoryId, storeView, attributeNames);
+	}
+	
+	@Operation
+	public List<Map<String, Object>> listCategoryLevels(String website, String storeView,
+			String parentCategory) throws MagentoException
+	{
+		return catalogClient.listCategoryLevels(website, storeView,
+				parentCategory);
+	}
+
+	@Operation
+	public void moveCategory(int categoryId, int parentId, String afterId)
+			throws MagentoException
+	{
+		catalogClient.moveCategory(categoryId, parentId, afterId);
+	}
+
+	@Operation
+	public void deleteCategoryProduct(int categoryId,
+			@Parameter(optional=true) Integer productId, @Parameter(optional=true) String productSku) throws MagentoException
+	{
+		catalogClient.deleteCategoryProduct(categoryId, from(productSku, productId));
+	}
+	
+	@Operation
+	public Map<String, Object> getCategoryTree(String parentId, String storeView)
+			throws MagentoException
+	{
+		return catalogClient.getCategoryTree(parentId, storeView);
+	}
+	
+	@Operation
+	public void updateCategory(int categoryId, Map<String, Object> attributes,
+			String storeView) throws MagentoException
+	{
+		catalogClient.updateCategory(categoryId, attributes, storeView);
+	}
+
+	@Operation
+	public void updateCategoryProduct(int categoryId,
+			@Parameter(optional=true) Integer productId, @Parameter(optional=true) String productSku, String position)
+			throws MagentoException
+	{
+		catalogClient.updateCategoryProduct(categoryId, from(productSku, productId), position);
+	}
+
+	@Operation
+	public List<Map<String, Object>> listInventoryStockItems(String[] products)
+			throws MagentoException
+	{
+		return catalogClient.listInventoryStockItems(products);
+	}
+
+	@Operation
+	public int updateInventoryStockItem(@Parameter(optional=true) Integer productId, 
+			                            @Parameter(optional=true) String productSku,
+			                            Map<String, Object> attributes) throws MagentoException
+	{
+		return catalogClient.updateInventoryStockItem(from(productSku, productId), attributes);
+	}
+	
+	@Operation
+	public int createProduct(String type, int set, String sku,
+			Map<String, Object> attributes) throws MagentoException
+	{
+		return catalogClient.createProduct(type, set, sku, attributes);
+	}
+
+	@Operation
+	public void updateProductStoreView(String storeView)
+			throws MagentoException
+	{
+		catalogClient.updateProductStoreView(storeView);
+	}
+
+	@Operation
+	public void getProductStoreView(String storeView) throws MagentoException
+	{
+		catalogClient.getProductStoreView(storeView);
+	}
+
+	@Operation
+	public void deleteProduct(@Parameter(optional=true) Integer productId,
+			                  @Parameter(optional=true) String productSku)
+			throws MagentoException
+	{
+		catalogClient.deleteProduct(from(productSku, productId));
+	}
+
+	@Operation
+	public Map<String, Object> getProductSpecialPrice(@Parameter(optional=true) Integer productId, 
+										 @Parameter(optional=true) String productSku,
+										 String storeView) throws MagentoException
+	{
+		return catalogClient.getProductSpecialPrice(from(productSku, productId), storeView);
+	}
+
+	@Operation
+	public Map<String, Object> getProduct(@Parameter(optional=true) Integer productId, 
+							 @Parameter(optional=true) String productSku, 
+							 String storeView, 
+							 Map<String, Object> attributes) throws MagentoException
+	{
+		return catalogClient.getProduct(from(productSku, productId), storeView, attributes);
+	}
+	
+	@Operation
+	public List<Map<String, Object>> listProducts(String filters, String storeView)
+			throws MagentoException
+	{
+		return catalogClient.listProducts(filters, storeView);
+	}
+
+	@Operation
+	public int updateProductSpecialPrice(@Parameter(optional=true) Integer productId,
+										 @Parameter(optional=true) String productSku,
+										 String specialPrice, 
+										 String fromDate, 
+										 String toDate, 
+										 String storeView) throws MagentoException
+	{
+		return catalogClient.updateProductSpecialPrice(from(productSku, productId), specialPrice,
+				fromDate, toDate, storeView);
+	}
+	
+	@Operation
+	public void updateProduct(@Parameter(optional=true) Integer productId, @Parameter(optional=true) String productSku,
+			Map<String, Object> attributes, String storeViewIdOrCode)
+			throws MagentoException
+	{
+		catalogClient.updateProduct(from(productSku, productId), attributes, storeViewIdOrCode);
+	}
+
+	@SuppressWarnings("unchecked")
     public void setOrderClient(MagentoOrderClient<?, ?, ?> magentoOrderClient)
     {
         this.orderClient = MagentoClientAdaptor.adapt(MagentoOrderClient.class, magentoOrderClient);
