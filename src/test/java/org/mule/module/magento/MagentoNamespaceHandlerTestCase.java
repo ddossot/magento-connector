@@ -21,12 +21,12 @@ public class MagentoNamespaceHandlerTestCase extends FunctionalTestCase
 {
     public void testNamespaceConfig() throws Exception
     {
-        assertNotNull(lookupFlowConstruct("MagentoOrderShipmentInfo"));
+        assertNotNull(lookupFlowConstruct("GetOrderShipment"));
     }
 
     public void testNamespaceConfig2() throws Exception
     {
-        assertNotNull(lookupFlowConstruct("MagentoListOrdersInvoices"));
+        assertNotNull(lookupFlowConstruct("ListOrdersInvoices"));
     }
 
     @Override

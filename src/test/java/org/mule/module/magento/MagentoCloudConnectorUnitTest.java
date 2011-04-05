@@ -26,6 +26,7 @@ import org.mule.module.magento.api.internal.AssociativeEntity;
 import org.mule.module.magento.api.internal.ComplexFilter;
 import org.mule.module.magento.api.internal.Filters;
 import org.mule.module.magento.api.internal.Mage_Api_Model_Server_V2_HandlerPortType;
+import org.mule.module.magento.api.internal.OrderItemIdQty;
 import org.mule.module.magento.api.internal.SalesOrderEntity;
 import org.mule.module.magento.api.internal.SalesOrderShipmentEntity;
 import org.mule.module.magento.api.inventory.AxisMagentoCustomerClient;
@@ -33,13 +34,14 @@ import org.mule.module.magento.api.order.AxisMagentoOrderClient;
 import org.mule.module.magento.api.order.model.Carrier;
 
 import java.rmi.RemoteException;
+import java.util.HashMap;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-
+@SuppressWarnings("serial")
 public class MagentoCloudConnectorUnitTest
 {
     private static final String ORDER_ID = "10001";
@@ -148,77 +150,54 @@ public class MagentoCloudConnectorUnitTest
             connector.getOrderShipmentCarriers(ORDER_ID));
     }
 
-    @Ignore
+
     @Test
-    public void testSalesOrderShipmentAddTrack()
+    public void testSalesOrderShipmentAddTrack() throws RemoteException
     {
-        fail("Not yet implemented");
+    	connector.addOrderShipmentTrack("1", "carrier", "title", "track");
+    	verify(port).salesOrderShipmentAddTrack(anyString(), eq("1"), eq("carrier"), eq("title"), eq("track"));
     }
 
-    @Ignore
+
     @Test
-    public void testSalesOrderShipmentRemoveTrack()
+    public void testSalesOrderShipmentRemoveTrack() throws RemoteException
     {
-        fail("Not yet implemented");
+    	connector.deleteOrderShipmentTrack("1", "id");
+    	verify(port).salesOrderShipmentRemoveTrack(anyString(), eq("1"), eq("id"));
     }
 
-    @Ignore
-    @Test
-    public void testSalesOrderShipmentCreate()
+    
+	@Test
+    public void testSalesOrderShipmentCreate() throws RemoteException
     {
-        fail("Not yet implemented");
+		connector.createOrderShipment("foo", new HashMap<Integer, Double>(){{put(100, 10.0);}}, "comment", true, false);
+		verify(port).salesOrderShipmentCreate(anyString(), eq("foo"),
+				eq(new OrderItemIdQty[] { new OrderItemIdQty(100, 10) }), eq("comment"), eq(1), eq(0));
     }
 
-    @Ignore
     @Test
-    public void testSalesOrderInvoicesList()
+    public void testSalesOrderInvoicesList() throws RemoteException
     {
-        fail("Not yet implemented");
+        connector.listOrdersInvoices("");
+        verify(port).salesOrderInvoiceList(anyString(), eq(new Filters()));
     }
 
-    @Ignore
     @Test
-    public void testSalesOrderInvoiceInfo()
+    public void testSalesOrderInvoiceInfo() throws RemoteException
     {
-        fail("Not yet implemented");
+        connector.getOrderInvoice("invoiceId");
+        verify(port).salesOrderInvoiceInfo(anyString(), eq("invoiceId"));
     }
 
-    @Ignore
     @Test
-    public void testSalesOrderInvoiceCreate()
+    public void testSalesOrderInvoiceComment() throws RemoteException
     {
-        fail("Not yet implemented");
+        connector.addOrderInvoiceComment("invoiceId", "comment", false, true);
+        verify(port).salesOrderInvoiceAddComment(anyString(), eq("invoiceId"), eq("comment"), eq("0"), eq("1"));
     }
 
-    @Ignore
-    @Test
-    public void testSalesOrderInvoiceComment()
-    {
-        fail("Not yet implemented");
-    }
-
-    @Ignore
-    @Test
-    public void testSalesOrderInvoiceCapture()
-    {
-        fail("Not yet implemented");
-    }
-
-    @Ignore
-    @Test
-    public void testSalesOrderInvoiceVoid()
-    {
-        fail("Not yet implemented");
-    }
-
-    @Ignore
-    @Test
-    public void testSalesOrderInvoiceCancel()
-    {
-        fail("Not yet implemented");
-    }
-
-    // TODO reflectively test all methods. It is a nonses to write individual tests
-    // for them all
+	// TODO reflectively test all methods. It is a nonses to write individual
+	// tests
+	// for them all
 
 }
