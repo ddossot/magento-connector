@@ -10,18 +10,18 @@
 
 package org.mule.module.magento;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
-import org.mule.module.magento.api.MagentoException;
-
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.junit.Before;
 import org.junit.Test;
+import org.mule.module.magento.api.MagentoException;
 
 /**
  * Integration test of the {@link MagentoCloudConnector}
@@ -129,4 +129,21 @@ public class MagentoCloudConnectorTestDriver
 		  + connector.listOrders("neq(customer_firstname, 'John')").size()); 
     }
     
+    /**
+     * Test that a user can be created
+     */
+    @Test
+	public void createCustomer() throws Exception {
+    	int customerId = connector.createCustomer(new HashMap<String, Object>(){{
+    		put("email", "johndoe@mycia.com");
+    		put("firstname", "John");
+    		put("lastname", "Doe");
+    		put("password", "123456");
+		}});
+    	try{
+    		assertEquals("John", connector.getCustomer(customerId, Arrays.asList("firstname")).get("firstname"));
+    	}finally{
+    		connector.deleteCustomer(customerId);
+    	}
+    }
 }

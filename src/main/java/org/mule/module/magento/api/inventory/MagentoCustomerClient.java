@@ -31,7 +31,6 @@ public interface MagentoCustomerClient<AttributesType, AttributesCollectionType,
      * Deletes a customer given its id
      * 
      * @param customerId
-     * 
      */
     void deleteCustomer(int customerId) throws ExceptionType;
 

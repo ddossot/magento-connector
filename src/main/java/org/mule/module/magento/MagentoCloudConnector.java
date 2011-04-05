@@ -484,17 +484,20 @@ public class MagentoCloudConnector implements Initialisable
     {
         orderClient.cancelOrderInvoice(invoiceId);
     }
-
-    //XXX add examples from here 
     
     /**
      * Creates a new address for the given customer using the given address
      * attributes
      * 
+     * {@code <magento:create-customer-address customerId="#[map-payload:customerId]"  >
+	 *		    <magento:attributes >
+	 *			  <magento:attribute key="city_code" value="#[map-payload:cityCode]"/>
+	 *		    </magento:attributes>
+	 *	      </magento:create-customer-address>}
+     * 
      * @param customerId
      * @param attributes
      * @return a new customer address id
-     * @throws ExceptionType
      */
     @Operation
     public int createCustomerAddress(@Parameter int customerId, @Parameter Map<String, Object> attributes)
@@ -503,11 +506,21 @@ public class MagentoCloudConnector implements Initialisable
     }
 
     /**
-     * Creates a customer with th given attributes
+     * Creates a customer with the given attributes
+     * 
+     * Example: 
+     * 
+     * {@code 	<magento:create-customer>
+	 *		      <magento:attributes >
+	 *			    <magento:attribute key="email" value="#[map-payload:email]"/>
+	 *			    <magento:attribute key="firstname" value="#[map-payload:firstname]"/>
+	 *			    <magento:attribute key="lastname" value="#[map-payload:lastname]"/>
+	 * 			    <magento:attribute key="password" value="#[map-payload:password]"/>
+	 *		      </magento:attributes>
+	 *	       </magento:create-customer>} 
      * 
      * @param attributes the attributes of the new customer
      * @return the new customer id
-     * @throws ExceptionType
      */
     @Operation
     public int createCustomer(@Parameter Map<String, Object> attributes)
@@ -517,6 +530,10 @@ public class MagentoCloudConnector implements Initialisable
 
     /**
      * Deletes a customer given its id
+     * 
+     * Example:
+     * 
+     * {@code <magento:delete-customer customerId="#[map-payload:customerId]" />} 
      * 
      * @param customerId
      */
@@ -529,6 +546,10 @@ public class MagentoCloudConnector implements Initialisable
     /**
      * Deletes a Customer Address
      * 
+     * Example:
+     * 
+     * {@code <magento:delete-customer-address addressId="#[map-payload:addressId]" />}
+     * 
      * @param addressId
      */
     @Operation
@@ -540,6 +561,16 @@ public class MagentoCloudConnector implements Initialisable
     /**
      * Answers customer attributes for the given id. Only the selected attributes are
      * retrieved
+     * 
+     * Example:
+     * 
+     * {@code <magento:get-customer  customerId="#[map-payload:customerId]"  >
+	 *		<magento:attributeNames>
+	 *			<magento:attributeName>customer_name</magento:attributeName>
+     *				<magento:attributeName>customer_last_name </magento:attributeName>
+ 	 *			<magento:attributeName>customer_age</magento:attributeName>
+	 *		</magento:attributeNames>
+	 *	  </magento:get-customer>}
      * 
      * @param customerId
      * @param attributeNames the attributes to retrieve. Not empty
@@ -555,9 +586,12 @@ public class MagentoCloudConnector implements Initialisable
 
     /**
      * Answers the customer address attributes
-     * @param addressId
-     * @return the customer address attributes
      * 
+     * Example: 
+     * {@code <magento:get-customer-address  addressId="#[map-payload:addressId]"/>}
+     * 
+     * @param addressId
+     * @return the customer address attributes map
      */
     @Operation
     public Map<String, Object> getCustomerAddress(@Parameter int addressId)
@@ -567,6 +601,10 @@ public class MagentoCloudConnector implements Initialisable
 
     /**
      * Lists the customer address for a given customer id
+     * 
+     * Example: 
+     * 
+     * {@code  <magento:list-customer-addresses customerId="#[map-payload:customerAddresses]" />}
      * 
      * @param customerId the id of the customer
      * @return a listing of addresses
@@ -580,6 +618,10 @@ public class MagentoCloudConnector implements Initialisable
     /**
      * Lists all the customer groups
      * 
+     * Example: 
+     * 
+     * {@code <magento:list-customer-groups />}
+     * 
      * @return a listing of groups attributes
      */
     @Operation
@@ -591,12 +633,15 @@ public class MagentoCloudConnector implements Initialisable
     /**
      * Answers a list of customer attributes for the given filter expression.
      * 
-     * @param filters a filtering expression.
-     * @return the attributes map
+     * Example:
      * 
+     * {@code <magento:list-customers filters="gteq(customer_age, #[map-payload:minCustomerAge])" />}
+     * 
+     * @param filters an optional filtering expression.
+     * @return the list of attributes map
      */
     @Operation
-    public List<Map<String, Object>> listCustomers(@Parameter String filters)
+    public List<Map<String, Object>> listCustomers(@Parameter(optional=true) String filters)
     {
         return customerClient.listCustomers(filters);
     }
@@ -604,6 +649,13 @@ public class MagentoCloudConnector implements Initialisable
     /**
      * Updates the given customer attributes, for the given customer id. Password can
      * not be updated using this method
+     * 
+     * Example:
+     * 
+     * {@code <magento:update-customer customerId="#[map-payload:customerId]">
+	 *		    <magento:attributes>
+	 *		       <magento:attribute key="lastname" value="#[map-payload:lastname]"/>
+	 *		    </magento:attributes>}
      * 
      * @param customerId
      * @param attributes the attributes map
@@ -618,16 +670,24 @@ public class MagentoCloudConnector implements Initialisable
     /**
      * Updates the given map of customer address attributes, for the given customer address
      * 
+     * Example:
+     * 
+     * {@code <magento:update-customer-address addressId="#[map-payload:addressId]">
+	 *		  <magento:attributes>
+	 *			<magento:attribute key="street" value="#[map-payload:street]"/>
+	 *			<magento:attribute key="region" value="#[map-payload:region]"/>
+	 *		   </magento:attributes>
+	 *	    </magento:update-customer-address>} 
+     * 
+     * 
      * @param addressId the customer address to update
      * @param attributes  the address attributes to update
      */
     @Operation
-    public void updateCustomerAddress(@Parameter int addressId, @Parameter Map<String, Object> addressData)
+    public void updateCustomerAddress(@Parameter int addressId, @Parameter Map<String, Object> attributes)
     {
-        customerClient.updateCustomerAddress(addressId, addressData);
+        customerClient.updateCustomerAddress(addressId, attributes);
     }
-    
-    // XXX to here
 
     @Operation
     public List<Map<String, Object>> listStockItems(@Parameter List<String> productIdsOrSkus)

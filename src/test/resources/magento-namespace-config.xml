@@ -191,7 +191,10 @@
 			exchange-pattern="request-response" />
 		<magento:create-customer>
 			<magento:attributes >
-				<magento:attribute key="customer_names" value="#[map-payload:customerName]"/>
+				<magento:attribute key="email" value="#[map-payload:email]"/>
+				<magento:attribute key="firstname" value="#[map-payload:firstname]"/>
+				<magento:attribute key="lastname" value="#[map-payload:lastname]"/>
+				<magento:attribute key="password" value="#[map-payload:password]"/>
 			</magento:attributes>
 		</magento:create-customer>
 	</flow>
@@ -230,6 +233,42 @@
 		<inbound-endpoint address="vm://ListCustomers"
 			exchange-pattern="request-response" />
 		<magento:list-customers filters="gteq(customer_age, #[map-payload:minCustomerAge])" />
+	</flow>
+	
+	<flow name="ListCustomerGroups">
+		<inbound-endpoint address="vm://ListCustomerGroups"
+			exchange-pattern="request-response" />
+		<magento:list-customer-groups />
+	</flow>
+	
+	
+	<flow name="ListCustomerAddresses">
+		<inbound-endpoint address="vm://ListCustomerAddresses"
+			exchange-pattern="request-response" />
+		<magento:list-customer-addresses customerId="#[map-payload:customerAddresses]" />
+	</flow>
+	
+	
+	<flow name="UpdateCustomerAddress">
+		<inbound-endpoint address="vm://UpdateCustomerAddress"
+			exchange-pattern="request-response" />
+		<magento:update-customer-address addressId="#[map-payload:addressId]">
+			<magento:attributes>
+				<magento:attribute key="street" value="#[map-payload:street]"/>
+				<magento:attribute key="region" value="#[map-payload:region]"/>
+			</magento:attributes>
+		</magento:update-customer-address>
+	</flow>
+	
+	
+	<flow name="UpdateCustomer">
+		<inbound-endpoint address="vm://UpdateCustomer"
+			exchange-pattern="request-response" />
+		<magento:update-customer customerId="#[map-payload:customerId]">
+			<magento:attributes>
+				<magento:attribute key="lastname" value="#[map-payload:lastname]"/>
+			</magento:attributes>
+		</magento:update-customer>
 	</flow>
 	
 	<!-- Directory API -->
