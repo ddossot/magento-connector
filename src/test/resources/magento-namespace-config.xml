@@ -273,9 +273,44 @@
 	
 	<!-- Directory API -->
 	
-	<!-- TODO -->
+	<flow name="ListDirectoryRegions">
+		<inbound-endpoint address="vm://ListDirectoryRegions"
+			exchange-pattern="request-response" />
+		<magento:list-directory-regions countryId="#[map-payload:countryId]"/>
+	</flow>
+	
+	<flow name="ListDirectoryCountries">
+		<inbound-endpoint address="vm://ListDirectoryCountries"
+			exchange-pattern="request-response" />
+		<magento:list-directory-countries/>
+	</flow>
 	
 	<!-- Catalog API -->
 	
 	<!-- TODO -->
+	
+	<!--  Inventory API -->
+	
+	<flow name="ListStockItems">
+		<inbound-endpoint address="vm://ListStockItems"
+			exchange-pattern="request-response" />
+		<magento:list-stock-items >
+			<magento:productIdentifiers>
+				<magento:productIdentifier>1560</magento:productIdentifier>
+				<magento:productIdentifier>JJFO986</magento:productIdentifier>
+			</magento:productIdentifiers>
+		</magento:list-stock-items>
+	</flow>
+	
+	<flow name="UpdateStockItem">
+		<inbound-endpoint address="vm://UpdateStockItem"
+			exchange-pattern="request-response" />
+		<magento:update-stock-item productIdentifier="#[map-payload:productIdOrSku]">
+			<magento:attributes>
+				<magento:attribute key="qty" value="#[map-payload:quantity]"/>
+			</magento:attributes>
+		</magento:update-stock-item>
+	</flow>
+	
+	
 </mule>

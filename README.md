@@ -32,7 +32,7 @@ Add the connector's maven repo to your pom.xml:
     </repositories>
 
 Add the connector as a dependency to your project. This can be done by adding
-the following under the dependencies element in the pom.xml file of the
+the following under the <dependencies> element in the pom.xml file of the
 application:
 
     <dependency>
@@ -626,22 +626,53 @@ Example:
 List Stock Items
 ----------------
 
+Retrieve stock data by product ids
+
+Example:
+
+
+
+     <magento:list-stock-items >
+    	<magento:productIdentifiers>
+    		<magento:productIdentifier>1560</magento:productIdentifier>
+    	 	<magento:productIdentifier>JJFO986</magento:productIdentifier>
+    	</magento:productIdentifiers>
+    </magento:list-stock-items>
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|productIdsOrSkus||no||
+|productIdentifiers| a not empty list of product ids or skus whose attributes to list|no||
 
 Update Stock Item
 -----------------
 
+Update product stock data given its id or sku
+
+Example:
+
+
+
+      <magento:update-stock-item productIdentifier="#[map-payload:productIdOrSku]">
+    	<magento:attributes>
+    		<magento:attribute key="qty" value="#[map-payload:quantity]"/>
+    	</magento:attributes>
+    </magento:update-stock-item>
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|productIdOrSku||no||
+|productIdentifier| the product id or sku of the product to update|no||
 |attributes||no||
 
 List Directory Countries
 ------------------------
+
+Answers the list of countries
+Example:
+
+
+     <magento:list-directory-countries"/>
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
@@ -650,10 +681,16 @@ List Directory Countries
 List Directory Regions
 ----------------------
 
+Answers a list of regions for the given county
+
+
+
+     <magento:list-directory-regions countryId="#[map-payload:countryId]"/>
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|countryId||no||
+|countryId| the country code, in ISO2 or ISO3 format|no||
 
 Assign Product Link
 -------------------

@@ -21,7 +21,6 @@ public interface MagentoDirectoryClient<AttributesCollectionType, ExceptionType 
      * Answers the list of countries
      * 
      * @return a collection of countries attributes
-     * @throws ExceptionType
      */
     AttributesCollectionType listDirectoryCountries() throws ExceptionType;
 
@@ -30,7 +29,6 @@ public interface MagentoDirectoryClient<AttributesCollectionType, ExceptionType 
      * 
      * @param countryId the country code, in ISO2 or ISO3 format
      * @return the collection of regions attributes
-     * @throws ExceptionType
      */
     AttributesCollectionType listDirectoryRegions(@NotNull String countryId) throws ExceptionType;
 }
