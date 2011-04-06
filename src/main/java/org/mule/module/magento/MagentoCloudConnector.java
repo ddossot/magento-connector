@@ -1123,9 +1123,8 @@ public class MagentoCloudConnector implements Initialisable
      * 
      * @return the list of product link types
      */
-    /*FIXME rettype*/
     @Operation
-    public String[] listProductLinkTypes() 
+    public List<String> listProductLinkTypes() 
     {
         return catalogClient.listProductLinkTypes();
     }
@@ -1346,21 +1345,20 @@ public class MagentoCloudConnector implements Initialisable
 	}
 
 	@Operation
-	public List<Map<String, Object>> listInventoryStockItems(/*FIXME*/String[] products)
+	public List<Map<String, Object>> listInventoryStockItems(@Parameter List<String> productIdOrSkus)
 			throws MagentoException
 	{
-		return catalogClient.listInventoryStockItems(products);
+		return catalogClient.listInventoryStockItems(productIdOrSkus);
 	}
 
 	//TODO motivation?
 	@Operation
-	/*FIXME retype*/
-	public int updateInventoryStockItem(@Parameter(optional=true) Integer productId, 
+	public void updateInventoryStockItem(@Parameter(optional=true) Integer productId, 
 			                            @Parameter(optional=true) String productSku,
 			                            @Parameter(optional=true) String productIdOrSku,
 			                            Map<String, Object> attributes) throws MagentoException
 	{
-		return catalogClient.updateInventoryStockItem(from(productSku, productId, productIdOrSku), attributes);
+		catalogClient.updateInventoryStockItem(from(productSku, productId, productIdOrSku), attributes);
 	}
 	
 	   
@@ -1442,7 +1440,8 @@ public class MagentoCloudConnector implements Initialisable
      * @param productIdOrSku
      *            the id or sku of the product.
 	 * @param storeView the optional store view
-	 * @param attributes the attributes to retrieve
+	 * @param attributesNames 
+	 * @param additionalAttributeNames 
 	 * @return the attributes
 	 */
 	@Operation
@@ -1450,9 +1449,10 @@ public class MagentoCloudConnector implements Initialisable
 							              @Parameter(optional=true) String productSku, 
 							              @Parameter(optional=true) String productIdOrSku,
 							              @Parameter(optional=true) String storeView, 
-							              @Parameter Map<String, Object> attributes) throws MagentoException
+							              @Parameter(optional=true) List<String> attributesNames, 
+							              @Parameter(optional=true) List<String> additionalAttributeNames) throws MagentoException
 	{
-		return catalogClient.getProduct(from(productSku, productId, productIdOrSku), storeView, attributes);
+		return catalogClient.getProduct(from(productSku, productId, productIdOrSku), storeView, attributesNames, additionalAttributeNames);
 	}
 	
 	

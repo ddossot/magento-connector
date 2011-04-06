@@ -153,7 +153,7 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * @param products
      * @return
      */
-    AttributesCollectionType listInventoryStockItems(String[] products) throws ExceptionType;
+    AttributesCollectionType listInventoryStockItems(@NotNull List<String> products) throws ExceptionType;
 
     /**
      * 
@@ -162,7 +162,7 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * @return
      * 
      */
-    int updateInventoryStockItem(@NotNull ProductIdentifier productId, @NotNull Map<String, Object> attributes)
+    void updateInventoryStockItem(@NotNull ProductIdentifier productId, @NotNull Map<String, Object> attributes)
         throws ExceptionType;
 	
 	
@@ -208,8 +208,8 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      */
     AttributesType getProduct(@NotNull ProductIdentifier productId,
                              String storeView,
-                             @NotNull Map<String, Object> attributes) throws ExceptionType;
-    
+                             List<String> attributeNames,
+                             List<String> additionalAttributeNames) throws ExceptionType;
 
     /**
      * Retrieve products list by filters
@@ -448,7 +448,7 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * 
      * @return the list of product link types
      */
-    String[] listProductLinkTypes() throws ExceptionType;
+    List<String> listProductLinkTypes() throws ExceptionType;
 
     /**
      * Update product link

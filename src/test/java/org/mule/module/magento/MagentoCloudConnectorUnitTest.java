@@ -18,6 +18,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.rmi.RemoteException;
+import java.util.Arrays;
+import java.util.HashMap;
+
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.mule.module.magento.api.AxisPortProvider;
 import org.mule.module.magento.api.catalog.AxisMagentoCatalogClient;
 import org.mule.module.magento.api.customer.AxisMagentoInventoryClient;
@@ -33,14 +40,7 @@ import org.mule.module.magento.api.inventory.AxisMagentoCustomerClient;
 import org.mule.module.magento.api.order.AxisMagentoOrderClient;
 import org.mule.module.magento.api.order.model.Carrier;
 
-import java.rmi.RemoteException;
-import java.util.HashMap;
-
 import edu.emory.mathcs.backport.java.util.Collections;
-
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
 @SuppressWarnings("serial")
 public class MagentoCloudConnectorUnitTest
 {
@@ -194,6 +194,14 @@ public class MagentoCloudConnectorUnitTest
     {
         connector.addOrderInvoiceComment("invoiceId", "comment", false, true);
         verify(port).salesOrderInvoiceAddComment(anyString(), eq("invoiceId"), eq("comment"), eq("0"), eq("1"));
+    }
+    
+    @Test
+    public void testListInventoryStockItems() throws Exception
+    {
+        String[] idsOrSkus = new String[]{"SK100", "155600", "7896"};
+        connector.listInventoryStockItems(Arrays.asList(idsOrSkus));
+        verify(port).catalogInventoryStockItemList(anyString(), eq(idsOrSkus));
     }
 
 	// TODO reflectively test all methods. It is a nonses to write individual

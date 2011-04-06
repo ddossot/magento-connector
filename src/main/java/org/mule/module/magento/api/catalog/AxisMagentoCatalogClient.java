@@ -26,12 +26,17 @@ import org.mule.module.magento.api.util.MagentoObject;
 import org.mule.module.magento.filters.FiltersParser;
 
 import java.rmi.RemoteException;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang.Validate;
+
+import java.util.Collections;
+
 
 public class AxisMagentoCatalogClient extends AbstractMagentoClient
     implements MagentoCatalogClient<Object, Object[], RemoteException>
@@ -120,19 +125,6 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
         return getPort().catalogCategoryInfo(getSessionId(), categoryId, storeView, toArray(attributeNames, String.class));
     }
     
-    /** TODO 
-    42.catalog-category-level Retrieve one level of categories by
-        * website/store view/parent category NOTE Please make sure that you are not
-        * moving category to any of its own children. There are no extra checks to
-        * prevent doing it through webservices API, and you won’t be able to fix this
-        * from admin interface then 
-     * 
-     * @param website
-     * @param storeView
-     * @param parentCategory
-     * @return
-     * @throws RemoteException
-     */
     public Object[] listCategoryLevels(String website, String storeView, String parentCategory)
         throws RemoteException
     {
@@ -213,14 +205,9 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
             productId.getIdentifierType());
     }
 
-    /**
-     * 
-     * @param products
-     * @return
-     */
-    public Object[] listInventoryStockItems(String[] products) throws RemoteException
+    public Object[] listInventoryStockItems(List<String> products) throws RemoteException
     {
-        return getPort().catalogInventoryStockItemList(getSessionId(), products);
+        return getPort().catalogInventoryStockItemList(getSessionId(), toArray(products, String.class));
     }
 
     /**
@@ -230,11 +217,11 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
      * @return
      * 
      */
-    public int updateInventoryStockItem(@NotNull ProductIdentifier productId, @NotNull Map<String, Object> attributes)
+    public void updateInventoryStockItem(@NotNull ProductIdentifier productId, @NotNull Map<String, Object> attributes)
         throws RemoteException
     {
         Validate.notNull(attributes);
-        return getPort().catalogInventoryStockItemUpdate(getSessionId(), productId.getIdentifierAsString(),
+        getPort().catalogInventoryStockItemUpdate(getSessionId(), productId.getIdentifierAsString(),
             fromMap(CatalogInventoryStockItemUpdateEntity.class, attributes));
     }
  
@@ -304,17 +291,30 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
      */
     public Object getProduct(@NotNull ProductIdentifier productId,
                              String storeView,
-                             //FIXME take two lists of attributes
-                             @NotNull Map<String, Object> attributes) throws RemoteException
+                             List<String> attributeNames,
+                             List<String> additionalAttributeNames) throws RemoteException
     {
-        Validate.notNull(attributes);
         Validate.notNull(productId);
+        
+        CatalogProductRequestAttributes request = 
+            new CatalogProductRequestAttributes(
+                toArray(nullToEmpty(attributeNames), String.class), 
+                toArray(nullToEmpty(additionalAttributeNames), String.class));
+        
         //FIXME the returned object contains an array of associative entities, which should be mapped as entries
         //in a map
         return getPort().catalogProductInfo(getSessionId(), productId.getIdentifierAsString(), storeView,
-            fromMap(CatalogProductRequestAttributes.class, attributes), productId.getIdentifierType());
+            request, productId.getIdentifierType());
     }
     
+    private <T> Collection<T> nullToEmpty(Collection<T> collection)
+    {
+        if (collection == null)
+        {
+            return Collections.emptyList();
+        }
+        return collection;
+    }
 
     /**
      * Retrieve products list by filters
@@ -526,9 +526,9 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
             productId.getIdentifierType());
     }
 
-    public String[] listProductLinkTypes() throws RemoteException
+    public List<String> listProductLinkTypes() throws RemoteException
     {
-        return getPort().catalogProductLinkTypes(getSessionId());
+        return Arrays.asList(getPort().catalogProductLinkTypes(getSessionId()));
     }
 
     public void updateProductLink(@NotNull String type,
