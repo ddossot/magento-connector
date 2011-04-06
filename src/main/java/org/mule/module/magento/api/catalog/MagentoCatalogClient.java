@@ -51,10 +51,20 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
         throws ExceptionType;
 
     /**
-     * TODO naming
-     * catalog-category-currentStore
+     * Answers the current default catalog store view id for this session
+     * @return the current default store view id
      */
-    int catalogCategoryCurrentStore(String storeView) throws ExceptionType;
+    int getCatalogCurrentStoreView() throws ExceptionType;
+    
+    /**
+     * Set the default catalog store view for this session
+     * 
+     * @param storeViewIdOrCode
+     *            the id or code of the store view to set as default for this
+     *            session
+     */
+    void updateCatalogCurrentStoreView(@NotNull String storeViewIdOrCode) throws ExceptionType;
+
 
     /**
      * Deletes a category. See  catalog-category-delete SOAP method
@@ -169,22 +179,6 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
         throws ExceptionType;
 
     /**
-     * @param storeView
-     * @return
-     * 
-     */
-    void updateProductStoreView(String storeView) throws ExceptionType;
-    
-    /**
-     * TODO
-     * 
-     * @param storeView
-     * @return
-     * 
-     */
-    void getProductStoreView(String storeView) throws ExceptionType;
-
-    /**
      * Deletes a product.
      *  See catalog-product-delete SOAP method. 
      * 
@@ -216,7 +210,6 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
                              String storeView,
                              @NotNull Map<String, Object> attributes) throws ExceptionType;
     
-    //TODO store view or code
 
     /**
      * Retrieve products list by filters
@@ -249,11 +242,11 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * Updates a product. See catalog-category-updateProduct SOAP method 
      * 
      * @param attributes not empty
-     * @param storeViewIdOrCode optional store view
+     * @param storeView optional store view
      */
     void updateProduct(@NotNull ProductIdentifier productId,
                               @NotNull Map<String, Object> attributes,
-                              String storeViewIdOrCode) throws ExceptionType;
+                              String storeView) throws ExceptionType;
 	
 
     /**
@@ -268,26 +261,6 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
     String createProductAttributeMedia(@NotNull ProductIdentifier productId,
                                        @NotNull Map<String, Object> attributes,
                                        String storeView) throws ExceptionType;
-
-    /**
-     * Set current store view. See catalog-product-attribute-media-currentStore SOAP
-     * method. TODO verify
-     * 
-     * @param storeView
-     * @return
-     * 
-     */
-    void updateProductAttributeMediaStoreView(@NotNull String storeView) throws ExceptionType;
-
-    /**
-     * Gets current store view. See catalog-product-attribute-media-currentStore SOAP
-     * method. TODO verify
-     * 
-     * @param storeView
-     * @return
-     * 
-     */
-    int getProductAttributeMediaStoreView() throws ExceptionType;
 
     /**
      * Answers product image attributes. See catalog-product-attribute-media-info SOAP method 
@@ -356,22 +329,6 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
     AttributesCollectionType listCategoryAttributes() throws ExceptionType;
 
     /**
-     * TODO verify
-     * 
-     * @param storeView
-     * 
-     */
-    void updateCategoryAttributeStoreView(String storeView) throws ExceptionType;
-
-    /**
-     * TODO verify
-     * 
-     * @return
-     * 
-     */
-    int getCategoryAttributeStoreView() throws ExceptionType;
-
-    /**
      * Retrieves attribute options. See catalog-category-attribute-options SOAP
      * method.
      * 
@@ -382,22 +339,6 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      */
     AttributesCollectionType listCategoryAttributeOptions(@NotNull String attributeId, String storeView)
         throws ExceptionType;
-
-    /**
-     * Sets the product attribute store. TODO verify
-     * 
-     * @param storeView
-     * 
-     */
-    void updateProductAttributeStoreView(@NotNull String storeView) throws ExceptionType;
-
-    /**
-     * Gets the product attribute store view. TODO verify
-     * 
-     * @return the current store
-     * 
-     */
-    int getProductAttributeStoreView() throws ExceptionType;
 
     /**
      * Retrieves product attributes list. See catalog-product-attribute-list SOAP

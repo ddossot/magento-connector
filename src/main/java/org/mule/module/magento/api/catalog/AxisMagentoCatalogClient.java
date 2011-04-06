@@ -85,14 +85,16 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
         return getPort().catalogCategoryCreate(getSessionId(), parentId,
             fromMap(CatalogCategoryEntityCreate.class, attributes), storeView);
     }
-
-    /**
-     * TODO naming
-     * catalog-category-currentStore
-     */
-    public int catalogCategoryCurrentStore(String storeView) throws RemoteException
+    
+    public int getCatalogCurrentStoreView() throws RemoteException
     {
-        return getPort().catalogCategoryCurrentStore(getSessionId(), storeView);
+        return getPort().catalogCategoryCurrentStore(getSessionId(), null);
+    }
+    
+    public void updateCatalogCurrentStoreView(String storeViewIdOrCode) throws RemoteException
+    {
+        Validate.notNull(storeViewIdOrCode);
+        getPort().catalogCategoryCurrentStore(getSessionId(), storeViewIdOrCode);
     }
 
     /**
@@ -260,27 +262,6 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
             fromMap(CatalogProductCreateEntity.class, attributes));
     }
 
-    /**
-     * @param storeView
-     * @return
-     * 
-     */
-    public void updateProductStoreView(String storeView) throws RemoteException
-    {
-        getPort().catalogProductCurrentStore(getSessionId(), storeView);
-    }
-    
-    /**
-     * TODO
-     * 
-     * @param storeView
-     * @return
-     * 
-     */
-    public void getProductStoreView(String storeView) throws RemoteException
-    {
-        getPort().catalogProductCurrentStore(getSessionId(), storeView);
-    }
 
     /**
      * Deletes a product.
@@ -374,16 +355,16 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
      * Updates a product. See catalog-category-updateProduct SOAP method 
      * 
      * @param attributes
-     * @param storeViewIdOrCode optional store view
+     * @param storeView optional store view
      */
     public void updateProduct(@NotNull ProductIdentifier productId,
                               @NotNull Map<String, Object> attributes,
-                              String storeViewIdOrCode) throws RemoteException
+                              String storeView) throws RemoteException
     {
         Validate.notNull(productId);
         Validate.notEmpty(attributes);
         getPort().catalogProductUpdate(getSessionId(), productId.getIdentifierAsString(),
-            fromMap(CatalogProductCreateEntity.class, attributes), storeViewIdOrCode, productId.getIdentifierType());
+            fromMap(CatalogProductCreateEntity.class, attributes), storeView, productId.getIdentifierType());
     }
     
     
@@ -399,17 +380,6 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
         return getPort().catalogProductAttributeMediaCreate(getSessionId(), productId.getIdentifierAsString(),
             fromMap(CatalogProductAttributeMediaCreateEntity.class, attributes), storeView,
             productId.getIdentifierType());
-    }
-
-    public void updateProductAttributeMediaStoreView(@NotNull String storeView) throws RemoteException
-    {
-        Validate.notNull(storeView);
-        getPort().catalogProductAttributeMediaCurrentStore(getSessionId(), storeView);
-    }
-
-    public int getProductAttributeMediaStoreView() throws RemoteException
-    {
-        return getPort().catalogProductAttributeMediaCurrentStore(getSessionId(), null);
     }
 
     public Object getProductAttributeMedia(@NotNull ProductIdentifier productId,
@@ -463,16 +433,6 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
         return getPort().catalogCategoryAttributeList(getSessionId());
     }
 
-    public void updateCategoryAttributeStoreView(String storeView) throws RemoteException
-    {
-        getPort().catalogCategoryAttributeCurrentStore(getSessionId(), storeView);
-    }
-
-    public int getCategoryAttributeStoreView() throws RemoteException
-    {
-        return getPort().catalogCategoryAttributeCurrentStore(getSessionId(), null);
-    }
-
     public Object[] listCategoryAttributeOptions(@NotNull String attributeId, String storeView)
         throws RemoteException
     {
@@ -481,17 +441,6 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
     }
 
     /* Product Attribute */
-
-    public void updateProductAttributeStoreView(@NotNull String storeView) throws RemoteException
-    {
-        Validate.notNull(storeView);
-        getPort().catalogProductAttributeCurrentStore(getSessionId(), storeView);
-    }
-
-    public int getProductAttributeStoreView() throws RemoteException
-    {
-        return getPort().catalogProductAttributeCurrentStore(getSessionId(), null);
-    }
 
     public Object[] listProductAttributes(int setId) throws RemoteException
     {

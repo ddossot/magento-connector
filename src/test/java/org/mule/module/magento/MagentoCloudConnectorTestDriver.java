@@ -156,7 +156,7 @@ public class MagentoCloudConnectorTestDriver
 	@Test
 	public void storeView() throws Exception 
 	{
-		assertEquals(connector.getCategoryAttributeStoreView(), connector.getCategoryAttributeStoreView());
+		assertEquals(connector.getCatalogCurrentStoreView(), connector.getCatalogCurrentStoreView());
 	}
 	
 	@Test

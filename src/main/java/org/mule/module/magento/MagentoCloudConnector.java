@@ -12,7 +12,6 @@ package org.mule.module.magento;
 
 import static org.mule.module.magento.api.catalog.model.ProductIdentifiers.from;
 
-import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +23,6 @@ import org.mule.module.magento.api.MagentoClientAdaptor;
 import org.mule.module.magento.api.MagentoException;
 import org.mule.module.magento.api.catalog.AxisMagentoCatalogClient;
 import org.mule.module.magento.api.catalog.MagentoCatalogClient;
-import org.mule.module.magento.api.catalog.model.ProductIdentifier;
 import org.mule.module.magento.api.customer.AxisMagentoInventoryClient;
 import org.mule.module.magento.api.customer.MagentoInventoryClient;
 import org.mule.module.magento.api.directory.AxisMagentoDirectoryClient;
@@ -874,11 +872,6 @@ public class MagentoCloudConnector implements Initialisable
         catalogClient.deleteProductLink(type, from(productSku, productId, productIdOrSku), linkedProductIdOrSku);
     }
 
-    @Operation
-    public int getCategoryAttributeStoreView() 
-    {
-        return catalogClient.getCategoryAttributeStoreView();
-    }
 
     /**
      * Lists linked products to the given product and for the given link type.
@@ -910,16 +903,27 @@ public class MagentoCloudConnector implements Initialisable
         return catalogClient.getProductAttributeMedia(from(productSku, productId, productIdOrSku), file, storeView);
     }
     
+    /**
+     * Answers the current default catalog store view id for this session
+     * @return the current default store view id
+     */
     @Operation
-    public int getProductAttributeMediaStoreView() 
+    public int getCatalogCurrentStoreView() 
     {
-        return catalogClient.getProductAttributeMediaStoreView();
+        return catalogClient.getCatalogCurrentStoreView();
     }
-
+    
+    /**
+     * Set the default catalog store view for this session
+     * 
+     * @param storeViewIdOrCode
+     *            the id or code of the store view to set as default for this
+     *            session
+     */
     @Operation
-    public int getProductAttributeStoreView() 
+    public void updateCategoryAttributeStoreView(@Parameter String storeViewIdOrCode) 
     {
-        return catalogClient.getProductAttributeStoreView();
+        catalogClient.updateCatalogCurrentStoreView(storeViewIdOrCode);
     }
 
     /**
@@ -1140,11 +1144,6 @@ public class MagentoCloudConnector implements Initialisable
         return catalogClient.listProductTypes();
     }
 
-    @Operation
-    public void updateCategoryAttributeStoreView(String storeView) 
-    {
-        catalogClient.updateCategoryAttributeStoreView(storeView);
-    }
     
     @Operation
     public int updateProductAttributeMedia(@Parameter(optional=true) Integer productId,
@@ -1155,18 +1154,6 @@ public class MagentoCloudConnector implements Initialisable
                                            String storeView) 
     {
         return catalogClient.updateProductAttributeMedia(from(productSku, productId, productIdOrSku), file, attributes, storeView);
-    }
-
-    @Operation
-    public void updateProductAttributeMediaStoreView(String storeView) 
-    {
-        catalogClient.updateProductAttributeMediaStoreView(storeView);
-    }
-
-    @Operation
-    public void updateProductAttributeStoreView(String storeView) 
-    {
-        catalogClient.updateProductAttributeStoreView(storeView);
     }
 
     /** FIXME */
@@ -1230,13 +1217,6 @@ public class MagentoCloudConnector implements Initialisable
 		return catalogClient.createCategory(parentId, attributes, storeView);
 	}
 	
-	@Operation
-	public int catalogCategoryCurrentStore(String storeView)
-			throws MagentoException
-	{
-		return catalogClient.catalogCategoryCurrentStore(storeView);
-	}
-
     /**
      * Deletes a category. See  catalog-category-delete SOAP method
      * Example:
@@ -1402,18 +1382,6 @@ public class MagentoCloudConnector implements Initialisable
 		return catalogClient.createProduct(type, set, sku, attributes);
 	}
 
-	@Operation
-	public void updateProductStoreView(@Parameter(optional=true) String storeView)
-			throws MagentoException
-	{
-		catalogClient.updateProductStoreView(storeView);
-	}
-
-	@Operation/*FIXME signature*/
-	public void getProductStoreView(@Parameter(optional=true) String storeView) throws MagentoException
-	{
-		catalogClient.getProductStoreView(storeView);
-	}
 	
 	/**
 	 * Deletes a product. See catalog-product-delete SOAP method.
@@ -1539,17 +1507,17 @@ public class MagentoCloudConnector implements Initialisable
      * @param productIdOrSku
      *            the id or sku of the product.       
      * @param attributes the not empty map of product attributes to update 
-     * @param storeViewIdOrCode optional store view
+     * @param storeView optional store view
      */
 	@Operation
 	public void updateProduct(@Parameter(optional=true) Integer productId, 
 			                  @Parameter(optional=true) String productSku,
 			                  @Parameter(optional=true) String productIdOrSku,
 			                  @Parameter Map<String, Object> attributes, 
-			                  @Parameter(optional=true)  String storeViewIdOrCode)
+			                  @Parameter(optional=true)  String storeView)
 			throws MagentoException
 	{
-		catalogClient.updateProduct(from(productSku, productId, productIdOrSku), attributes, storeViewIdOrCode);
+		catalogClient.updateProduct(from(productSku, productId, productIdOrSku), attributes, storeView);
 	}
 
 	@SuppressWarnings("unchecked")
