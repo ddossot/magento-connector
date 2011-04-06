@@ -29,6 +29,7 @@ import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Map;
 
+import javax.sound.sampled.Line;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang.Validate;
@@ -542,13 +543,16 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
 
     /* h. Product Link (related, cross sells, up sells, grouped) */
 
-    public String assignProductLink(@NotNull String type,
+    public void assignProductLink(@NotNull String type,
                                     @NotNull ProductIdentifier productId,
                                     @NotNull String linkedProduct,
                                     @NotNull Map<String, Object> attributes) throws RemoteException
     {
         Validate.notNull(attributes);
-        return getPort().catalogProductLinkAssign(getSessionId(), type, productId.getIdentifierAsString(), linkedProduct,
+        Validate.notNull(type);
+        Validate.notNull(productId);
+        Validate.notNull(linkedProduct);
+        getPort().catalogProductLinkAssign(getSessionId(), type, productId.getIdentifierAsString(), linkedProduct,
             fromMap(CatalogProductLinkEntity.class, attributes), productId.getIdentifierType());
     }
 
@@ -563,11 +567,11 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
         return getPort().catalogProductLinkList(getSessionId(), type, productId.getIdentifierAsString(), productId.getIdentifierType());
     }
 
-    public String deleteProductLink(@NotNull String type,
+    public void deleteProductLink(@NotNull String type,
                                     @NotNull ProductIdentifier productId,
                                     @NotNull String linkedProduct) throws RemoteException
     {
-        return getPort().catalogProductLinkRemove(getSessionId(), type, productId.getIdentifierAsString(), linkedProduct,
+        getPort().catalogProductLinkRemove(getSessionId(), type, productId.getIdentifierAsString(), linkedProduct,
             productId.getIdentifierType());
     }
 
@@ -576,7 +580,7 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
         return getPort().catalogProductLinkTypes(getSessionId());
     }
 
-    public String updateProductLink(@NotNull String type,
+    public void updateProductLink(@NotNull String type,
                                     @NotNull ProductIdentifier productId,
                                     @NotNull String linkedProduct,
                                     @NotNull Map<String, Object> attributes) throws RemoteException
@@ -585,7 +589,7 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
         Validate.notNull(type);
         Validate.notNull(linkedProduct);
 
-        return getPort().catalogProductLinkUpdate(getSessionId(), type, productId.getIdentifierAsString(), linkedProduct,
+        getPort().catalogProductLinkUpdate(getSessionId(), type, productId.getIdentifierAsString(), linkedProduct,
             fromMap(CatalogProductLinkEntity.class, attributes), productId.getIdentifierType());
     }
 }

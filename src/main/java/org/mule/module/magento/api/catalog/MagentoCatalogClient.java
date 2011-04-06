@@ -485,9 +485,8 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * @param productId
      * @param linkedProduct
      * @param attributes
-     * @return TODO
      */
-    String assignProductLink(@NotNull String type,
+    void assignProductLink(@NotNull String type,
     						 @NotNull ProductIdentifier productId,
                              @NotNull String linkedProduct,
                              @NotNull Map<String, Object> attributes) throws ExceptionType;
@@ -518,9 +517,8 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * @param type
      * @param productId
      * @param linkedProduct
-     * @return TODO
      */
-    String deleteProductLink(@NotNull String type,
+    void deleteProductLink(@NotNull String type,
     						 @NotNull ProductIdentifier productId,
                              @NotNull String linkedProduct) throws ExceptionType;
 
@@ -539,9 +537,8 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * @param product
      * @param linkedProduct
      * @param attributes
-     * @return TODO
      */
-    String updateProductLink(@NotNull String type,
+    void updateProductLink(@NotNull String type,
     						 @NotNull ProductIdentifier productId,
                              @NotNull String linkedProduct,
                              @NotNull Map<String, Object> attributes) throws ExceptionType;

@@ -761,13 +761,13 @@ public class MagentoCloudConnector implements Initialisable
     }
 
     @Operation
-    public String assignProductLink(@Parameter String type,
+    public void assignProductLink(@Parameter String type,
     								@Parameter(optional=true) Integer productId,
     								@Parameter(optional=true) String productSku,
                                     @Parameter String linkedProduct,
                                     @Parameter Map<String, Object> attributes) 
     {
-        return catalogClient.assignProductLink(type, from(productSku, productId), linkedProduct, attributes);
+        catalogClient.assignProductLink(type, from(productSku, productId), linkedProduct, attributes);
     }
 
     @Operation
@@ -789,12 +789,12 @@ public class MagentoCloudConnector implements Initialisable
     }
 
     @Operation
-    public String deleteProductLink(String type,
+    public void deleteProductLink(String type,
 						    		@Parameter(optional=true) Integer productId,
 									@Parameter(optional=true) String productSku,
                                     String linkedProduct) 
     {
-        return catalogClient.deleteProductLink(type, from(productSku, productId), linkedProduct);
+        catalogClient.deleteProductLink(type, from(productSku, productId), linkedProduct);
     }
 
     @Operation
@@ -943,13 +943,13 @@ public class MagentoCloudConnector implements Initialisable
     }
 
     @Operation
-    public String updateProductLink(String type,
+    public void updateProductLink(String type,
 									@Parameter(optional=true) Integer productId,
 									@Parameter(optional=true) String productSku,
                                     String linkedProduct,
                                     Map<String, Object> attributes) 
     {
-        return catalogClient.updateProductLink(type, from(productSku, productId), linkedProduct, attributes);
+        catalogClient.updateProductLink(type, from(productSku, productId), linkedProduct, attributes);
     }
     
     
