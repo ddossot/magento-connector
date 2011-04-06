@@ -21,7 +21,7 @@ public interface ProductIdentifier
 	String getIdentifierAsString();
 
 	/**The identifier type  - soap methods 
-	 * support just "sku" and "id"*/
+	 * support just "sku", "id" or null*/
 	String getIdentifierType();
 
 	class Id implements ProductIdentifier
@@ -61,6 +61,26 @@ public interface ProductIdentifier
 		public String getIdentifierType()
 		{
 			return "sku";
+		}
+	}
+	
+	class IdOrSku implements ProductIdentifier
+	{
+		private final String idOrSku;
+
+		public IdOrSku(String sku)
+		{
+			this.idOrSku = sku;
+		}
+
+		public String getIdentifierAsString()
+		{
+			return idOrSku;
+		}
+
+		public String getIdentifierType()
+		{
+			return null;
 		}
 	}
 }

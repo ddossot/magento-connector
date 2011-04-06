@@ -32,7 +32,7 @@ Add the connector's maven repo to your pom.xml:
     </repositories>
 
 Add the connector as a dependency to your project. This can be done by adding
-the following under the <dependencies> element in the pom.xml file of the
+the following under the dependencies element in the pom.xml file of the
 application:
 
     <dependency>
@@ -633,16 +633,16 @@ Example:
 
 
      <magento:list-stock-items >
-    	<magento:productIdentifiers>
-    		<magento:productIdentifier>1560</magento:productIdentifier>
-    	 	<magento:productIdentifier>JJFO986</magento:productIdentifier>
-    	</magento:productIdentifiers>
+    	<magento:productIdOrSkus>
+    		<magento:productIdOrSku>1560</magento:productIdOrSku>
+    	 	<magento:productIdOrSku>JJFO986</magento:productIdOrSku>
+    	</magento:productIdOrSkus>
     </magento:list-stock-items>
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|productIdentifiers| a not empty list of product ids or skus whose attributes to list|no||
+|productIdOrSkus| a not empty list of product ids or skus whose attributes to list|no||
 
 Update Stock Item
 -----------------
@@ -653,7 +653,7 @@ Example:
 
 
 
-      <magento:update-stock-item productIdentifier="#[map-payload:productIdOrSku]">
+      <magento:update-stock-item productIdOrSku="#[map-payload:productIdOrSku]">
     	<magento:attributes>
     		<magento:attribute key="qty" value="#[map-payload:quantity]"/>
     	</magento:attributes>
@@ -662,7 +662,7 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|productIdentifier| the product id or sku of the product to update|no||
+|productIdOrSku| the product id or sku of the product to update|no||
 |attributes||no||
 
 List Directory Countries
@@ -682,7 +682,7 @@ List Directory Regions
 ----------------------
 
 Answers a list of regions for the given county
-
+Example:
 
 
      <magento:list-directory-regions countryId="#[map-payload:countryId]"/>
@@ -692,17 +692,35 @@ Answers a list of regions for the given county
 |config-ref|Specify which configuration to use for this invocation|yes||
 |countryId| the country code, in ISO2 or ISO3 format|no||
 
-Assign Product Link
--------------------
+Add Product Link
+----------------
+
+Links two products, given its source and destination productIdOrSku.
+Example:
+
+
+
+      <magento:add-product-link type="#[map-payload:type]"     
+                             productId="#[map-payload:productId]"
+                             linkedProductIdOrSku="#[map-payload:linkedProductId]">
+               <magento:attributes> 
+                  <magento:attribute key="qty" value="#[map-payload:qty]"/>
+               </magento:attributes>
+             </magento:add-product-link>
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|type||no||
-|productId||yes||
-|productSku||yes||
-|linkedProduct||no||
-|attributes||no||
+|type|           the product type|no||
+|productId|           the id of the source product. Use it instead of productIdOrSku
+           in case you are sure the source product identifier is a
+           product id|yes||
+|productSku|           the sku of the source product. Use it instead of productIdOrSku
+           in case you are sure the source product identifier is a
+           product sku|yes||
+|productIdOrSku|           the id or sku of the source product.|yes||
+|linkedProductIdOrSku|           the destination product id or sku.|no||
+|attributes|           the link attributes|no||
 
 Create Product Attribute Media
 ------------------------------
@@ -712,39 +730,84 @@ Create Product Attribute Media
 |config-ref|Specify which configuration to use for this invocation|yes||
 |productId||yes||
 |productSku||yes||
+|productIdOrSku||yes||
 |attributes||no||
 |storeView||no||
 
 Delete Product Attribute Media
 ------------------------------
 
+Removes a product image. See catalog-product-attribute-media-remove SOAP
+method.
+Example:
+
+
+
+     <magento:delete-product-attribute-media 
+                 productSku="#[map-payload:productSku]" 
+                 file="#[map-payload:fileName]"/>
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|productId||yes||
-|productSku||yes||
+|productId|           the id of the product. Use it instead of productIdOrSku
+           in case you are sure the product identifier is a
+           product id|yes||
+|productSku|           the sku of the product. Use it instead of productIdOrSku
+           in case you are sure the product identifier is a
+           product sku|yes||
+|productIdOrSku|           the id or sku of the product.|yes||
 |file||no||
 
 Delete Product Link
 -------------------
 
+Deletes a product's link.
+
+Example:
+
+
+
+     <magento:delete-product-link 
+                 type="#[map-payload:type]"                    
+                 productId="#[map-payload:productId]"
+                 linkedProductIdOrSku="#[map-payload:linkedProductId]"/>
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|type||no||
-|productId||yes||
-|productSku||yes||
-|linkedProduct||no||
+|type| link type|no||
+|productId|           the id of the source product. Use it instead of productIdOrSku
+           in case you are sure the source product identifier is a
+           product id|yes||
+|productSku|           the sku of the source product. Use it instead of productIdOrSku
+           in case you are sure the source product identifier is a
+           product sku|yes||
+|productIdOrSku|           the id or sku of the source product.|yes||
+|linkedProductIdOrSku||no||
 
 
 Get Product Attribute Media
 ---------------------------
 
+Lists linked products to the given product and for the given link type.
+Example:
+
+
+
+     <magento:get-product-attribute-media 
+                 productIdOrSku="#[map-payload:productIdOrSku]"
+                 file="#[map-payload:fileName]"
+                 storeView="#[map-payload:storeView]"/>
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|productId||yes||
-|productSku||yes||
+|productId|           the id of the product. Use it instead of productIdOrSku in
+           case you are sure the product identifier is a product id|yes||
+|productSku|           the sku of the product. Use it instead of productIdOrSku in
+           case you are sure the product identifier is a product sku|yes||
+|productIdOrSku|           the id or sku of the product.|yes||
 |file||no||
 |storeView||yes||
 
@@ -753,48 +816,101 @@ Get Product Attribute Media
 List Category Attributes
 ------------------------
 
+Retrieve product image types. See catalog-product-attribute-media-types SOAP
+method.
+
+Example: 
+
+
+     <magento:list-category-attributes setId="#[map-payload:setId]"/>
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 
-List Category Attributes Options
---------------------------------
+List Category Attribute Options
+-------------------------------
+
+Retrieves attribute options. See catalog-category-attribute-options SOAP
+method.
+
+Example:
+
+
+     <magento:list-category-attributes-options attributeId="#[map-payload:attributeId]"/>
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |attributeId||no||
-|storeView||no||
+|storeView| optional|yes||
 
 List Product Attribute Media
 ----------------------------
 
+Retrieves product image list. See catalog-product-attribute-media-list SOAP
+method
+Example:
+
+
+       <magento:list-product-attribute-media
+                     productId="#[map-payload:productId]"
+                     storeView="#[map-payload:storeView]"/>
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|productId||yes||
-|productSku||yes||
-|storeView||no||
+|productId|           the id of the product. Use it instead of productIdOrSku in
+           case you are sure the product identifier is a product id|yes||
+|productSku|           the sku of the product. Use it instead of productIdOrSku in
+           case you are sure the product identifier is a product sku|yes||
+|productIdOrSku|           the id or sku of the product.|yes||
+|storeView||yes||
 
 List Product Attribute Media Types
 ----------------------------------
 
+Retrieve product image types. See catalog-product-attribute-media-types SOAP
+method.
+
+Example:
+
+
+     <magento:list-product-attribute-media-types setId="#[map-payload:setId]"/>
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|setId||no||
+|setId| the setId|no||
 
 List Product Attribute Options
 ------------------------------
+
+Answers the product attribute options. See catalog-product-attribute-options
+SOAP method.
+
+Example:
+
+
+     <magento:list-product-attribute-options attributeId="#[map-payload:attributeId]"/>
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |attributeId||no||
-|storeView||no||
+|storeView| optional|yes||
 
 List Product Attributes
 -----------------------
+
+Retrieves product attributes list. See catalog-product-attribute-list SOAP
+methods
+
+Example:
+
+
+
+     <magento:list-product-attributes setId="#[map-payload:setId]"/>
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
@@ -804,6 +920,15 @@ List Product Attributes
 List Product Attribute Sets
 ---------------------------
 
+Retrieves product attribute sets. See catalog-product-attribute-set-list SOAP
+method.
+
+Example:
+
+
+
+     <magento:list-product-attribute-sets/>
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
@@ -811,21 +936,37 @@ List Product Attribute Sets
 List Product Attribute Tier Prices
 ----------------------------------
 
+Retrieve product tier prices. See catalog-product-attribute-tier-price-info
+SOAP Method.
+Example:
+
+
+
+     <magento:list-product-attribute-tier-prices productIdOrSku="#[map-payload:productIdOrSku]"/>
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|productId||yes||
-|productSku||yes||
+|productId|           the id of the product. Use it instead of productIdOrSku in
+           case you are sure the product identifier is a product id|yes||
+|productSku|           the sku of the product. Use it instead of productIdOrSku in
+           case you are sure the product identifier is a product sku|yes||
+|productIdOrSku|           the id or sku of the product.|yes||
 
 List Product Link
 -----------------
 
+Lists linked products to the given product and for the given link type
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|type||no||
-|productId||yes||
-|productSku||yes||
+|type| the link type|no||
+|productId|           the id of the product. Use it instead of productIdOrSku in
+           case you are sure the product identifier is a product id|yes||
+|productSku|           the sku of the product. Use it instead of productIdOrSku in
+           case you are sure the product identifier is a product sku|yes||
+|productIdOrSku|           the id or sku of the product.|yes||
 
 List Product Link Attributes
 ----------------------------
@@ -838,12 +979,26 @@ List Product Link Attributes
 List Product Link Types
 -----------------------
 
+Answers product link types
+Example:
+
+
+
+     <magento:list-product-link-types />
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 
 List Product Types
 ------------------
+
+Answers product types. See catalog-product-type-list SOAP method
+Example:
+
+
+
+     <magento:list-product-types />
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
@@ -865,6 +1020,7 @@ Update Product Attribute Media
 |config-ref|Specify which configuration to use for this invocation|yes||
 |productId||yes||
 |productSku||yes||
+|productIdOrSku||yes||
 |file||no||
 |attributes||no||
 |storeView||no||
@@ -895,11 +1051,19 @@ Update Product Link
 |type||no||
 |productId||yes||
 |productSku||yes||
+|productIdOrSku||yes||
 |linkedProduct||no||
 |attributes||no||
 
 List Category Products
 ----------------------
+
+Lists product of a given category. See  catalog-category-assignedProducts SOAP method.   
+Example:
+
+
+
+     <magento:list-category-products  categoryId="#[map-payload:categoryId]"/>
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
@@ -915,10 +1079,13 @@ Add Category Product
 |categoryId||no||
 |productId||yes||
 |productSku||yes||
+|productIdOrSku||yes||
 |position||no||
 
 Create Category
 ---------------
+
+Creates a new category. See catalog-category-create SOAP method.
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
@@ -938,19 +1105,32 @@ Catalog Category Current Store
 Delete Category
 ---------------
 
+Deletes a category. See  catalog-category-delete SOAP method
+Example:
+
+
+     <magento:delete-category categoryId="#[map-payload:categoryId]"/>
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|categoryId||no||
+|categoryId| the category to delete|no||
 
 Get Category
 ------------
 
+Answers category attributes. See catalog-category-info  SOAP method.
+  
+Example:
+
+
+     <magento:get-category categoryId="#[map-payload:categoryId]"/>
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |categoryId||no||
-|storeView||no||
+|storeView||yes||
 |attributeNames||no||
 
 List Category Levels
@@ -960,11 +1140,13 @@ List Category Levels
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |website||no||
-|storeView||no||
+|storeView||yes||
 |parentCategory||no||
 
 Move Category
 -------------
+
+Move category in tree. See  catalog-category-move SOAP method.
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
@@ -976,12 +1158,24 @@ Move Category
 Delete Category Product
 -----------------------
 
+Remove a product assignment. See catalog-category-removeProduct SOAP method. 
+Example:
+
+
+
+     <magento:delete-category-product 
+                 categoryId="#[map-payload:categoryId]"
+                 productSku="#[map-payload:productSku]"/>
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |categoryId||no||
-|productId||yes||
-|productSku||yes||
+|productId|           the id of the product. Use it instead of productIdOrSku in
+           case you are sure the product identifier is a product id|yes||
+|productSku|           the sku of the product. Use it instead of productIdOrSku in
+           case you are sure the product identifier is a product sku|yes||
+|productIdOrSku|           the id or sku of the product.|yes||
 
 Get Category Tree
 -----------------
@@ -995,6 +1189,8 @@ Get Category Tree
 Update Category
 ---------------
 
+Updates a category. See catalog-category-update SOAP method
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
@@ -1005,12 +1201,17 @@ Update Category
 Update Category Product
 -----------------------
 
+Updates a category product
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|categoryId||no||
-|productId||yes||
-|productSku||yes||
+|categoryId| the category id|no||
+|productId|           the id of the product. Use it instead of productIdOrSku in
+           case you are sure the product identifier is a product id|yes||
+|productSku|           the sku of the product. Use it instead of productIdOrSku in
+           case you are sure the product identifier is a product sku|yes||
+|productIdOrSku|           the id or sku of the product.|yes||
 |position||no||
 
 List Inventory Stock Items
@@ -1029,18 +1230,21 @@ Update Inventory Stock Item
 |config-ref|Specify which configuration to use for this invocation|yes||
 |productId||yes||
 |productSku||yes||
+|productIdOrSku||yes||
 |attributes||no||
 
 Create Product
 --------------
 
+Creates a new product
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|type||no||
-|set||no||
-|sku||no||
-|attributes||no||
+|type| the new product's type|no||
+|set| the new product's set|no||
+|sku| the new product's sku|no||
+|attributes| the attributes of the new product|no||
 
 Update Product Store View
 -------------------------
@@ -1048,7 +1252,7 @@ Update Product Store View
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|storeView||no||
+|storeView||yes||
 
 Get Product Store View
 ----------------------
@@ -1056,46 +1260,77 @@ Get Product Store View
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|storeView||no||
+|storeView||yes||
 
 Delete Product
 --------------
 
+Deletes a product. See catalog-product-delete SOAP method.
+
+Example:
+
+<magento:delete-product productId="#[map-payload:productId]" />
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|productId||yes||
-|productSku||yes||
+|productId|           the id of the product. Use it instead of productIdOrSku in
+           case you are sure the product identifier is a product id|yes||
+|productSku|           the sku of the product. Use it instead of productIdOrSku in
+           case you are sure the product identifier is a product sku|yes||
+|productIdOrSku|           the id or sku of the product.|yes||
 
 Get Product Special Price
 -------------------------
 
+Answers a product special price. See catalog-product-getSpecialPrice SOAP method.
+
+Example: 
+
+
+
+     <magento:get-product-special-price productId="#[map-payload:productId]"/>
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |productId||yes||
 |productSku||yes||
-|storeView||no||
+|productIdOrSku||yes||
+|storeView||yes||
 
 Get Product
 -----------
 
+Answers a product's attributes. See catalog-product-info SOAP method.
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|productId||yes||
-|productSku||yes||
-|storeView||no||
-|attributes||no||
+|productId|           the id of the product. Use it instead of productIdOrSku in
+           case you are sure the product identifier is a product id|yes||
+|productSku|           the sku of the product. Use it instead of productIdOrSku in
+           case you are sure the product identifier is a product sku|yes||
+|productIdOrSku|           the id or sku of the product.|yes||
+|storeView| the optional store view|yes||
+|attributes| the attributes to retrieve|no||
 
 List Products
 -------------
 
+Retrieve products list by filters. See catalog-product-list SOAP method.
+
+Example:
+
+
+
+     <magento:list-products/>
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|filters||no||
-|storeView||no||
+|filters| an optional filtering expression|yes||
+|storeView| an optional storeView|yes||
 
 Update Product Special Price
 ----------------------------
@@ -1105,21 +1340,36 @@ Update Product Special Price
 |config-ref|Specify which configuration to use for this invocation|yes||
 |productId||yes||
 |productSku||yes||
+|productIdOrSku||yes||
 |specialPrice||no||
 |fromDate||no||
 |toDate||no||
-|storeView||no||
+|storeView||yes||
 
 Update Product
 --------------
 
+Updates a product. See catalog-category-updateProduct SOAP method 
+Example:
+
+
+
+     <magento:update-product productIdOrSku="#[map-payload:productIdOrSku]">
+             <magento:attributes>
+                 <magento:attribute key="name" value="#[map-payload:name]"/>
+             </magento:attributes>
+           </magento:update-product>
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|productId||yes||
-|productSku||yes||
-|attributes||no||
-|storeViewIdOrCode||no||
+|productId|           the id of the product. Use it instead of productIdOrSku in
+           case you are sure the product identifier is a product id|yes||
+|productSku|           the sku of the product. Use it instead of productIdOrSku in
+           case you are sure the product identifier is a product sku|yes||
+|productIdOrSku|           the id or sku of the product.|yes||
+|attributes| the not empty map of product attributes to update|no||
+|storeViewIdOrCode| optional store view|yes||
 
 
 

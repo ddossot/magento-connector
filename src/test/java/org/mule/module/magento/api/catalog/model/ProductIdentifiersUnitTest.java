@@ -23,20 +23,20 @@ public class ProductIdentifiersUnitTest
 	@Test(expected=IllegalArgumentException.class)
 	public void testFromBothIds()
 	{
-		ProductIdentifiers.from("XAF4596", 100);
+		ProductIdentifiers.from("XAF4596", 100, null);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testFromNoIds()
 	{
-		ProductIdentifiers.from(null, null);
+		ProductIdentifiers.from(null, null, null);
 	}
 	
 	@Test
 	public void testFromSku()
 	{
 		String sku = "FO4G896";
-		ProductIdentifier id = ProductIdentifiers.from(sku, null);
+		ProductIdentifier id = ProductIdentifiers.from(sku, null, null);
 		assertEquals("sku", id.getIdentifierType());
 		assertEquals(sku, id.getIdentifierAsString());
 	}
@@ -45,9 +45,18 @@ public class ProductIdentifiersUnitTest
 	public void testFromId()
 	{
 		int id = 98602;
-		ProductIdentifier identifier = ProductIdentifiers.from(null, id);
+		ProductIdentifier identifier = ProductIdentifiers.from(null, id, null);
 		assertEquals("id", identifier.getIdentifierType());
 		assertEquals("98602", identifier.getIdentifierAsString());
 	}
+	
+	@Test
+    public void testFromIdOrSku()
+    {
+        String idOrSku = "98602";
+        ProductIdentifier identifier = ProductIdentifiers.from(null, null, idOrSku);
+        assertEquals(null, identifier.getIdentifierType());
+        assertEquals("98602", identifier.getIdentifierAsString());
+    }
 
 }

@@ -15,21 +15,34 @@ import org.apache.commons.lang.Validate;
 public class ProductIdentifiers
 {
 	/**
-	 * Answers a {@link ProductIdentifier} for the given optional sku and id.
+	 * Answers a {@link ProductIdentifier} for the three given product id types.
 	 * One and only of those parameters must be non null.
 	 * 
 	 * @param productSku
 	 * @param productId
+	 * @param idOrSku
 	 * @return a new {@link ProductIdentifier}
 	 */
-	public static ProductIdentifier from(String productSku, Integer productId)
+	public static ProductIdentifier from(String productSku, Integer productId,
+			String idOrSku)
 	{
-		Validate.isTrue((productSku == null) != (productId == null),
-				"Must specify one an only one product identifier");
 		if (productSku != null)
 		{
+			validateNull(idOrSku, productId);
 			return new ProductIdentifier.Sku(productSku);
 		}
-		return new ProductIdentifier.Id(productId);
+		if (productId != null)
+		{
+			validateNull(idOrSku, productSku);
+			return new ProductIdentifier.Id(productId);
+		}
+		Validate.notNull(idOrSku, "No product identifier was specifier");
+		return new ProductIdentifier.IdOrSku(idOrSku);
+	}
+
+	private static void validateNull(Object o1, Object o2)
+	{
+		Validate.isTrue(o1 == null && o2 == null,
+				"More than one product identifier specified");
 	}
 }

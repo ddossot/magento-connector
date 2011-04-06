@@ -158,5 +158,33 @@ public class MagentoCloudConnectorTestDriver
 	{
 		assertEquals(connector.getCategoryAttributeStoreView(), connector.getCategoryAttributeStoreView());
 	}
+	
+	@Test
+    public void linkProduct() throws Exception
+    {
+        int productId = connector.createProduct("Hardware", 1, "HDW100001",
+                new HashMap<String, Object>()
+                {
+                    {
+                        put("", "");
+                        put("", "");
+                        put("", "");
+                        put("", "");
+                    }
+                });
+        Integer productId2 = connector.createProduct("Hardware", 2, "HDW100002",
+                new HashMap<String, Object>()
+                {
+                    {
+                    }
+                });
+        connector.addProductLink("related", productId, null, null,
+                productId2.toString(), new HashMap<String, Object>()
+                {
+                    {
+                    }
+                });
+        
+    }
 
 }

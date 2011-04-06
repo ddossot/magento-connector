@@ -29,7 +29,6 @@ import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Map;
 
-import javax.sound.sampled.Line;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang.Validate;
@@ -324,15 +323,17 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
      */
     public Object getProduct(@NotNull ProductIdentifier productId,
                              String storeView,
+                             //FIXME take two lists of attributes
                              @NotNull Map<String, Object> attributes) throws RemoteException
     {
         Validate.notNull(attributes);
         Validate.notNull(productId);
+        //FIXME the returned object contains an array of associative entities, which should be mapped as entries
+        //in a map
         return getPort().catalogProductInfo(getSessionId(), productId.getIdentifierAsString(), storeView,
             fromMap(CatalogProductRequestAttributes.class, attributes), productId.getIdentifierType());
     }
     
-    //TODO store view or code
 
     /**
      * Retrieve products list by filters
@@ -380,7 +381,7 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
                               String storeViewIdOrCode) throws RemoteException
     {
         Validate.notNull(productId);
-        Validate.notNull(attributes);
+        Validate.notEmpty(attributes);
         getPort().catalogProductUpdate(getSessionId(), productId.getIdentifierAsString(),
             fromMap(CatalogProductCreateEntity.class, attributes), storeViewIdOrCode, productId.getIdentifierType());
     }
@@ -389,13 +390,12 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
     /*
      * Product Images
      */
-
     public String createProductAttributeMedia(@NotNull ProductIdentifier productId,
                                               @NotNull Map<String, Object> attributes,
-                                              String storeView
-                                              ) throws RemoteException
+                                              String storeView) throws RemoteException
     {
         Validate.notNull(attributes);
+        Validate.notNull(productId);
         return getPort().catalogProductAttributeMediaCreate(getSessionId(), productId.getIdentifierAsString(),
             fromMap(CatalogProductAttributeMediaCreateEntity.class, attributes), storeView,
             productId.getIdentifierType());
@@ -428,10 +428,12 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
             productId.getIdentifierType());
     }
 
-    public int deleteProductAttributeMedia(@NotNull ProductIdentifier productId, String file )
+    public void deleteProductAttributeMedia(@NotNull ProductIdentifier productId, @NotNull  String file)
         throws RemoteException
     {
-        return getPort().catalogProductAttributeMediaRemove(getSessionId(), productId.getIdentifierAsString(), file,
+        Validate.notNull(productId);
+        Validate.notNull(file);
+        getPort().catalogProductAttributeMediaRemove(getSessionId(), productId.getIdentifierAsString(), file,
             productId.getIdentifierType());
     }
 
@@ -471,7 +473,7 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
         return getPort().catalogCategoryAttributeCurrentStore(getSessionId(), null);
     }
 
-    public Object[] listCategoryAttributesOptions(@NotNull String attributeId, String storeView)
+    public Object[] listCategoryAttributeOptions(@NotNull String attributeId, String storeView)
         throws RemoteException
     {
         Validate.notNull(attributeId);
@@ -543,16 +545,16 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
 
     /* h. Product Link (related, cross sells, up sells, grouped) */
 
-    public void assignProductLink(@NotNull String type,
+    public void addProductLink(@NotNull String type,
                                     @NotNull ProductIdentifier productId,
-                                    @NotNull String linkedProduct,
+                                    @NotNull String linkedProductIdOrSku,
                                     @NotNull Map<String, Object> attributes) throws RemoteException
     {
         Validate.notNull(attributes);
         Validate.notNull(type);
         Validate.notNull(productId);
-        Validate.notNull(linkedProduct);
-        getPort().catalogProductLinkAssign(getSessionId(), type, productId.getIdentifierAsString(), linkedProduct,
+        Validate.notNull(linkedProductIdOrSku);
+        getPort().catalogProductLinkAssign(getSessionId(), type, productId.getIdentifierAsString(), linkedProductIdOrSku,
             fromMap(CatalogProductLinkEntity.class, attributes), productId.getIdentifierType());
     }
 
@@ -569,9 +571,9 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
 
     public void deleteProductLink(@NotNull String type,
                                     @NotNull ProductIdentifier productId,
-                                    @NotNull String linkedProduct) throws RemoteException
+                                    @NotNull String linkedProductIdOrSku) throws RemoteException
     {
-        getPort().catalogProductLinkRemove(getSessionId(), type, productId.getIdentifierAsString(), linkedProduct,
+        getPort().catalogProductLinkRemove(getSessionId(), type, productId.getIdentifierAsString(), linkedProductIdOrSku,
             productId.getIdentifierType());
     }
 

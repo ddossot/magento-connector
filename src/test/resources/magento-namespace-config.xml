@@ -287,7 +287,117 @@
 	
 	<!-- Catalog API -->
 	
-	<!-- TODO -->
+	<flow name="AddProductLink">
+        <inbound-endpoint address="vm://AddProductLink"
+            exchange-pattern="request-response" />
+        <magento:add-product-link type="#[map-payload:type]"
+                                  productId="#[map-payload:productId]"
+                                  linkedProductIdOrSku="#[map-payload:linkedProductId]">
+            <magento:attributes>
+                <magento:attribute key="qty" value="#[map-payload:qty]"/>
+            </magento:attributes>                   
+        </magento:add-product-link>
+    </flow>
+    
+    
+    <flow name="DeleteProductLink">
+        <inbound-endpoint address="vm://DeleteProductLink"
+            exchange-pattern="request-response" />
+        <magento:delete-product-link type="#[map-payload:type]"
+                                     productId="#[map-payload:productId]"
+                                     linkedProductIdOrSku="#[map-payload:linkedProductId]"/>
+    </flow>
+    
+    <flow name="DeleteProduct">
+        <inbound-endpoint address="vm://DeleteProduct"
+            exchange-pattern="request-response" />
+        <magento:delete-product productId="#[map-payload:productId]" />
+    </flow>
+    
+    <flow name="DeleteCategory">
+        <inbound-endpoint address="vm://DeleteCategory"
+            exchange-pattern="request-response" />
+        <magento:delete-category categoryId="#[map-payload:categoryId]"/>
+    </flow>
+    
+    <flow name="GetProductSpecialPrice">
+        <inbound-endpoint address="vm://GetProductSpecialPrice"
+            exchange-pattern="request-response" />
+        <magento:get-product-special-price productId="#[map-payload:productId]"/>
+    </flow>
+    
+     <flow name="ListProductAttributeOptions">
+        <inbound-endpoint address="vm://ListProductAttributeOptions"
+            exchange-pattern="request-response" />
+        <magento:list-product-attribute-options attributeId="#[map-payload:attributeId]"/>
+    </flow>
+    
+    <flow name="ListCategoryAttributeOptions">
+        <inbound-endpoint address="vm://ListCategoryAttributeOptions"
+            exchange-pattern="request-response" />
+        <magento:list-category-attribute-options attributeId="#[map-payload:attributeId]"/>
+    </flow>
+    
+     <flow name="ListProductAttributeMediaTypes">
+        <inbound-endpoint address="vm://ListProductAttributeMediaTypes"
+            exchange-pattern="request-response" />
+         <magento:list-product-attribute-media-types setId="#[map-payload:setId]"/>
+    </flow>
+    
+    <flow name="ListProductAttributeMedia">
+        <inbound-endpoint address="vm://ListProductAttributeMedia"
+            exchange-pattern="request-response" />
+         <magento:list-product-attribute-media 
+            productId="#[map-payload:productId]"
+            storeView="#[map-payload:storeView]"/>
+    </flow>
+    
+    <flow name="DeleteProductAttributeMedia">
+        <inbound-endpoint address="vm://DeleteProductAttributeMedia"
+            exchange-pattern="request-response" />
+        <magento:delete-product-attribute-media productSku="#[map-payload:productSku]" file="#[map-payload:fileName]"/>
+    </flow>
+    
+    <flow name="DeleteCategoryProduct">
+        <inbound-endpoint address="vm://DeleteCategoryProduct"
+            exchange-pattern="request-response" />
+        <magento:delete-category-product
+             categoryId="#[map-payload:categoryId]" 
+             productSku="#[map-payload:productSku]"/>
+    </flow>
+    
+    <flow name="GetProductAttributeMedia">
+        <inbound-endpoint address="vm://GetProductAttributeMedia"
+            exchange-pattern="request-response" />
+        <magento:get-product-attribute-media productIdOrSku="#[map-payload:productIdOrSku]"
+                                             file="#[map-payload:fileName]"
+                                             storeView="#[map-payload:storeView]"/>
+    </flow>
+    
+    <flow name="ListProductLinkTypes">
+        <inbound-endpoint address="vm://ListProductLinkTypes"
+            exchange-pattern="request-response" />
+        <magento:list-product-link-types />
+    </flow>
+
+    <flow name="ListProductTypes">
+        <inbound-endpoint address="vm://ListProductTypes"
+            exchange-pattern="request-response" />
+        <magento:list-product-types />
+    </flow>
+    
+       <flow name="ListCategoryProducts">
+        <inbound-endpoint address="vm://ListCategoryProducts"
+            exchange-pattern="request-response" />
+        <magento:list-category-products  categoryId="#[map-payload:categoryId]"/>
+    </flow>
+    
+    
+     <flow name="ListProductAttributeTierPrices">
+        <inbound-endpoint address="vm://ListProductAttributeTierPrices"
+            exchange-pattern="request-response" />
+        <magento:list-product-attribute-tier-prices productIdOrSku="#[map-payload:productIdOrSku]"/>
+    </flow>
 	
 	<!--  Inventory API -->
 	
@@ -295,22 +405,33 @@
 		<inbound-endpoint address="vm://ListStockItems"
 			exchange-pattern="request-response" />
 		<magento:list-stock-items >
-			<magento:productIdentifiers>
-				<magento:productIdentifier>1560</magento:productIdentifier>
-				<magento:productIdentifier>JJFO986</magento:productIdentifier>
-			</magento:productIdentifiers>
+			<magento:productIdOrSkus>
+				<magento:productIdOrSku>1560</magento:productIdOrSku>
+				<magento:productIdOrSku>JJFO986</magento:productIdOrSku>
+			</magento:productIdOrSkus>
 		</magento:list-stock-items>
 	</flow>
 	
 	<flow name="UpdateStockItem">
 		<inbound-endpoint address="vm://UpdateStockItem"
 			exchange-pattern="request-response" />
-		<magento:update-stock-item productIdentifier="#[map-payload:productIdOrSku]">
+		<magento:update-stock-item productIdOrSku="#[map-payload:productIdOrSku]">
 			<magento:attributes>
 				<magento:attribute key="qty" value="#[map-payload:quantity]"/>
 			</magento:attributes>
 		</magento:update-stock-item>
 	</flow>
+	
+	<flow name="UpdateProduct">
+        <inbound-endpoint address="vm://UpdateProduct"
+            exchange-pattern="request-response" />
+        <magento:update-product productIdOrSku="#[map-payload:productIdOrSku]">
+            <magento:attributes>
+                <magento:attribute key="name" value="#[map-payload:name]"/>
+            </magento:attributes>
+        </magento:update-product>
+    </flow>
+	
 	
 	
 </mule>
