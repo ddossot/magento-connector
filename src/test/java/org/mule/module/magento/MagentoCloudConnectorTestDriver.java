@@ -14,6 +14,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
+import org.mule.module.magento.api.MagentoException;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +23,6 @@ import java.util.Map;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.junit.Before;
 import org.junit.Test;
-import org.mule.module.magento.api.MagentoException;
 
 /**
  * Integration test of the {@link MagentoCloudConnector}
@@ -130,7 +131,7 @@ public class MagentoCloudConnectorTestDriver
     }
     
     /**
-     * Test that a user can be created
+     * Test that a user can be created an deleted
      */
     @Test
 	public void createCustomer() throws Exception {
@@ -139,6 +140,7 @@ public class MagentoCloudConnectorTestDriver
     		put("firstname", "John");
     		put("lastname", "Doe");
     		put("password", "123456");
+    		put("group_id", "1");
 		}});
     	try{
     		assertEquals("John", connector.getCustomer(customerId, Arrays.asList("firstname")).get("firstname"));
@@ -160,31 +162,41 @@ public class MagentoCloudConnectorTestDriver
 	}
 	
 	@Test
+    public void getProductById() throws Exception
+    {
+        Map<String, Object> product = connector.getProduct(1, null, null, null, // 
+            Arrays.asList("set", "type", "name", "description", "status", "visiility"), null);
+        System.out.println(product);
+        assertNotNull(product);
+    }
+
+    /**
+     * Test that products can be created, linked and deleted
+     */
+    @Test
     public void linkProduct() throws Exception
     {
-        int productId = connector.createProduct("Hardware", 1, "HDW100001",
-                new HashMap<String, Object>()
-                {
-                    {
-                        put("", "");
-                        put("", "");
-                        put("", "");
-                        put("", "");
-                    }
-                });
-        Integer productId2 = connector.createProduct("Hardware", 2, "HDW100002",
-                new HashMap<String, Object>()
-                {
-                    {
-                    }
-                });
-        connector.addProductLink("related", productId, null, null,
-                productId2.toString(), new HashMap<String, Object>()
-                {
-                    {
-                    }
-                });
-        
+        Integer productId = null;
+        Integer productId2 = null;
+        try
+        {
+            productId = connector.createProduct("simple", 4, "FOOO457", new HashMap<String, Object>());
+            productId2 = connector.createProduct("simple", 4, "AOOO986", new HashMap<String, Object>());
+            connector.addProductLink("related", productId, null, null, productId2.toString(),
+                new HashMap<String, Object>());
+        }
+        finally
+        {
+            if (productId != null)
+            {
+                connector.deleteProduct(productId, null, null);
+            }
+            if (productId2 != null)
+            {
+                connector.deleteProduct(productId2, null, null);
+            }
+        }
+
     }
 
 }

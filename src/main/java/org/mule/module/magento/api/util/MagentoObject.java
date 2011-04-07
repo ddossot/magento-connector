@@ -57,8 +57,6 @@ public final class MagentoObject
     @SuppressWarnings("unchecked")
     public static <T> T fromMap(Class<T> clazz, Map<String, Object> map)
     {
-        // TODO type conversions? this map is formed by integers instead of booleans?
-        // TODO convert everything primitive into string?
         return (T) beanConverter.convert(clazz, map);
     }
 

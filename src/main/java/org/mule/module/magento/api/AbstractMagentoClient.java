@@ -32,8 +32,7 @@ import org.apache.commons.lang.BooleanUtils;
  * representing collection of attributes, while {@link MagentoClientAdaptor} will
  * answer lists of maps, instead</li>
  * <li>Create and update operations take the target's object attributes in a Map with
- * String keys and Object values. TODO actual value type depend on the conversion
- * strategy used by the client</li>
+ * String keys and Object values. </li>
  * <li>Retrieve operations return object's attributes in a Map similar to the
  * previously described</li>
  * </ul>

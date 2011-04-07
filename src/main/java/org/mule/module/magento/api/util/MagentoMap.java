@@ -14,11 +14,13 @@ import static org.mule.module.magento.api.util.MagentoClass.isMagentoArrayClass;
 import static org.mule.module.magento.api.util.MagentoClass.isMagentoClass;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.lang.Validate;
 
@@ -62,7 +64,30 @@ public class MagentoMap extends BeanMap
         }
         return value;
     }
-
+    
+    @SuppressWarnings("unchecked")
+    public String toString()
+    {
+        Iterator<java.util.Map.Entry<String, Object>> i = entrySet().iterator();
+        if (!i.hasNext()) return "{}";
+        StringBuilder sb = new StringBuilder();
+        sb.append('{');
+        for (;;)
+        {
+            java.util.Map.Entry<String, Object> e = i.next();
+            String key = e.getKey();
+            Object value = e.getValue();
+            sb.append(key);
+            sb.append('=');
+            sb.append(value == this ? "(this Map)" : value);
+            if (!i.hasNext())
+            {
+                return sb.append('}').toString();
+            }
+            sb.append(", ");
+        }
+    }
+    
     @SuppressWarnings("unchecked")
     public static Map<String, Object> toMap(Object magentoObject)
     {
