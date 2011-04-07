@@ -12,6 +12,7 @@ package org.mule.module.magento;
 
 import static org.mule.module.magento.api.catalog.model.ProductIdentifiers.from;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +22,7 @@ import org.mule.module.magento.api.AxisPortProvider;
 import org.mule.module.magento.api.DefaultAxisPortProvider;
 import org.mule.module.magento.api.MagentoClientAdaptor;
 import org.mule.module.magento.api.MagentoException;
+import org.mule.module.magento.api.MediaMimeType;
 import org.mule.module.magento.api.catalog.AxisMagentoCatalogClient;
 import org.mule.module.magento.api.catalog.MagentoCatalogClient;
 import org.mule.module.magento.api.customer.AxisMagentoInventoryClient;
@@ -764,12 +766,7 @@ public class MagentoCloudConnector implements Initialisable
      * 
      * {@code  <magento:add-product-link type="#[map-payload:type]"     
      *                          productId="#[map-payload:productId]"
-     *                          linkedProductIdOrSku="#[map-payload:linkedProductId]">
-     *            <magento:attributes> 
-     *               <magento:attribute key="qty" value="#[map-payload:qty]"/>
-     *            </magento:attributes>
-     *          </magento:add-product-link>}
-     * 
+     *                          linkedProductIdOrSku="#[map-payload:linkedProductId]"/>
      * @param type
      *            the product type
      * @param productId
@@ -789,23 +786,62 @@ public class MagentoCloudConnector implements Initialisable
      */
     @Operation
     public void addProductLink(@Parameter String type,
-							   @Parameter(optional=true) Integer productId,
-    						   @Parameter(optional=true) String productSku,
-    						   @Parameter(optional=true) String productIdOrSku,
+                               @Parameter(optional = true) Integer productId,
+                               @Parameter(optional = true) String productSku,
+                               @Parameter(optional = true) String productIdOrSku,
                                @Parameter String linkedProductIdOrSku,
-                               @Parameter Map<String, Object> attributes) 
+                               @Parameter(optional = true) Map<String, Object> attributes)
     {
-        catalogClient.addProductLink(type, from(productSku, productId, productIdOrSku), linkedProductIdOrSku, attributes);
+        catalogClient.addProductLink(type, from(productSku, productId, productIdOrSku), linkedProductIdOrSku,
+            attributes);
     }
 
+    /**
+     * Creates a new product media. See catalog-product-attribute-media-create SOAP
+     * method. 
+     * Example:
+     * 
+     * {@code  
+     *   <magento:create-product-attribute-media 
+     *        content="#[map-payload:content]" 
+     *       productId="#[map-payload:productId]"
+     *       fileName="#[map-payload:fileName]" 
+     *       mimeType="JPEG">
+     *       <magento:attributes>
+     *           <magento:attribute key="label" value="#[map-payload:label]"/>
+     *           <magento:attribute key="position" value="#[map-payload:position]"/>
+     *       </magento:attributes>
+     *   </magento:create-product-attribute-media>}
+     * 
+     * @param productId
+     *            the id of the product. Use it instead of productIdOrSku
+     *            in case you are sure the product identifier is a
+     *            product id
+     * @param productSku
+     *            the sku of the product. Use it instead of productIdOrSku
+     *            in case you are sure the product identifier is a
+     *            product sku
+     * @param productIdOrSku
+     *            the id or sku of the product.
+     * @param attributes the media attributes
+     * @param storeViewIdOrCode
+     * @param content the image to upload
+     * @param mimeType the mimetype
+     * @param fileName the remote filename
+     * @return the new image filename
+     */
     @Operation
-    public String createProductAttributeMedia(@Parameter(optional=true) Integer productId,
-											  @Parameter(optional=true) String productSku,
-											  @Parameter(optional=true) String productIdOrSku,
-                                              Map<String, Object> attributes,
-                                              String storeViewIdOrCode) 
+    public String createProductAttributeMedia(@Parameter(optional = true) Integer productId,
+                                              @Parameter(optional = true) String productSku,
+                                              @Parameter(optional = true) String productIdOrSku,
+                                              @Parameter(optional = true) Map<String, Object> attributes,
+                                              @Parameter(optional = true) String storeViewIdOrCode,
+                                              @Parameter InputStream content,
+                                              @Parameter MediaMimeType mimeType,
+                                              @Parameter String fileName)
     {
-        return catalogClient.createProductAttributeMedia(from(productSku, productId, productIdOrSku), attributes, storeViewIdOrCode);
+        return catalogClient.createProductAttributeMedia(from(productSku, productId, productIdOrSku),
+            attributes, content, mimeType, fileName, storeViewIdOrCode);
     }
 
     /**
@@ -1479,23 +1515,24 @@ public class MagentoCloudConnector implements Initialisable
 	}
 	
 	   
-   /**
-    * Creates a new product
-    * 
-    * @param type the new product's type
-    * @param set the new product's set
-    * @param sku the new product's sku
-    * @param attributes the attributes of the new product
-    * @return the new product's id
-    */
-	@Operation
-	public int createProduct(@Parameter String type, 
-	                         @Parameter  int set,
-	                         @Parameter  String sku,
-	                         @Parameter  Map<String, Object> attributes) throws MagentoException
-	{
-		return catalogClient.createProduct(type, set, sku, attributes);
-	}
+    /**
+     * Creates a new product
+     * 
+     * @param type the new product's type
+     * @param set the new product's set
+     * @param sku the new product's sku
+     * @param attributes the attributes of the new product
+     * @return the new product's id
+     */
+    @Operation
+    public int createProduct(@Parameter String type,
+                             @Parameter int set,
+                             @Parameter String sku,
+                             @Parameter(optional = true) Map<String, Object> attributes)
+        throws MagentoException
+    {
+        return catalogClient.createProduct(type, set, sku, attributes);
+    }
 
 	
 	/**

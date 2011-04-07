@@ -10,11 +10,13 @@
 
 package org.mule.module.magento;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 import org.mule.module.magento.api.MagentoException;
+import org.mule.module.magento.api.MediaMimeType;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,6 +25,7 @@ import java.util.Map;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.core.io.ClassPathResource;
 
 /**
  * Integration test of the {@link MagentoCloudConnector}
@@ -180,10 +183,9 @@ public class MagentoCloudConnectorTestDriver
         Integer productId2 = null;
         try
         {
-            productId = connector.createProduct("simple", 4, "FOOO457", new HashMap<String, Object>());
-            productId2 = connector.createProduct("simple", 4, "AOOO986", new HashMap<String, Object>());
-            connector.addProductLink("related", productId, null, null, productId2.toString(),
-                new HashMap<String, Object>());
+            productId = connector.createProduct("simple", 4, "FOOO457", null);
+            productId2 = connector.createProduct("simple", 4, "AOOO986", null);
+            connector.addProductLink("related", productId, null, null, productId2.toString(), null);
         }
         finally
         {
@@ -196,7 +198,30 @@ public class MagentoCloudConnectorTestDriver
                 connector.deleteProduct(productId2, null, null);
             }
         }
-
     }
 
+    /**Test that images can be uploaded and deleted*/
+    @Test
+    public void createMedia() throws Exception
+    {
+        Integer productId = null;
+        String fileName = null;
+        try
+        {
+            productId = connector.createProduct("simple", 4, "ZZF879", null);
+            fileName = connector.createProductAttributeMedia(productId, null, null, null, null, new ClassPathResource(
+                "img.gif").getInputStream(), MediaMimeType.GIF, "img.gif");
+        }
+        finally
+        {
+            if (productId != null)
+            {
+                if (fileName != null)
+                {
+                    connector.deleteProductAttributeMedia(productId, null, null, fileName);
+                }
+                connector.deleteProduct(productId, null, null);
+            }
+        }
+    }
 }

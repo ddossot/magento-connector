@@ -513,5 +513,19 @@
 			</magento:attributes>
 		</magento:update-inventory-stock-item>
     </flow>
-  
+    
+    <flow name="CreateProductAttributeMedia">
+        <inbound-endpoint address="vm://CreateProductAttributeMedia"
+            exchange-pattern="request-response" />
+        <magento:create-product-attribute-media 
+        	content="#[map-payload:content]" 
+        	productId="#[map-payload:productId]"
+        	fileName="#[map-payload:fileName]" 
+        	mimeType="JPEG">
+			<magento:attributes>
+			 	<magento:attribute key="label" value="#[map-payload:label]"/>
+			 	<magento:attribute key="position" value="#[map-payload:position]"/>
+			</magento:attributes>
+		</magento:create-product-attribute-media>
+    </flow>
 </mule>

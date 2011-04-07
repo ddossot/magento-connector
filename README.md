@@ -365,8 +365,8 @@ Adds a comment to the given order id
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |orderId|the order id|no||
-|status|TODO possible values?|no||
-|comment||no||
+|status|the comment status|no||
+|comment|the comment|no||
 |sendEmail|if an email must be sent after shipment creation|yes|false|
 
 
@@ -810,15 +810,9 @@ Add Product Link
 Links two products, given its source and destination productIdOrSku.
 Example:
 
-
-
-      <magento:add-product-link type="#[map-payload:type]"     
-                             productId="#[map-payload:productId]"
-                             linkedProductIdOrSku="#[map-payload:linkedProductId]">
-               <magento:attributes> 
-                  <magento:attribute key="qty" value="#[map-payload:qty]"/>
-               </magento:attributes>
-             </magento:add-product-link>
+{@code  <magento:add-product-link type="#[map-payload:type]"     
+                         productId="#[map-payload:productId]"
+                         linkedProductIdOrSku="#[map-payload:linkedProductId]"/>
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
@@ -828,21 +822,44 @@ Example:
 |productSku|the sku of the source product. Use it instead of productIdOrSku in case you are sure the source product identifier is a product sku|yes||
 |productIdOrSku|the id or sku of the source product.|yes||
 |linkedProductIdOrSku|the destination product id or sku.|no||
-|attributes|the link attributes|no||
+|attributes|the link attributes|yes||
 
 
 
 Create Product Attribute Media
 ------------------------------
 
+Creates a new product media. See catalog-product-attribute-media-create SOAP
+method. 
+Example:
+
+
+
+      
+      <magento:create-product-attribute-media 
+           content="#[map-payload:content]" 
+          productId="#[map-payload:productId]"
+          fileName="#[map-payload:fileName]" 
+          mimeType="JPEG">
+          <magento:attributes>
+              <magento:attribute key="label" value="#[map-payload:label]"/>
+              <magento:attribute key="position" value="#[map-payload:position]"/>
+          </magento:attributes>
+      </magento:create-product-attribute-media>
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|productId||yes||
-|productSku||yes||
-|productIdOrSku||yes||
-|attributes||no||
-|storeViewIdOrCode||no||
+|productId|the id of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product id|yes||
+|productSku|the sku of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product sku|yes||
+|productIdOrSku|the id or sku of the product.|yes||
+|attributes|the media attributes|yes||
+|storeViewIdOrCode||yes||
+|content|the image to upload|no||
+|mimeType|the mimetype|no||*JPEG*, *GIF*, *PNG*
+|fileName|the remote filename|no||
+
+Returns new image filename
 
 
 
@@ -1335,14 +1352,20 @@ Move Category
 Move category in tree. See  catalog-category-move SOAP method. Please make sure that you are not 
 moving category to any of its own children. There are no
 extra checks to prevent doing it through webservices API, and you won’t be
-able to fix this from admin interface then
+able to fix this from admin interface then .
+
+Example:
+
+
+
+     <magento:move-category categoryId="#[map-payload:categoryId]" parentId="#[map-payload:afterId]"/> 
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |categoryId||no||
 |parentId||no||
-|afterId||no||
+|afterId||yes||
 
 
 
@@ -1384,12 +1407,22 @@ Update Category
 
 Updates a category. See catalog-category-update SOAP method
 
+Example:
+
+
+
+     <magento:update-category categoryId="#[map-payload:categoryId]" />  
+             <magento:attributes>
+                 <magento:attribute key="name" value="#[map-payload:categoryName]"/>
+             </magento:attributes>
+          </magento:update-category>
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |categoryId||no||
 |attributes||no||
-|storeViewIdOrCode||no||
+|storeViewIdOrCode||yes||
 
 
 
@@ -1436,12 +1469,22 @@ Returns list of attributes
 Update Inventory Stock Item
 ---------------------------
 
+Updates an stock inventory item
+
+
+
+      <magento:update-product-inventory-stock-item  productIdOrSku="#[map-payload:productIdOrSku]">
+               <magento:attributes>
+                 <magento:attribute key="qty" value="#[map-payload:quantity]"/>
+               </magento:attributes>
+            </magento:update-product-inventory-stock-item>
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|productId||yes||
-|productSku||yes||
-|productIdOrSku||yes||
+|productId|the id of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product id|yes||
+|productSku|the sku of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product sku|yes||
+|productIdOrSku|the id or sku of the product.|yes||
 |attributes||no||
 
 
@@ -1457,7 +1500,7 @@ Creates a new product
 |type|the new product's type|no||
 |set|the new product's set|no||
 |sku|the new product's sku|no||
-|attributes|the attributes of the new product|no||
+|attributes|the attributes of the new product|yes||
 
 Returns new product's id
 
@@ -1566,8 +1609,8 @@ Sets a product special price. See catalog-product-setSpecialPrice SOAP method
 |productSku|the sku of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product sku|yes||
 |productIdOrSku|the id or sku of the product.|yes||
 |specialPrice||no||
-|fromDate||no||
-|toDate||no||
+|fromDate||yes||
+|toDate||yes||
 |storeViewIdOrCode||yes||
 
 

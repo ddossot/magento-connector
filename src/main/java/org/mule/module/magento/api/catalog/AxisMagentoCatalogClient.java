@@ -14,29 +14,35 @@ import static org.mule.module.magento.api.util.MagentoObject.fromMap;
 
 import org.mule.module.magento.api.AbstractMagentoClient;
 import org.mule.module.magento.api.AxisPortProvider;
+import org.mule.module.magento.api.MediaMimeType;
 import org.mule.module.magento.api.catalog.model.ProductIdentifier;
 import org.mule.module.magento.api.internal.CatalogCategoryEntityCreate;
 import org.mule.module.magento.api.internal.CatalogInventoryStockItemUpdateEntity;
 import org.mule.module.magento.api.internal.CatalogProductAttributeMediaCreateEntity;
 import org.mule.module.magento.api.internal.CatalogProductCreateEntity;
+import org.mule.module.magento.api.internal.CatalogProductImageFileEntity;
 import org.mule.module.magento.api.internal.CatalogProductLinkEntity;
 import org.mule.module.magento.api.internal.CatalogProductRequestAttributes;
 import org.mule.module.magento.api.internal.CatalogProductTierPriceEntity;
 import org.mule.module.magento.api.util.MagentoObject;
 import org.mule.module.magento.filters.FiltersParser;
+import org.mule.util.Base64;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.UnhandledException;
 import org.apache.commons.lang.Validate;
-
-import java.util.Collections;
 
 
 public class AxisMagentoCatalogClient extends AbstractMagentoClient
@@ -238,13 +244,12 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
     * @param attributes the attributes of the new product
     * @return the new product's id
     */
-	public int createProduct(@NotNull String type, @NotNull int set, @NotNull String sku, @NotNull Map<String, Object> attributes)
+	public int createProduct(@NotNull String type, @NotNull int set, @NotNull String sku, Map<String, Object> attributes)
         throws RemoteException
     {
         Validate.notNull(type);
         Validate.notNull(set);
         Validate.notNull(sku);
-        Validate.notNull(attributes);
         
         return getPort().catalogProductCreate(getSessionId(), type, String.valueOf(set), sku,
             fromMap(CatalogProductCreateEntity.class, attributes));
@@ -310,14 +315,6 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
             request, productId.getIdentifierType());
     }
     
-    private <T> Collection<T> nullToEmpty(Collection<T> collection)
-    {
-        if (collection == null)
-        {
-            return Collections.emptyList();
-        }
-        return collection;
-    }
 
     /**
      * Retrieve products list by filters
@@ -375,14 +372,37 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
      * Product Images
      */
     public String createProductAttributeMedia(@NotNull ProductIdentifier productId,
-                                              @NotNull Map<String, Object> attributes,
+                                              Map<String, Object> attributes,
+                                              @NotNull InputStream content,
+                                              @NotNull MediaMimeType mimeType,
+                                              @NotNull String baseFileName,
                                               String storeView) throws RemoteException
     {
-        Validate.notNull(attributes);
         Validate.notNull(productId);
+        Validate.notNull(mimeType);
+        Validate.notNull(baseFileName);
+        
+        CatalogProductImageFileEntity file = new CatalogProductImageFileEntity(encodeStream(content), mimeType.toString(), baseFileName);
+        CatalogProductAttributeMediaCreateEntity request = 
+            fromMap(CatalogProductAttributeMediaCreateEntity.class, nullToEmpty(attributes));
+        request.setFile(file);
+        
         return getPort().catalogProductAttributeMediaCreate(getSessionId(), productId.getIdentifierAsString(),
-            fromMap(CatalogProductAttributeMediaCreateEntity.class, attributes), storeView,
+            request, storeView,
             productId.getIdentifierType());
+    }
+
+   
+    private String encodeStream(InputStream content)
+    {
+        try
+        {
+           return Base64.encodeBytes(IOUtils.toByteArray(content));
+        }
+        catch (IOException e)
+        {
+            throw new UnhandledException("Could not encode the stream", e);
+        }
     }
 
     public Object getProductAttributeMedia(@NotNull ProductIdentifier productId,
@@ -499,9 +519,8 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
     public void addProductLink(@NotNull String type,
                                     @NotNull ProductIdentifier productId,
                                     @NotNull String linkedProductIdOrSku,
-                                    @NotNull Map<String, Object> attributes) throws RemoteException
+                                    Map<String, Object> attributes) throws RemoteException
     {
-        Validate.notNull(attributes);
         Validate.notNull(type);
         Validate.notNull(productId);
         Validate.notNull(linkedProductIdOrSku);

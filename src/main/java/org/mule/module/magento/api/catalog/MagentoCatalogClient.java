@@ -10,12 +10,14 @@
 
 package org.mule.module.magento.api.catalog;
 
+import org.mule.module.magento.api.MediaMimeType;
+import org.mule.module.magento.api.catalog.model.ProductIdentifier;
+
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
 import javax.validation.constraints.NotNull;
-
-import org.mule.module.magento.api.catalog.model.ProductIdentifier;
 
 public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, ExceptionType extends Exception>
 {
@@ -173,7 +175,7 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
     * @param attributes the attributes of the new product
     * @return the new product's id
     */
-	int createProduct(@NotNull String type, @NotNull int set, @NotNull String sku, @NotNull Map<String, Object> attributes)
+	int createProduct(@NotNull String type, @NotNull int set, @NotNull String sku, Map<String, Object> attributes)
         throws ExceptionType;
 
     /**
@@ -253,7 +255,7 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
 
     /**
      * Creates a new product media. See catalog-product-attribute-media-create SOAP
-     * method. TODO content passed as string??? Is nonsense!
+     * method. 
      * 
      * @param product
      * @param attributes
@@ -261,7 +263,10 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * @return the new image filename
      */
     String createProductAttributeMedia(@NotNull ProductIdentifier productId,
-                                       @NotNull Map<String, Object> attributes,
+                                       Map<String, Object> attributes,
+                                       @NotNull InputStream content,
+                                       @NotNull MediaMimeType mimeType,
+                                       @NotNull String baseFileName,
                                        String storeView) throws ExceptionType;
 
     /**
@@ -412,7 +417,7 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
     void addProductLink(@NotNull String type,
     					@NotNull ProductIdentifier productId,
                         @NotNull String linkedProductIdOrSku,
-                        @NotNull Map<String, Object> attributes) throws ExceptionType;
+                        Map<String, Object> attributes) throws ExceptionType;
 
     /**
      * Lists all the attributes for the given product link type

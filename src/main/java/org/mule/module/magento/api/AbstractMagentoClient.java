@@ -17,6 +17,8 @@ import org.mule.module.magento.api.internal.Mage_Api_Model_Server_V2_HandlerPort
 import java.lang.reflect.Array;
 import java.rmi.RemoteException;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 
 import org.apache.commons.lang.BooleanUtils;
 
@@ -70,6 +72,23 @@ public abstract class AbstractMagentoClient
     protected static boolean fromIntegerString(String value)
     {
         return BooleanUtils.toBoolean(Integer.parseInt(value));
+    }
+    
+    protected <T> Collection<T> nullToEmpty(Collection<T> collection)
+    {
+        if (collection == null)
+        {
+            return Collections.emptyList();
+        }
+        return collection;
+    }
+    
+    protected <K,V> Map<K,V> nullToEmpty(Map<K, V> attributes)
+    {
+        if(attributes == null){
+            return Collections.emptyMap();
+        }
+        return attributes;
     }
 
 }
