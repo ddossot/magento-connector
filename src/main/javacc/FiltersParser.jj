@@ -8,7 +8,6 @@ PARSER_BEGIN(FiltersParser)
 
 	/**
 	 * A Magento's filter expression parser.
-	 * TODO support a true operator? Example: true(is_active)
 	 */    
 	public class FiltersParser {
 	
@@ -52,7 +51,7 @@ PARSER_END(FiltersParser)
 SKIP : { " " | "\n" | "\r" | "\t" }
 TOKEN : { < COMMA : "," > }
 TOKEN : { < BINARY_OP : "from" | "to" | "eq" | "neq" | "like" | "nlike" | "is" | "gt" | "gteq" | "lt" | "lteq" | "nin" | "in" > }
-TOKEN : { < UNARY_OP : "null" | "notnull" > }
+TOKEN : { < UNARY_OP : "null" | "notnull" | "istrue" | "isfalse" > }
 TOKEN : { < INDIV : < NUMBER > | < STRING > > }
 TOKEN : { < NUMBER : ("-")?(["0"-"9"])+ > }
 TOKEN : { < STRING : "'" (~["'"])* "'" > }

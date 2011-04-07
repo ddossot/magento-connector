@@ -138,6 +138,22 @@ public class FiltersParserTestCase
                 new ComplexFilter("customer_name", new AssociativeEntity("notnull", "")),
                 new ComplexFilter("customer_city_code", new AssociativeEntity("lt", "56"))}));
     }
+    
+    /**
+     * Tests that the custom istrue expression is equivalent to eq(_,1)
+     */
+    public void testIsTrue() throws Exception
+    {
+        assertEquals(parse("eq(is_active, 1)"), parse("istrue(is_active"));
+    }
+
+    /**
+     * Tests that the custom isfalse expression is equivalent to eq(_,0)
+     */
+    public void testIsFalse() throws Exception
+    {
+        assertEquals(parse("eq(is_active, 0)"), parse("isfalse(is_active"));
+    }
 
     public Filters parse(String expression) throws ParseException
     {

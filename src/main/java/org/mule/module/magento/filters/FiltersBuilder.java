@@ -48,7 +48,18 @@ public class FiltersBuilder
      */
     public void addUnaryExpression(String operation, String variable)
     {
-        addBinaryExpression(operation, variable, "");
+        if (operation.equals("istrue"))
+        {
+            addBinaryExpression("eq", variable, "1");
+        }
+        else if (operation.equals("isfalse"))
+        {
+            addBinaryExpression("eq", variable, "0");
+        }
+        else
+        {
+            addBinaryExpression(operation, variable, "");
+        }
     }
 
     /**
