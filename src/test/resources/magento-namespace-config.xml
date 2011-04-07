@@ -360,13 +360,13 @@
             exchange-pattern="request-response" />
          <magento:list-product-attribute-media 
             productId="#[map-payload:productId]"
-            storeView="#[map-payload:storeView]"/>
+            storeViewIdOrCode="#[map-payload:storeViewId]"/>
     </flow>
     
     <flow name="DeleteProductAttributeMedia">
         <inbound-endpoint address="vm://DeleteProductAttributeMedia"
             exchange-pattern="request-response" />
-        <magento:delete-product-attribute-media productSku="#[map-payload:productSku]" file="#[map-payload:fileName]"/>
+        <magento:delete-product-attribute-media productSku="#[map-payload:productSku]" fileName="#[map-payload:fileName]"/>
     </flow>
     
     <flow name="DeleteCategoryProduct">
@@ -377,18 +377,19 @@
              productSku="#[map-payload:productSku]"/>
     </flow>
     
-    <flow name="GetProductAttributeMedia">
+    <flow name="GetProductAttributeMedia">		
         <inbound-endpoint address="vm://GetProductAttributeMedia"
             exchange-pattern="request-response" />
         <magento:get-product-attribute-media  productIdOrSku="#[map-payload:productIdOrSku]"
-                                             file="#[map-payload:fileName]"
-                                             storeView="#[map-payload:storeView]"/>
+                                             fileName="#[map-payload:fileName]"
+                                             storeViewIdOrCode="#[map-payload:storeViewId]"/>
     </flow>
     
      <flow name="GetProduct">
         <inbound-endpoint address="vm://GetProduct"
             exchange-pattern="request-response" />
-        <magento:get-product  productIdOrSku="#[map-payload:productIdOrSku]" storeView="#[map-payload:storeView]">
+        <magento:get-product  productIdOrSku="#[map-payload:productIdOrSku]" 
+        					  storeViewIdOrCode="#[map-payload:storeViewCode]">
         	<magento:attributesNames>
         		<magento:attributesName>sku</magento:attributesName>
         	</magento:attributesNames>
@@ -405,6 +406,7 @@
     </flow>
 
     <flow name="ListProductTypes">
+    
         <inbound-endpoint address="vm://ListProductTypes"
             exchange-pattern="request-response" />
         <magento:list-product-types />
@@ -477,7 +479,7 @@
     <flow name="UpdateProductAttributeMedia">
         <inbound-endpoint address="vm://UpdateProductAttributeMedia"
             exchange-pattern="request-response" />
-        <magento:update-product-attribute-media file="#[map-payload:fileName]"  
+        <magento:update-product-attribute-media fileName="#[map-payload:fileName]"  
         										productId="#[map-payload:productId]">
 			<magento:attributes>
 			 	<magento:attribute key="label" value="#[map-payload:label]"/>

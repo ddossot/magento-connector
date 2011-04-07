@@ -199,7 +199,9 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
         throws ExceptionType;
 
     /**
-     * Answers a product's attributes. See catalog-product-info SOAP method.
+     * Answers a product's specified attributes. At least one of attributNames or
+     * additionalAttributeNames must be non null and non empty. See
+     * catalog-product-info SOAP method.
      * 
      * @param productId
      * @param storeView
@@ -217,7 +219,7 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * Retrieve products list by filters
      * See catalog-product-list SOAP method. 
      * @param filters an optional filtering expression
-     * @param storeView an optional storeView
+     * @param storeViewIdOrCode an optional storeView
      * @return the list of product attributes that match the given optional filtering expression
      */
     AttributesCollectionType listProducts(String filters, String storeView) throws ExceptionType;
@@ -243,7 +245,7 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * Updates a product. See catalog-category-updateProduct SOAP method 
      * 
      * @param attributes not empty
-     * @param storeView optional store view
+     * @param storeViewIdOrCode optional store view
      */
     void updateProduct(@NotNull ProductIdentifier productId,
                               @NotNull Map<String, Object> attributes,
@@ -309,12 +311,12 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * Updates product media. See catalog-product-attribute-media-update
      * 
      * @param product
-     * @param file
+     * @param fileName
      * @param attributes
      * @param storeView
      */
     void updateProductAttributeMedia(@NotNull ProductIdentifier productId,
-                                    String file,
+                                    String fileName,
                                     @NotNull Map<String, Object> attributes,
                                     String storeView) throws ExceptionType;
 
@@ -332,7 +334,7 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * method.
      * 
      * @param attributeId
-     * @param storeView optinal
+     * @param storeViewIdOrCode optinal
      * @return the list of attributes
      * 
      */
@@ -354,7 +356,7 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * SOAP method.
      * 
      * @param attributeId
-     * @param storeView optional
+     * @param storeViewIdOrCode optional
      * @return the attributes list
      */
     @NotNull

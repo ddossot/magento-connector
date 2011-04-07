@@ -323,7 +323,7 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
      * Retrieve products list by filters
      * See catalog-product-list SOAP method. 
      * @param filters an optional filtering expression
-     * @param storeView an optional storeView
+     * @param storeViewIdOrCode an optional storeView
      * @return the list of product attributes that match the given optional filtering expression
      */
     public Object[] listProducts(String filters, String storeView) throws RemoteException
@@ -358,7 +358,7 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
      * Updates a product. See catalog-category-updateProduct SOAP method 
      * 
      * @param attributes
-     * @param storeView optional store view
+     * @param storeViewIdOrCode optional store view
      */
     public void updateProduct(@NotNull ProductIdentifier productId,
                               @NotNull Map<String, Object> attributes,
@@ -394,10 +394,10 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
             productId.getIdentifierType());
     }
 
-    public Object[] listProductAttributeMedia(@NotNull ProductIdentifier productId, String storeView )
+    public Object[] listProductAttributeMedia(@NotNull ProductIdentifier productId, String storeViewIdOrCode )
         throws RemoteException
     {
-        return getPort().catalogProductAttributeMediaList(getSessionId(), productId.getIdentifierAsString(), storeView,
+        return getPort().catalogProductAttributeMediaList(getSessionId(), productId.getIdentifierAsString(), storeViewIdOrCode,
             productId.getIdentifierType());
     }
 
@@ -416,13 +416,12 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
     }
 
     public void updateProductAttributeMedia(@NotNull ProductIdentifier productId,
-                                           String file,
-                                           @NotNull Map<String, Object> attributes,
-                                           String storeView
-                                           ) throws RemoteException
+                                            String fileName,
+                                            @NotNull Map<String, Object> attributes,
+                                            String storeView) throws RemoteException
     {
         Validate.notNull(attributes);
-        getPort().catalogProductAttributeMediaUpdate(getSessionId(), productId.getIdentifierAsString(), file,
+        getPort().catalogProductAttributeMediaUpdate(getSessionId(), productId.getIdentifierAsString(), fileName,
             fromMap(CatalogProductAttributeMediaCreateEntity.class, attributes), storeView,
             productId.getIdentifierType());
     }

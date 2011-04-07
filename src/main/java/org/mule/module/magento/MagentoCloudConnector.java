@@ -803,9 +803,9 @@ public class MagentoCloudConnector implements Initialisable
 											  @Parameter(optional=true) String productSku,
 											  @Parameter(optional=true) String productIdOrSku,
                                               Map<String, Object> attributes,
-                                              String storeView) 
+                                              String storeViewIdOrCode) 
     {
-        return catalogClient.createProductAttributeMedia(from(productSku, productId, productIdOrSku), attributes, storeView);
+        return catalogClient.createProductAttributeMedia(from(productSku, productId, productIdOrSku), attributes, storeViewIdOrCode);
     }
 
     /**
@@ -815,7 +815,7 @@ public class MagentoCloudConnector implements Initialisable
      * 
      * {@code <magento:delete-product-attribute-media 
      *              productSku="#[map-payload:productSku]" 
-     *              file="#[map-payload:fileName]"/>}
+     *              fileName="#[map-payload:fileName]"/>}
      * 
      * @param productId
      *            the id of the product. Use it instead of productIdOrSku
@@ -827,16 +827,16 @@ public class MagentoCloudConnector implements Initialisable
      *            product sku
      * @param productIdOrSku
      *            the id or sku of the product.
-     * @param file
+     * @param fileName
      */
     @Operation
     public void deleteProductAttributeMedia(@Parameter(optional=true) Integer productId,
 										   @Parameter(optional=true) String productSku,
 										   @Parameter(optional=true) String productIdOrSku,
-										   String file)
+										   String fileName)
         
     {
-        catalogClient.deleteProductAttributeMedia(from(productSku, productId, productIdOrSku), file);
+        catalogClient.deleteProductAttributeMedia(from(productSku, productId, productIdOrSku), fileName);
     }
 
     /**
@@ -879,8 +879,8 @@ public class MagentoCloudConnector implements Initialisable
      * 
      * {@code <magento:get-product-attribute-media 
      *              productIdOrSku="#[map-payload:productIdOrSku]"
-     *              file="#[map-payload:fileName]"
-     *              storeView="#[map-payload:storeView]"/>} 
+     *              fileName="#[map-payload:fileName]"
+     *              storeViewIdOrCode="#[map-payload:storeViewIdOrCode]"/>} 
      * @param type
      *            the link type
      * @param productId
@@ -897,10 +897,10 @@ public class MagentoCloudConnector implements Initialisable
     public Map<String, Object> getProductAttributeMedia(@Parameter(optional=true) Integer productId,
 														@Parameter(optional=true) String productSku,
 														@Parameter(optional=true) String productIdOrSku,
-                                                        @Parameter String file,
-                                                        @Parameter(optional=true) String storeView) 
+                                                        @Parameter String fileName,
+                                                        @Parameter(optional=true) String storeViewIdOrCode) 
     {
-        return catalogClient.getProductAttributeMedia(from(productSku, productId, productIdOrSku), file, storeView);
+        return catalogClient.getProductAttributeMedia(from(productSku, productId, productIdOrSku), fileName, storeViewIdOrCode);
     }
     
     /**
@@ -950,15 +950,15 @@ public class MagentoCloudConnector implements Initialisable
      * {@code <magento:list-category-attributes-options attributeId="#[map-payload:attributeId]"/>}
      * 
      * @param attributeId
-     * @param storeView optional
+     * @param storeViewIdOrCode optional
      * @return the list of category attribute options
      */
     @Operation
     public List<Map<String, Object>> listCategoryAttributeOptions(@Parameter String attributeId, 
-                                                                   @Parameter(optional=true) String storeView)
+                                                                   @Parameter(optional=true) String storeViewIdOrCode)
         
     {
-        return catalogClient.listCategoryAttributeOptions(attributeId, storeView);
+        return catalogClient.listCategoryAttributeOptions(attributeId, storeViewIdOrCode);
     }
 
     /**
@@ -967,7 +967,7 @@ public class MagentoCloudConnector implements Initialisable
      * Example:
      * {@code   <magento:list-product-attribute-media
      *                  productId="#[map-payload:productId]"
-     *                  storeView="#[map-payload:storeView]"/>}
+     *                  storeViewIdOrCode="#[map-payload:storeViewIdOrCode]"/>}
      * 
      * @param productId
      *            the id of the product. Use it instead of productIdOrSku in
@@ -977,16 +977,16 @@ public class MagentoCloudConnector implements Initialisable
      *            case you are sure the product identifier is a product sku
      * @param productIdOrSku
      *            the id or sku of the product.
-     * @param storeView
+     * @param storeViewIdOrCode
      * @return the list of product images attributes
      */
     @Operation
     public List<Map<String, Object>> listProductAttributeMedia(@Parameter(optional=true) Integer productId,
 															   @Parameter(optional=true) String productSku,
 															   @Parameter(optional=true) String productIdOrSku,
-															   @Parameter(optional=true) String storeView)
+															   @Parameter(optional=true) String storeViewIdOrCode)
     {
-        return catalogClient.listProductAttributeMedia(from(productSku, productId, productIdOrSku), storeView);
+        return catalogClient.listProductAttributeMedia(from(productSku, productId, productIdOrSku), storeViewIdOrCode);
     }
 
     /**
@@ -1015,15 +1015,15 @@ public class MagentoCloudConnector implements Initialisable
      * {@code <magento:list-product-attribute-options attributeId="#[map-payload:attributeId]"/>}
      * 
      * @param attributeId
-     * @param storeView optional
+     * @param storeViewIdOrCode optional
      * @return the attributes list
      */
     @Operation
     public List<Map<String, Object>> listProductAttributeOptions(@Parameter String attributeId, 
-                                                                 @Parameter(optional=true) String storeView)
+                                                                 @Parameter(optional=true) String storeViewIdOrCode)
         
     {
-        return catalogClient.listProductAttributeOptions(attributeId, storeView);
+        return catalogClient.listProductAttributeOptions(attributeId, storeViewIdOrCode);
     }
 
     /**
@@ -1153,12 +1153,11 @@ public class MagentoCloudConnector implements Initialisable
         return catalogClient.listProductTypes();
     }
     
- //TODO file parameter name 
     
     /**
      * Updates product media. See catalog-product-attribute-media-update
      * Example:
-     * {@code <magento:update-product-attribute-media file="#[map-payload:fileName]" productId="#[map-payload:productId]">
+     * {@code <magento:update-product-attribute-media fileName="#[map-payload:fileName]" productId="#[map-payload:productId]">
      *          <magento:attributes>
      *              <magento:attribute key="label" value="#[map-payload:label]"/>
      *          </magento:attributes>
@@ -1172,20 +1171,20 @@ public class MagentoCloudConnector implements Initialisable
      *            case you are sure the product identifier is a product sku
      * @param productIdOrSku
      *            the id or sku of the product.
-     * @param file
+     * @param fileName
      * @param attributes
-     * @param storeView
+     * @param storeViewIdOrCode
      */
     @Operation
     public void updateProductAttributeMedia(@Parameter(optional = true) Integer productId,
                                             @Parameter(optional = true) String productSku,
                                             @Parameter(optional = true) String productIdOrSku,
-                                            @Parameter String file,
+                                            @Parameter String fileName,
                                             @Parameter Map<String, Object> attributes,
-                                            @Parameter(optional = true) String storeView)
+                                            @Parameter(optional = true) String storeViewIdOrCode)
     {
-        catalogClient.updateProductAttributeMedia(from(productSku, productId, productIdOrSku), file,
-            attributes, storeView);
+        catalogClient.updateProductAttributeMedia(from(productSku, productId, productIdOrSku), fileName,
+            attributes, storeViewIdOrCode);
     }
 
     /** FIXME */
@@ -1275,15 +1274,15 @@ public class MagentoCloudConnector implements Initialisable
      * 
      * @param parentId
      * @param attributes
-     * @param storeView
+     * @param storeViewIdOrCode
      * @return the new category id
      */
     @Operation
     public int createCategory(int parentId,
                               Map<String, Object> attributes,
-                              @Parameter(optional = true) String storeView) throws MagentoException
+                              @Parameter(optional = true) String storeViewIdOrCode) throws MagentoException
     {
-        return catalogClient.createCategory(parentId, attributes, storeView);
+        return catalogClient.createCategory(parentId, attributes, storeViewIdOrCode);
     }
 
     /**
@@ -1306,25 +1305,25 @@ public class MagentoCloudConnector implements Initialisable
      * {@code <magento:get-category categoryId="#[map-payload:categoryId]"/>}
      * 
      * @param categoryId
-     * @param storeView
+     * @param storeViewIdOrCode
      * @param attributeNames
      * @return the category attributes
      */
 	@Operation
 	public Map<String, Object> getCategory(@Parameter int categoryId, 
-	                                       @Parameter(optional=true) String storeView,
+	                                       @Parameter(optional=true) String storeViewIdOrCode,
 			List<String> attributeNames) throws MagentoException
 	{
-		return catalogClient.getCategory(categoryId, storeView, attributeNames);
+		return catalogClient.getCategory(categoryId, storeViewIdOrCode, attributeNames);
 	}
 
     @Operation
     public List<Map<String, Object>> listCategoryLevels(@Parameter(optional = true) String website,
-                                                        @Parameter(optional = true) String storeView,
+                                                        @Parameter(optional = true) String storeViewIdOrCode,
                                                         @Parameter(optional = true) String parentCategory)
         throws MagentoException
     {
-        return catalogClient.listCategoryLevels(website, storeView, parentCategory);
+        return catalogClient.listCategoryLevels(website, storeViewIdOrCode, parentCategory);
     }
 
     /**
@@ -1373,10 +1372,10 @@ public class MagentoCloudConnector implements Initialisable
 	}
 	
 	@Operation
-	public Map<String, Object> getCategoryTree(String parentId, String storeView)
+	public Map<String, Object> getCategoryTree(String parentId, String storeViewIdOrCode)
 			throws MagentoException
 	{
-		return catalogClient.getCategoryTree(parentId, storeView);
+		return catalogClient.getCategoryTree(parentId, storeViewIdOrCode);
 	}
 	
 	/**
@@ -1384,13 +1383,13 @@ public class MagentoCloudConnector implements Initialisable
      * 
      * @param categoryId
      * @param attributes
-     * @param storeView
+     * @param storeViewIdOrCode
      */
 	@Operation
 	public void updateCategory(int categoryId, Map<String, Object> attributes,
-			String storeView) throws MagentoException
+			String storeViewIdOrCode) throws MagentoException
 	{
-		catalogClient.updateCategory(categoryId, attributes, storeView);
+		catalogClient.updateCategory(categoryId, attributes, storeViewIdOrCode);
 	}
 
     /**
@@ -1501,7 +1500,7 @@ public class MagentoCloudConnector implements Initialisable
      * {@code <magento:get-product-special-price productId="#[map-payload:productId]"/>}
      * 
      * @param product
-     * @param storeView
+     * @param storeViewIdOrCode
      * @param productId.getIdentifierType()
      * @return the product special price attributes
      */
@@ -1509,9 +1508,9 @@ public class MagentoCloudConnector implements Initialisable
 	public Map<String, Object> getProductSpecialPrice(@Parameter(optional=true) Integer productId, 
 										 @Parameter(optional=true) String productSku,
 										 @Parameter(optional=true) String productIdOrSku,
-										 @Parameter(optional=true) String storeView) throws MagentoException
+										 @Parameter(optional=true) String storeViewIdOrCode) throws MagentoException
 	{
-		return catalogClient.getProductSpecialPrice(from(productSku, productId, productIdOrSku), storeView);
+		return catalogClient.getProductSpecialPrice(from(productSku, productId, productIdOrSku), storeViewIdOrCode);
 	}
 	
 	/**
@@ -1519,7 +1518,7 @@ public class MagentoCloudConnector implements Initialisable
      * additionalAttributeNames must be non null and non empty. See
      * catalog-product-info SOAP method
 	 * 
-	 * {@code   <magento:get-product  productIdOrSku="#[map-payload:productIdOrSku]" storeView="#[map-payload:storeView]">
+	 * {@code   <magento:get-product  productIdOrSku="#[map-payload:productIdOrSku]" storeViewIdOrCode="#[map-payload:storeViewIdOrCode]">
      *              <magento:additionalAttributeNames>
      *                  <magento:additionalAttributeName>keyboard_distribution_type</magento:additionalAttributeName>
      *              </magento:additionalAttributeNames>
@@ -1533,7 +1532,7 @@ public class MagentoCloudConnector implements Initialisable
      *            case you are sure the product identifier is a product sku
      * @param productIdOrSku
      *            the id or sku of the product.
-	 * @param storeView the optional store view
+	 * @param storeViewIdOrCode the optional store view
 	 * @param attributeNames the list of standard attributes to be returned
 	 * @param additionalAttributeNames the list of non standard attributes to be returned in the additionalAttributes attribute 
 	 * @return the attributes
@@ -1542,11 +1541,11 @@ public class MagentoCloudConnector implements Initialisable
 	public Map<String, Object> getProduct(@Parameter(optional=true) Integer productId, 
 							              @Parameter(optional=true) String productSku, 
 							              @Parameter(optional=true) String productIdOrSku,
-							              @Parameter(optional=true) String storeView, 
+							              @Parameter(optional=true) String storeViewIdOrCode, 
 							              @Parameter(optional=true) List<String> attributesNames, 
 							              @Parameter(optional=true) List<String> additionalAttributeNames) throws MagentoException
 	{
-		return catalogClient.getProduct(from(productSku, productId, productIdOrSku), storeView, attributesNames, additionalAttributeNames);
+		return catalogClient.getProduct(from(productSku, productId, productIdOrSku), storeViewIdOrCode, attributesNames, additionalAttributeNames);
 	}
 	
 	
@@ -1558,15 +1557,15 @@ public class MagentoCloudConnector implements Initialisable
      * {@code <magento:list-products/>}
      *    
      * @param filters an optional filtering expression
-     * @param storeView an optional storeView
+     * @param storeViewIdOrCode an optional storeViewIdOrCode
      * @return the list of product attributes that match the given optional filtering expression
      */
 	@Operation
 	public List<Map<String, Object>> listProducts(@Parameter(optional=true) String filters, 
-	                                              @Parameter(optional=true) String storeView)
+	                                              @Parameter(optional=true) String storeViewIdOrCode)
 			throws MagentoException
 	{
-		return catalogClient.listProducts(filters, storeView);
+		return catalogClient.listProducts(filters, storeViewIdOrCode);
 	}
 
     /**
@@ -1580,7 +1579,7 @@ public class MagentoCloudConnector implements Initialisable
      * @param specialPrice
      * @param fromDate
      * @param toDate
-     * @param storeView
+     * @param storeViewIdOrCode
      */
     @Operation
     public void updateProductSpecialPrice(@Parameter(optional = true) Integer productId,
@@ -1589,11 +1588,11 @@ public class MagentoCloudConnector implements Initialisable
                                           @Parameter String specialPrice,
                                           /* TODO optional? */String fromDate,
                                           /* TODO optional? */String toDate,
-                                          @Parameter(optional = true) String storeView)
+                                          @Parameter(optional = true) String storeViewIdOrCode)
         throws MagentoException
     {
         catalogClient.updateProductSpecialPrice(from(productSku, productId, productIdOrSku), specialPrice,
-            fromDate, toDate, storeView);
+            fromDate, toDate, storeViewIdOrCode);
     }
 
 	/**
@@ -1615,16 +1614,16 @@ public class MagentoCloudConnector implements Initialisable
      * @param productIdOrSku
      *            the id or sku of the product.       
      * @param attributes the not empty map of product attributes to update 
-     * @param storeView optional store view
+     * @param storeViewIdOrCode optional store view
      */
     @Operation
     public void updateProduct(@Parameter(optional = true) Integer productId,
                               @Parameter(optional = true) String productSku,
                               @Parameter(optional = true) String productIdOrSku,
                               @Parameter Map<String, Object> attributes,
-                              @Parameter(optional = true) String storeView) throws MagentoException
+                              @Parameter(optional = true) String storeViewIdOrCode) throws MagentoException
 	{
-		catalogClient.updateProduct(from(productSku, productId, productIdOrSku), attributes, storeView);
+		catalogClient.updateProduct(from(productSku, productId, productIdOrSku), attributes, storeViewIdOrCode);
 	}
 
 	@SuppressWarnings("unchecked")

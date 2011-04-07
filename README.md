@@ -65,6 +65,13 @@ Here is detailed list of all the configuration attributes:
 
 
 
+
+
+
+
+
+
+
 Add Order Shipment Comment
 --------------------------
 
@@ -82,10 +89,12 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|shipmentId| the shipment's increment id|no||
-|comment| the comment to add|no||
-|sendEmail| if an email must be sent after shipment creation|yes|false|
-|includeCommentInEmail| if the comment must be sent in the email|yes|false|
+|shipmentId|the shipment's increment id|no||
+|comment|the comment to add|no||
+|sendEmail|if an email must be sent after shipment creation|yes|false|
+|includeCommentInEmail|if the comment must be sent in the email|yes|false|
+
+
 
 Add Order Shipment Track
 ------------------------
@@ -105,10 +114,14 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|shipmentId| the shipment id|no||
-|carrierCode| the new track's carrier code|no||
-|title| the new track's title|no||
+|shipmentId|the shipment id|no||
+|carrierCode|the new track's carrier code|no||
+|title|the new track's title|no||
 |trackId||no||
+
+Returns new track's id
+
+
 
 Cancel Order
 ------------
@@ -125,7 +138,9 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|orderId| the order to cancel|no||
+|orderId|the order to cancel|no||
+
+
 
 Create Order Shipment
 ---------------------
@@ -148,12 +163,15 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|orderId| the order increment id|no||
-|itemsQuantities| a map containing an entry per each (orderItemId,
-           quantity) pair|no||
-|comment| an optional comment|yes||
-|sendEmail| if an email must be sent after shipment creation|yes|false|
-|includeCommentInEmail| if the comment must be sent in the email|yes|false|
+|orderId|the order increment id|no||
+|itemsQuantities|a map containing an entry per each (orderItemId, quantity) pair|no||
+|comment|an optional comment|yes||
+|sendEmail|if an email must be sent after shipment creation|yes|false|
+|includeCommentInEmail|if the comment must be sent in the email|yes|false|
+
+Returns new shipment's id
+
+
 
 Get Order
 ---------
@@ -169,7 +187,11 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|orderId| the order whose properties to fetch|no||
+|orderId|the order whose properties to fetch|no||
+
+Returns string-object map of order properties
+
+
 
 Get Order Invoice
 -----------------
@@ -187,6 +209,10 @@ Example:
 |config-ref|Specify which configuration to use for this invocation|yes||
 |invoiceId||no||
 
+Returns invoice attributes
+
+
+
 Get Order Shipment Carriers
 ---------------------------
 
@@ -202,6 +228,10 @@ Example:
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |orderId||no||
+
+Returns new invoice's id
+
+
 
 Get Order Shipment
 ------------------
@@ -220,6 +250,8 @@ Example:
 |config-ref|Specify which configuration to use for this invocation|yes||
 |shipmentId||no||
 
+
+
 Hold Order
 ----------
 
@@ -235,6 +267,8 @@ Example:
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |orderId||no||
+
+
 
 List Orders
 -----------
@@ -254,6 +288,10 @@ Example
 |config-ref|Specify which configuration to use for this invocation|yes||
 |filter||yes||
 
+Returns list of string-object maps
+
+
+
 List Orders Invoices
 --------------------
 
@@ -269,6 +307,10 @@ Example:
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |filter||yes||
+
+Returns of string-object maps order attributes
+
+
 
 List Orders Shipments
 ---------------------
@@ -287,6 +329,10 @@ Example:
 |config-ref|Specify which configuration to use for this invocation|yes||
 |filter||yes||
 
+Returns of string-object map order shipments attributes
+
+
+
 Delete Order Shipment Track
 ---------------------------
 
@@ -298,8 +344,10 @@ Deletes the given track of the given order's shipment
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|shipmentId| the target shipment id|no||
-|trackId| the id of the track to delete|no||
+|shipmentId|the target shipment id|no||
+|trackId|the id of the track to delete|no||
+
+
 
 Add Order Comment
 -----------------
@@ -316,10 +364,12 @@ Adds a comment to the given order id
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|orderId| the order id|no||
-|status| TODO possible values?|no||
+|orderId|the order id|no||
+|status|TODO possible values?|no||
 |comment||no||
-|sendEmail| if an email must be sent after shipment creation|yes|false|
+|sendEmail|if an email must be sent after shipment creation|yes|false|
+
+
 
 Unhold Order
 ------------
@@ -337,6 +387,8 @@ Example:
 |config-ref|Specify which configuration to use for this invocation|yes||
 |orderId||no||
 
+
+
 Create Order Invoice
 --------------------
 
@@ -348,6 +400,8 @@ Create Order Invoice
 |comment||yes||
 |sendEmail||yes|false|
 |includeCommentInEmail||yes|false|
+
+
 
 Add Order Invoice Comment
 -------------------------
@@ -366,10 +420,12 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|invoiceId| the invoice id|no||
-|comment| the comment to add|no||
-|sendEmail| if an email must be sent after shipment creation|yes|false|
-|includeCommentInEmail| if the comment must be sent in the email|yes|false|
+|invoiceId|the invoice id|no||
+|comment|the comment to add|no||
+|sendEmail|if an email must be sent after shipment creation|yes|false|
+|includeCommentInEmail|if the comment must be sent in the email|yes|false|
+
+
 
 Capture Order Invoice
 ---------------------
@@ -385,7 +441,9 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|invoiceId| the invoice to capture|no||
+|invoiceId|the invoice to capture|no||
+
+
 
 Void Order Invoice
 ------------------
@@ -401,7 +459,9 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|invoiceId| the invoice id|no||
+|invoiceId|the invoice id|no||
+
+
 
 Cancel Order Invoice
 --------------------
@@ -417,7 +477,9 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|invoiceId| the invoice id|no||
+|invoiceId|the invoice id|no||
+
+
 
 Create Customer Address
 -----------------------
@@ -438,6 +500,10 @@ attributes
 |config-ref|Specify which configuration to use for this invocation|yes||
 |customerId||no||
 |attributes||no||
+
+Returns new customer address id
+
+
 
 Create Customer
 ---------------
@@ -460,7 +526,11 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|attributes| the attributes of the new customer|no||
+|attributes|the attributes of the new customer|no||
+
+Returns new customer id
+
+
 
 Delete Customer
 ---------------
@@ -478,6 +548,8 @@ Example:
 |config-ref|Specify which configuration to use for this invocation|yes||
 |customerId||no||
 
+
+
 Delete Customer Address
 -----------------------
 
@@ -493,6 +565,8 @@ Example:
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |addressId||no||
+
+
 
 Get Customer
 ------------
@@ -516,7 +590,11 @@ Example:
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |customerId||no||
-|attributeNames| the attributes to retrieve. Not empty|no||
+|attributeNames|the attributes to retrieve. Not empty|no||
+
+Returns attributes map
+
+
 
 Get Customer Address
 --------------------
@@ -533,6 +611,10 @@ Example:
 |config-ref|Specify which configuration to use for this invocation|yes||
 |addressId||no||
 
+Returns customer address attributes map
+
+
+
 List Customer Addresses
 -----------------------
 
@@ -547,7 +629,11 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|customerId| the id of the customer|no||
+|customerId|the id of the customer|no||
+
+Returns listing of addresses
+
+
 
 List Customer Groups
 --------------------
@@ -564,6 +650,10 @@ Example:
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 
+Returns listing of groups attributes
+
+
+
 List Customers
 --------------
 
@@ -578,7 +668,11 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|filters| an optional filtering expression.|yes||
+|filters|an optional filtering expression.|yes||
+
+Returns list of attributes map
+
+
 
 Update Customer
 ---------------
@@ -599,7 +693,9 @@ Example:
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |customerId||no||
-|attributes| the attributes map|no||
+|attributes|the attributes map|no||
+
+
 
 Update Customer Address
 -----------------------
@@ -620,8 +716,10 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|addressId| the customer address to update|no||
-|attributes|  the address attributes to update|no||
+|addressId|the customer address to update|no||
+|attributes|the address attributes to update|no||
+
+
 
 List Stock Items
 ----------------
@@ -642,7 +740,11 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|productIdOrSkus| a not empty list of product ids or skus whose attributes to list|no||
+|productIdOrSkus|a not empty list of product ids or skus whose attributes to list|no||
+
+Returns list of stock items attributes
+
+
 
 Update Stock Item
 -----------------
@@ -662,8 +764,10 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|productIdOrSku| the product id or sku of the product to update|no||
+|productIdOrSku|the product id or sku of the product to update|no||
 |attributes||no||
+
+
 
 List Directory Countries
 ------------------------
@@ -678,6 +782,10 @@ Example:
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 
+Returns collection of countries attributes
+
+
+
 List Directory Regions
 ----------------------
 
@@ -690,7 +798,11 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|countryId| the country code, in ISO2 or ISO3 format|no||
+|countryId|the country code, in ISO2 or ISO3 format|no||
+
+Returns collection of regions attributes
+
+
 
 Add Product Link
 ----------------
@@ -711,16 +823,14 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|type|           the product type|no||
-|productId|           the id of the source product. Use it instead of productIdOrSku
-           in case you are sure the source product identifier is a
-           product id|yes||
-|productSku|           the sku of the source product. Use it instead of productIdOrSku
-           in case you are sure the source product identifier is a
-           product sku|yes||
-|productIdOrSku|           the id or sku of the source product.|yes||
-|linkedProductIdOrSku|           the destination product id or sku.|no||
-|attributes|           the link attributes|no||
+|type|the product type|no||
+|productId|the id of the source product. Use it instead of productIdOrSku in case you are sure the source product identifier is a product id|yes||
+|productSku|the sku of the source product. Use it instead of productIdOrSku in case you are sure the source product identifier is a product sku|yes||
+|productIdOrSku|the id or sku of the source product.|yes||
+|linkedProductIdOrSku|the destination product id or sku.|no||
+|attributes|the link attributes|no||
+
+
 
 Create Product Attribute Media
 ------------------------------
@@ -732,7 +842,9 @@ Create Product Attribute Media
 |productSku||yes||
 |productIdOrSku||yes||
 |attributes||no||
-|storeView||no||
+|storeViewIdOrCode||no||
+
+
 
 Delete Product Attribute Media
 ------------------------------
@@ -745,19 +857,17 @@ Example:
 
      <magento:delete-product-attribute-media 
                  productSku="#[map-payload:productSku]" 
-                 file="#[map-payload:fileName]"/>
+                 fileName="#[map-payload:fileName]"/>
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|productId|           the id of the product. Use it instead of productIdOrSku
-           in case you are sure the product identifier is a
-           product id|yes||
-|productSku|           the sku of the product. Use it instead of productIdOrSku
-           in case you are sure the product identifier is a
-           product sku|yes||
-|productIdOrSku|           the id or sku of the product.|yes||
-|file||no||
+|productId|the id of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product id|yes||
+|productSku|the sku of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product sku|yes||
+|productIdOrSku|the id or sku of the product.|yes||
+|fileName||no||
+
+
 
 Delete Product Link
 -------------------
@@ -776,15 +886,12 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|type| link type|no||
-|productId|           the id of the source product. Use it instead of productIdOrSku
-           in case you are sure the source product identifier is a
-           product id|yes||
-|productSku|           the sku of the source product. Use it instead of productIdOrSku
-           in case you are sure the source product identifier is a
-           product sku|yes||
-|productIdOrSku|           the id or sku of the source product.|yes||
+|type|link type|no||
+|productId|the id of the source product. Use it instead of productIdOrSku in case you are sure the source product identifier is a product id|yes||
+|productSku|the sku of the source product. Use it instead of productIdOrSku in case you are sure the source product identifier is a product sku|yes||
+|productIdOrSku|the id or sku of the source product.|yes||
 |linkedProductIdOrSku||no||
+
 
 
 Get Product Attribute Media
@@ -797,19 +904,33 @@ Example:
 
      <magento:get-product-attribute-media 
                  productIdOrSku="#[map-payload:productIdOrSku]"
-                 file="#[map-payload:fileName]"
-                 storeView="#[map-payload:storeView]"/>
+                 fileName="#[map-payload:fileName]"
+                 storeViewIdOrCode="#[map-payload:storeViewIdOrCode]"/>
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|productId|           the id of the product. Use it instead of productIdOrSku in
-           case you are sure the product identifier is a product id|yes||
-|productSku|           the sku of the product. Use it instead of productIdOrSku in
-           case you are sure the product identifier is a product sku|yes||
-|productIdOrSku|           the id or sku of the product.|yes||
-|file||no||
-|storeView||yes||
+|productId|the id of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product id|yes||
+|productSku|the sku of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product sku|yes||
+|productIdOrSku|the id or sku of the product.|yes||
+|fileName||no||
+|storeViewIdOrCode||yes||
+
+Returns list of links to the product
+
+
+
+
+
+Update Category Attribute Store View
+------------------------------------
+
+Set the default catalog store view for this session
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|storeViewIdOrCode|the id or code of the store view to set as default for this session|no||
 
 
 
@@ -828,6 +949,10 @@ Example:
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 
+Returns list of category attributes
+
+
+
 List Category Attribute Options
 -------------------------------
 
@@ -843,7 +968,11 @@ Example:
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |attributeId||no||
-|storeView| optional|yes||
+|storeViewIdOrCode|optional|yes||
+
+Returns list of category attribute options
+
+
 
 List Product Attribute Media
 ----------------------------
@@ -855,17 +984,19 @@ Example:
 
        <magento:list-product-attribute-media
                      productId="#[map-payload:productId]"
-                     storeView="#[map-payload:storeView]"/>
+                     storeViewIdOrCode="#[map-payload:storeViewIdOrCode]"/>
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|productId|           the id of the product. Use it instead of productIdOrSku in
-           case you are sure the product identifier is a product id|yes||
-|productSku|           the sku of the product. Use it instead of productIdOrSku in
-           case you are sure the product identifier is a product sku|yes||
-|productIdOrSku|           the id or sku of the product.|yes||
-|storeView||yes||
+|productId|the id of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product id|yes||
+|productSku|the sku of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product sku|yes||
+|productIdOrSku|the id or sku of the product.|yes||
+|storeViewIdOrCode||yes||
+
+Returns list of product images attributes
+
+
 
 List Product Attribute Media Types
 ----------------------------------
@@ -881,7 +1012,11 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|setId| the setId|no||
+|setId|the setId|no||
+
+Returns list of attribute media types
+
+
 
 List Product Attribute Options
 ------------------------------
@@ -898,7 +1033,11 @@ Example:
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |attributeId||no||
-|storeView| optional|yes||
+|storeViewIdOrCode|optional|yes||
+
+Returns attributes list
+
+
 
 List Product Attributes
 -----------------------
@@ -917,6 +1056,10 @@ Example:
 |config-ref|Specify which configuration to use for this invocation|yes||
 |setId||no||
 
+Returns list of product attributes
+
+
+
 List Product Attribute Sets
 ---------------------------
 
@@ -933,6 +1076,10 @@ Example:
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 
+Returns list of product attributes sets
+
+
+
 List Product Attribute Tier Prices
 ----------------------------------
 
@@ -947,11 +1094,13 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|productId|           the id of the product. Use it instead of productIdOrSku in
-           case you are sure the product identifier is a product id|yes||
-|productSku|           the sku of the product. Use it instead of productIdOrSku in
-           case you are sure the product identifier is a product sku|yes||
-|productIdOrSku|           the id or sku of the product.|yes||
+|productId|the id of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product id|yes||
+|productSku|the sku of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product sku|yes||
+|productIdOrSku|the id or sku of the product.|yes||
+
+Returns list of product attributes
+
+
 
 List Product Link
 -----------------
@@ -961,20 +1110,34 @@ Lists linked products to the given product and for the given link type
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|type| the link type|no||
-|productId|           the id of the product. Use it instead of productIdOrSku in
-           case you are sure the product identifier is a product id|yes||
-|productSku|           the sku of the product. Use it instead of productIdOrSku in
-           case you are sure the product identifier is a product sku|yes||
-|productIdOrSku|           the id or sku of the product.|yes||
+|type|the link type|no||
+|productId|the id of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product id|yes||
+|productSku|the sku of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product sku|yes||
+|productIdOrSku|the id or sku of the product.|yes||
+
+Returns list of links to the product
+
+
 
 List Product Link Attributes
 ----------------------------
 
+Lists all the attributes for the given product link type
+
+Example:
+
+
+
+     <magento:list-product-link-attributes type="#[map-payload:type]" />
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|type||no||
+|type|the product type|no||
+
+Returns listing of product attributes
+
+
 
 List Product Link Types
 -----------------------
@@ -990,6 +1153,10 @@ Example:
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 
+Returns list of product link types
+
+
+
 List Product Types
 ------------------
 
@@ -1004,56 +1171,63 @@ Example:
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 
-Update Category Attribute Store View
-------------------------------------
+Returns list of product types
 
-| attribute | description | optional | default value | possible values |
-|:-----------|:-----------|:---------|:--------------|:----------------|
-|config-ref|Specify which configuration to use for this invocation|yes||
-|storeView||no||
+
 
 Update Product Attribute Media
 ------------------------------
 
+Updates product media. See catalog-product-attribute-media-update
+Example:
+
+
+     <magento:update-product-attribute-media fileName="#[map-payload:fileName]" productId="#[map-payload:productId]">
+             <magento:attributes>
+                 <magento:attribute key="label" value="#[map-payload:label]"/>
+             </magento:attributes>
+           </magento:update-product-attribute-media>
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|productId||yes||
-|productSku||yes||
-|productIdOrSku||yes||
-|file||no||
+|productId|the id of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product id|yes||
+|productSku|the sku of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product sku|yes||
+|productIdOrSku|the id or sku of the product.|yes||
+|fileName||no||
 |attributes||no||
-|storeView||no||
+|storeViewIdOrCode||yes||
 
-Update Product Attribute Media Store View
------------------------------------------
 
-| attribute | description | optional | default value | possible values |
-|:-----------|:-----------|:---------|:--------------|:----------------|
-|config-ref|Specify which configuration to use for this invocation|yes||
-|storeView||no||
 
-Update Product Attribute Store View
------------------------------------
-
-| attribute | description | optional | default value | possible values |
-|:-----------|:-----------|:---------|:--------------|:----------------|
-|config-ref|Specify which configuration to use for this invocation|yes||
-|storeView||no||
 
 
 Update Product Link
 -------------------
 
+Update product link
+Example:
+
+
+
+     <magento:update-product-link type="#[map-payload:type]" productId="#[map-payload:productId]"
+                    linkedProductIdOrSku="#[map-payload:linkedProductId]">
+             <magento:attributes>
+                 <magento:attribute key="qty" value="#[map-payload:qty]"/>
+             </magento:attributes>                   
+           </magento:update-product-link>
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |type||no||
-|productId||yes||
-|productSku||yes||
-|productIdOrSku||yes||
-|linkedProduct||no||
+|productId|the id of the source product. Use it instead of productIdOrSku in case you are sure the source product identifier is a product id|yes||
+|productSku|the sku of the source product. Use it instead of productIdOrSku in case you are sure the source product identifier is a product sku|yes||
+|productIdOrSku|the id or sku of the source product.|yes||
+|linkedProductIdOrSku|the destination product id or sku.|no||
 |attributes||no||
+
+
 
 List Category Products
 ----------------------
@@ -1070,17 +1244,25 @@ Example:
 |config-ref|Specify which configuration to use for this invocation|yes||
 |categoryId||no||
 
+Returns listing of category products
+
+
+
 Add Category Product
 --------------------
+
+Assign product to category. See catalog-category-assignProduct SOAP method
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |categoryId||no||
-|productId||yes||
-|productSku||yes||
-|productIdOrSku||yes||
+|productId|the id of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product id|yes||
+|productSku|the sku of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product sku|yes||
+|productIdOrSku|the id or sku of the product.|yes||
 |position||no||
+
+
 
 Create Category
 ---------------
@@ -1092,15 +1274,11 @@ Creates a new category. See catalog-category-create SOAP method.
 |config-ref|Specify which configuration to use for this invocation|yes||
 |parentId||no||
 |attributes||no||
-|storeView||no||
+|storeViewIdOrCode||yes||
 
-Catalog Category Current Store
-------------------------------
+Returns new category id
 
-| attribute | description | optional | default value | possible values |
-|:-----------|:-----------|:---------|:--------------|:----------------|
-|config-ref|Specify which configuration to use for this invocation|yes||
-|storeView||no||
+
 
 Delete Category
 ---------------
@@ -1114,7 +1292,9 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|categoryId| the category to delete|no||
+|categoryId|the category to delete|no||
+
+
 
 Get Category
 ------------
@@ -1130,8 +1310,12 @@ Example:
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |categoryId||no||
-|storeView||yes||
+|storeViewIdOrCode||yes||
 |attributeNames||no||
+
+Returns category attributes
+
+
 
 List Category Levels
 --------------------
@@ -1139,14 +1323,19 @@ List Category Levels
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|website||no||
-|storeView||yes||
-|parentCategory||no||
+|website||yes||
+|storeViewIdOrCode||yes||
+|parentCategory||yes||
+
+
 
 Move Category
 -------------
 
-Move category in tree. See  catalog-category-move SOAP method.
+Move category in tree. See  catalog-category-move SOAP method. Please make sure that you are not 
+moving category to any of its own children. There are no
+extra checks to prevent doing it through webservices API, and you won’t be
+able to fix this from admin interface then
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
@@ -1154,6 +1343,8 @@ Move category in tree. See  catalog-category-move SOAP method.
 |categoryId||no||
 |parentId||no||
 |afterId||no||
+
+
 
 Delete Category Product
 -----------------------
@@ -1171,11 +1362,11 @@ Example:
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |categoryId||no||
-|productId|           the id of the product. Use it instead of productIdOrSku in
-           case you are sure the product identifier is a product id|yes||
-|productSku|           the sku of the product. Use it instead of productIdOrSku in
-           case you are sure the product identifier is a product sku|yes||
-|productIdOrSku|           the id or sku of the product.|yes||
+|productId|the id of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product id|yes||
+|productSku|the sku of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product sku|yes||
+|productIdOrSku|the id or sku of the product.|yes||
+
+
 
 Get Category Tree
 -----------------
@@ -1184,7 +1375,9 @@ Get Category Tree
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |parentId||no||
-|storeView||no||
+|storeViewIdOrCode||no||
+
+
 
 Update Category
 ---------------
@@ -1196,7 +1389,9 @@ Updates a category. See catalog-category-update SOAP method
 |config-ref|Specify which configuration to use for this invocation|yes||
 |categoryId||no||
 |attributes||no||
-|storeView||no||
+|storeViewIdOrCode||no||
+
+
 
 Update Category Product
 -----------------------
@@ -1206,21 +1401,37 @@ Updates a category product
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|categoryId| the category id|no||
-|productId|           the id of the product. Use it instead of productIdOrSku in
-           case you are sure the product identifier is a product id|yes||
-|productSku|           the sku of the product. Use it instead of productIdOrSku in
-           case you are sure the product identifier is a product sku|yes||
-|productIdOrSku|           the id or sku of the product.|yes||
+|categoryId|the category id|no||
+|productId|the id of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product id|yes||
+|productSku|the sku of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product sku|yes||
+|productIdOrSku|the id or sku of the product.|yes||
 |position||no||
+
+
 
 List Inventory Stock Items
 --------------------------
 
+Lists inventory stock items.
+ Example: 
+ 
+
+     <magento:list-inventory-stock-items >
+             <magento:productIdOrSkus>
+                 <magento:productIdOrSku>1560</magento:productIdOrSku>
+                 <magento:productIdOrSku>10036</magento:productIdOrSku>
+                 <magento:productIdOrSku>9868</magento:productIdOrSku>
+             </magento:productIdOrSkus>
+            </magento:list-inventory-stock-items>
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|products||no||
+|productIdOrSkus||no||
+
+Returns list of attributes
+
+
 
 Update Inventory Stock Item
 ---------------------------
@@ -1233,6 +1444,8 @@ Update Inventory Stock Item
 |productIdOrSku||yes||
 |attributes||no||
 
+
+
 Create Product
 --------------
 
@@ -1241,26 +1454,14 @@ Creates a new product
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|type| the new product's type|no||
-|set| the new product's set|no||
-|sku| the new product's sku|no||
-|attributes| the attributes of the new product|no||
+|type|the new product's type|no||
+|set|the new product's set|no||
+|sku|the new product's sku|no||
+|attributes|the attributes of the new product|no||
 
-Update Product Store View
--------------------------
+Returns new product's id
 
-| attribute | description | optional | default value | possible values |
-|:-----------|:-----------|:---------|:--------------|:----------------|
-|config-ref|Specify which configuration to use for this invocation|yes||
-|storeView||yes||
 
-Get Product Store View
-----------------------
-
-| attribute | description | optional | default value | possible values |
-|:-----------|:-----------|:---------|:--------------|:----------------|
-|config-ref|Specify which configuration to use for this invocation|yes||
-|storeView||yes||
 
 Delete Product
 --------------
@@ -1274,11 +1475,11 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|productId|           the id of the product. Use it instead of productIdOrSku in
-           case you are sure the product identifier is a product id|yes||
-|productSku|           the sku of the product. Use it instead of productIdOrSku in
-           case you are sure the product identifier is a product sku|yes||
-|productIdOrSku|           the id or sku of the product.|yes||
+|productId|the id of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product id|yes||
+|productSku|the sku of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product sku|yes||
+|productIdOrSku|the id or sku of the product.|yes||
+
+
 
 Get Product Special Price
 -------------------------
@@ -1297,23 +1498,40 @@ Example:
 |productId||yes||
 |productSku||yes||
 |productIdOrSku||yes||
-|storeView||yes||
+|storeViewIdOrCode||yes||
+
+Returns product special price attributes
+
+
 
 Get Product
 -----------
 
-Answers a product's attributes. See catalog-product-info SOAP method.
+Answers a product's specified attributes. At least one of attributNames or
+additionalAttributeNames must be non null and non empty. See
+catalog-product-info SOAP method
+
+
+
+       <magento:get-product  productIdOrSku="#[map-payload:productIdOrSku]" storeViewIdOrCode="#[map-payload:storeViewIdOrCode]">
+                 <magento:additionalAttributeNames>
+                     <magento:additionalAttributeName>keyboard_distribution_type</magento:additionalAttributeName>
+                 </magento:additionalAttributeNames>
+             </magento:get-product>
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|productId|           the id of the product. Use it instead of productIdOrSku in
-           case you are sure the product identifier is a product id|yes||
-|productSku|           the sku of the product. Use it instead of productIdOrSku in
-           case you are sure the product identifier is a product sku|yes||
-|productIdOrSku|           the id or sku of the product.|yes||
-|storeView| the optional store view|yes||
-|attributes| the attributes to retrieve|no||
+|productId|the id of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product id|yes||
+|productSku|the sku of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product sku|yes||
+|productIdOrSku|the id or sku of the product.|yes||
+|storeViewIdOrCode|the optional store view|yes||
+|attributesNames||yes||
+|additionalAttributeNames|the list of non standard attributes to be returned in the additionalAttributes attribute|yes||
+
+Returns attributes
+
+
 
 List Products
 -------------
@@ -1329,22 +1547,30 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|filters| an optional filtering expression|yes||
-|storeView| an optional storeView|yes||
+|filters|an optional filtering expression|yes||
+|storeViewIdOrCode|an optional storeViewIdOrCode|yes||
+
+Returns list of product attributes that match the given optional filtering expression
+
+
 
 Update Product Special Price
 ----------------------------
 
+Sets a product special price. See catalog-product-setSpecialPrice SOAP method
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|productId||yes||
-|productSku||yes||
-|productIdOrSku||yes||
+|productId|the id of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product id|yes||
+|productSku|the sku of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product sku|yes||
+|productIdOrSku|the id or sku of the product.|yes||
 |specialPrice||no||
 |fromDate||no||
 |toDate||no||
-|storeView||yes||
+|storeViewIdOrCode||yes||
+
+
 
 Update Product
 --------------
@@ -1363,13 +1589,30 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|productId|           the id of the product. Use it instead of productIdOrSku in
-           case you are sure the product identifier is a product id|yes||
-|productSku|           the sku of the product. Use it instead of productIdOrSku in
-           case you are sure the product identifier is a product sku|yes||
-|productIdOrSku|           the id or sku of the product.|yes||
-|attributes| the not empty map of product attributes to update|no||
-|storeViewIdOrCode| optional store view|yes||
+|productId|the id of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product id|yes||
+|productSku|the sku of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product sku|yes||
+|productIdOrSku|the id or sku of the product.|yes||
+|attributes|the not empty map of product attributes to update|no||
+|storeViewIdOrCode|optional store view|yes||
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
