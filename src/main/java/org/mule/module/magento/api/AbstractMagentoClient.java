@@ -37,7 +37,6 @@ import org.apache.commons.lang.BooleanUtils;
  * <li>Retrieve operations return object's attributes in a Map similar to the
  * previously described</li>
  * </ul>
- * TODO extract interface and move doc to there
  */
 public abstract class AbstractMagentoClient
 {

@@ -83,13 +83,9 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      */
     AttributesType getCategory(int categoryId, String storeView, List<String> attributeNames) throws ExceptionType;
     
-    /** TODO 
-    42.catalog-category-level Retrieve one level of categories by
-        * website/store view/parent category NOTE Please make sure that you are not
-        * moving category to any of its own children. There are no extra checks to
-        * prevent doing it through webservices API, and you won’t be able to fix this
-        * from admin interface then 
-     * 
+    /** 
+     * Answers levels of categories for a website, store view or category (TODO OR???)   
+     *
      * @param website
      * @param storeView
      * @param parentCategory
@@ -100,8 +96,11 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
         throws ExceptionType;
 
     /**
-     * Move category in tree. See  catalog-category-move SOAP method. 
-     *  
+     * Move category in tree. See catalog-category-move SOAP method. NOTE Please make
+     * sure that you are not moving category to any of its own children. There are no
+     * extra checks to prevent doing it through webservices API, and you won’t be
+     * able to fix this from admin interface then
+     * 
      * @param categoryId
      * @param parentId
      * @param afterId
@@ -201,9 +200,12 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
 
     /**
      * Answers a product's attributes. See catalog-product-info SOAP method.
+     * 
      * @param productId
      * @param storeView
-     * @param attributes
+     * @param attributeNames the list of standard attributes to be returned
+     * @param additionalAttributeNames the list of non standard attributes to be
+     *            returned in the additionalAttributes attribute
      * @return the product attributes
      */
     AttributesType getProduct(@NotNull ProductIdentifier productId,
@@ -229,10 +231,9 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * @param toDate
      * @param storeView
      * @param productId.getIdentifierType()
-     * @return
      * @throws ExceptionType
      */
-    int updateProductSpecialPrice(@NotNull ProductIdentifier productId,
+    void updateProductSpecialPrice(@NotNull ProductIdentifier productId,
                                          @NotNull String specialPrice,
                                          String fromDate,
                                          String toDate,
@@ -311,10 +312,8 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * @param file
      * @param attributes
      * @param storeView
-     * @return
-     * 
      */
-    int updateProductAttributeMedia(@NotNull ProductIdentifier productId,
+    void updateProductAttributeMedia(@NotNull ProductIdentifier productId,
                                     String file,
                                     @NotNull Map<String, Object> attributes,
                                     String storeView) throws ExceptionType;

@@ -33,6 +33,7 @@ import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.Validate;
 
 import java.util.Collections;
@@ -295,6 +296,8 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
                              List<String> additionalAttributeNames) throws RemoteException
     {
         Validate.notNull(productId);
+        Validate.isTrue(CollectionUtils.isNotEmpty(attributeNames)
+                        || CollectionUtils.isNotEmpty(additionalAttributeNames));
         
         CatalogProductRequestAttributes request = 
             new CatalogProductRequestAttributes(
@@ -339,7 +342,7 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
      * @param productId.getIdentifierType()
      * @return
      */
-    public int updateProductSpecialPrice(@NotNull ProductIdentifier productId,
+    public void updateProductSpecialPrice(@NotNull ProductIdentifier productId,
                                          @NotNull String specialPrice,
                                          String fromDate,
                                          String toDate,
@@ -347,7 +350,7 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
     {
     	Validate.notNull(specialPrice);
     	Validate.notNull(productId);
-        return getPort().catalogProductSetSpecialPrice(getSessionId(), productId.getIdentifierAsString(), specialPrice, fromDate,
+        getPort().catalogProductSetSpecialPrice(getSessionId(), productId.getIdentifierAsString(), specialPrice, fromDate,
             toDate, storeView, productId.getIdentifierType());
     }
     
@@ -412,14 +415,14 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
         return getPort().catalogProductAttributeMediaTypes(getSessionId(), setId);
     }
 
-    public int updateProductAttributeMedia(@NotNull ProductIdentifier productId,
+    public void updateProductAttributeMedia(@NotNull ProductIdentifier productId,
                                            String file,
                                            @NotNull Map<String, Object> attributes,
                                            String storeView
                                            ) throws RemoteException
     {
         Validate.notNull(attributes);
-        return getPort().catalogProductAttributeMediaUpdate(getSessionId(), productId.getIdentifierAsString(), file,
+        getPort().catalogProductAttributeMediaUpdate(getSessionId(), productId.getIdentifierAsString(), file,
             fromMap(CatalogProductAttributeMediaCreateEntity.class, attributes), storeView,
             productId.getIdentifierType());
     }

@@ -1109,8 +1109,18 @@ public class MagentoCloudConnector implements Initialisable
         return catalogClient.listProductLink(type, from(productSku, productId, productIdOrSku));
     }
 
+    /**
+     * Lists all the attributes for the given product link type
+     * 
+     * Example:
+     * 
+     * {@code <magento:list-product-link-attributes type="#[map-payload:type]" />}
+     * 
+     * @param type the product type
+     * @return the listing of product attributes
+     */
     @Operation
-    public List<Map<String, Object>> listProductLinkAttributes(String type) 
+    public List<Map<String, Object>> listProductLinkAttributes(@Parameter String type) 
     {
         return catalogClient.listProductLinkAttributes(type);
     }
@@ -1142,39 +1152,88 @@ public class MagentoCloudConnector implements Initialisable
     {
         return catalogClient.listProductTypes();
     }
-
     
+ //TODO file parameter name 
+    
+    /**
+     * Updates product media. See catalog-product-attribute-media-update
+     * Example:
+     * {@code <magento:update-product-attribute-media file="#[map-payload:fileName]" productId="#[map-payload:productId]">
+     *          <magento:attributes>
+     *              <magento:attribute key="label" value="#[map-payload:label]"/>
+     *          </magento:attributes>
+     *        </magento:update-product-attribute-media>}
+     * 
+     *  @param productId
+     *            the id of the product. Use it instead of productIdOrSku in
+     *            case you are sure the product identifier is a product id
+     * @param productSku
+     *            the sku of the product. Use it instead of productIdOrSku in
+     *            case you are sure the product identifier is a product sku
+     * @param productIdOrSku
+     *            the id or sku of the product.
+     * @param file
+     * @param attributes
+     * @param storeView
+     */
     @Operation
-    public int updateProductAttributeMedia(@Parameter(optional=true) Integer productId,
-										   @Parameter(optional=true) String productSku,
-										   @Parameter(optional=true) String productIdOrSku,
-                                           String file,
-                                           Map<String, Object> attributes,
-                                           String storeView) 
+    public void updateProductAttributeMedia(@Parameter(optional = true) Integer productId,
+                                            @Parameter(optional = true) String productSku,
+                                            @Parameter(optional = true) String productIdOrSku,
+                                            @Parameter String file,
+                                            @Parameter Map<String, Object> attributes,
+                                            @Parameter(optional = true) String storeView)
     {
-        return catalogClient.updateProductAttributeMedia(from(productSku, productId, productIdOrSku), file, attributes, storeView);
+        catalogClient.updateProductAttributeMedia(from(productSku, productId, productIdOrSku), file,
+            attributes, storeView);
     }
 
     /** FIXME */
     public void updateProductAttributeTierPrices(@Parameter(optional=true) Integer productId,
 												 @Parameter(optional=true) String productSku,
 												 @Parameter(optional=true) String productIdOrSku,
-                                                 List<Map<String, Object>> attributes) 
+                                                 @Parameter List<Map<String, Object>> attributes) 
     {
         catalogClient.updateProductAttributeTierPrices(from(productSku, productId, productIdOrSku), attributes);
     }
 
+    /**
+     * Update product link
+     * Example:
+     * 
+     * {@code <magento:update-product-link type="#[map-payload:type]" productId="#[map-payload:productId]"
+     *                 linkedProductIdOrSku="#[map-payload:linkedProductId]">
+     *          <magento:attributes>
+     *              <magento:attribute key="qty" value="#[map-payload:qty]"/>
+     *          </magento:attributes>                   
+     *        </magento:update-product-link>}
+     * 
+     * @param type
+      *@param productId
+     *            the id of the source product. Use it instead of productIdOrSku
+     *            in case you are sure the source product identifier is a
+     *            product id
+     * @param productSku
+     *            the sku of the source product. Use it instead of productIdOrSku
+     *            in case you are sure the source product identifier is a
+     *            product sku
+     * @param productIdOrSku
+     *            the id or sku of the source product.
+     * @param linkedProductIdOrSku
+     *            the destination product id or sku.
+     * @param attributes
+     */
     @Operation
-    public void updateProductLink(String type,
-									@Parameter(optional=true) Integer productId,
-									@Parameter(optional=true) String productSku,
-									@Parameter(optional=true) String productIdOrSku,
-                                    String linkedProduct,
-                                    Map<String, Object> attributes) 
+    public void updateProductLink(@Parameter String type,
+                                  @Parameter(optional = true) Integer productId,
+                                  @Parameter(optional = true) String productSku,
+                                  @Parameter(optional = true) String productIdOrSku,
+                                  @Parameter String linkedProductIdOrSku,
+                                  @Parameter Map<String, Object> attributes)
     {
-        catalogClient.updateProductLink(type, from(productSku, productId, productIdOrSku), linkedProduct, attributes);
+        catalogClient.updateProductLink(type, from(productSku, productId, productIdOrSku), linkedProductIdOrSku,
+            attributes);
     }
-    
     
     /**
      * Lists product of a given category. See  catalog-category-assignedProducts SOAP method.   
@@ -1185,37 +1244,48 @@ public class MagentoCloudConnector implements Initialisable
      * @return the listing of category products
      */
     @Operation
-    public List<Map<String, Object>> listCategoryProducts(int categoryId)
-			throws MagentoException
-	{
-		return catalogClient.listCategoryProducts(categoryId);
-	}
-    
+    public List<Map<String, Object>> listCategoryProducts(int categoryId) throws MagentoException
+    {
+        return catalogClient.listCategoryProducts(categoryId);
+    }
+
+    /**
+     * Assign product to category. See catalog-category-assignProduct SOAP method
+     * 
+     * @param categoryId
+     * @param productId the id of the product. Use it instead of productIdOrSku in
+     *            case you are sure the product identifier is a product id
+     * @param productSku the sku of the product. Use it instead of productIdOrSku in
+     *            case you are sure the product identifier is a product sku
+     * @param productIdOrSku the id or sku of the product.
+     * @param position
+     */
     @Operation
-	public void addCategoryProduct(int categoryId,
-								   @Parameter(optional=true) Integer productId, 
-								   @Parameter(optional=true) String productSku,
-								   @Parameter(optional=true) String productIdOrSku,
-								   String position) throws MagentoException
-	{
-		catalogClient.addCategoryProduct(categoryId, from(productSku, productId, productIdOrSku), position);
-	}
+    public void addCategoryProduct(int categoryId,
+                                   @Parameter(optional = true) Integer productId,
+                                   @Parameter(optional = true) String productSku,
+                                   @Parameter(optional = true) String productIdOrSku,
+                                   String position) throws MagentoException
+    {
+        catalogClient.addCategoryProduct(categoryId, from(productSku, productId, productIdOrSku), position);
+    }
 	
     /**
      * Creates a new category. See catalog-category-create SOAP method.
-     *  
+     * 
      * @param parentId
      * @param attributes
      * @param storeView
      * @return the new category id
      */
-	@Operation
-	public int createCategory(int parentId, Map<String, Object> attributes,
-			String storeView) throws MagentoException
-	{
-		return catalogClient.createCategory(parentId, attributes, storeView);
-	}
-	
+    @Operation
+    public int createCategory(int parentId,
+                              Map<String, Object> attributes,
+                              @Parameter(optional = true) String storeView) throws MagentoException
+    {
+        return catalogClient.createCategory(parentId, attributes, storeView);
+    }
+
     /**
      * Deletes a category. See  catalog-category-delete SOAP method
      * Example:
@@ -1247,17 +1317,21 @@ public class MagentoCloudConnector implements Initialisable
 	{
 		return catalogClient.getCategory(categoryId, storeView, attributeNames);
 	}
-	
-	@Operation /*FIXME check optionals*/
-	public List<Map<String, Object>> listCategoryLevels(String website, @Parameter(optional=true)  String storeView,
-			String parentCategory) throws MagentoException
-	{
-		return catalogClient.listCategoryLevels(website, storeView,
-				parentCategory);
-	}
+
+    @Operation
+    public List<Map<String, Object>> listCategoryLevels(@Parameter(optional = true) String website,
+                                                        @Parameter(optional = true) String storeView,
+                                                        @Parameter(optional = true) String parentCategory)
+        throws MagentoException
+    {
+        return catalogClient.listCategoryLevels(website, storeView, parentCategory);
+    }
 
     /**
-     * Move category in tree. See  catalog-category-move SOAP method. 
+     * Move category in tree. See  catalog-category-move SOAP method. Please make sure that you are not 
+     * moving category to any of its own children. There are no
+     * extra checks to prevent doing it through webservices API, and you won’t be
+     * able to fix this from admin interface then 
      *  
      * @param categoryId
      * @param parentId
@@ -1344,6 +1418,20 @@ public class MagentoCloudConnector implements Initialisable
 		catalogClient.updateCategoryProduct(categoryId, from(productSku, productId, productIdOrSku), position);
 	}
 
+    /**
+     * Lists inventory stock items.
+     *  Example: 
+     *  {@code <magento:list-inventory-stock-items >
+     *          <magento:productIdOrSkus>
+     *              <magento:productIdOrSku>1560</magento:productIdOrSku>
+     *              <magento:productIdOrSku>10036</magento:productIdOrSku>
+     *              <magento:productIdOrSku>9868</magento:productIdOrSku>
+     *          </magento:productIdOrSkus>
+     *         </magento:list-inventory-stock-items>}
+     * 
+     * @param products
+     * @return the list of attributes
+     */
 	@Operation
 	public List<Map<String, Object>> listInventoryStockItems(@Parameter List<String> productIdOrSkus)
 			throws MagentoException
@@ -1352,11 +1440,11 @@ public class MagentoCloudConnector implements Initialisable
 	}
 
 	//TODO motivation?
-	@Operation
-	public void updateInventoryStockItem(@Parameter(optional=true) Integer productId, 
-			                            @Parameter(optional=true) String productSku,
-			                            @Parameter(optional=true) String productIdOrSku,
-			                            Map<String, Object> attributes) throws MagentoException
+    @Operation
+    public void updateInventoryStockItem(@Parameter(optional = true) Integer productId,
+                                         @Parameter(optional = true) String productSku,
+                                         @Parameter(optional = true) String productIdOrSku,
+                                         @Parameter Map<String, Object> attributes) throws MagentoException
 	{
 		catalogClient.updateInventoryStockItem(from(productSku, productId, productIdOrSku), attributes);
 	}
@@ -1425,11 +1513,17 @@ public class MagentoCloudConnector implements Initialisable
 	{
 		return catalogClient.getProductSpecialPrice(from(productSku, productId, productIdOrSku), storeView);
 	}
-
 	
 	/**
-	 * Answers a product's attributes. See catalog-product-info SOAP method.
+	 * Answers a product's specified attributes. At least one of attributNames or
+     * additionalAttributeNames must be non null and non empty. See
+     * catalog-product-info SOAP method
 	 * 
+	 * {@code   <magento:get-product  productIdOrSku="#[map-payload:productIdOrSku]" storeView="#[map-payload:storeView]">
+     *              <magento:additionalAttributeNames>
+     *                  <magento:additionalAttributeName>keyboard_distribution_type</magento:additionalAttributeName>
+     *              </magento:additionalAttributeNames>
+     *          </magento:get-product>}    
 	 * 
 	 * @param productId
      *            the id of the product. Use it instead of productIdOrSku in
@@ -1440,8 +1534,8 @@ public class MagentoCloudConnector implements Initialisable
      * @param productIdOrSku
      *            the id or sku of the product.
 	 * @param storeView the optional store view
-	 * @param attributesNames 
-	 * @param additionalAttributeNames 
+	 * @param attributeNames the list of standard attributes to be returned
+	 * @param additionalAttributeNames the list of non standard attributes to be returned in the additionalAttributes attribute 
 	 * @return the attributes
 	 */
 	@Operation
@@ -1475,19 +1569,33 @@ public class MagentoCloudConnector implements Initialisable
 		return catalogClient.listProducts(filters, storeView);
 	}
 
-	@Operation
-	public int updateProductSpecialPrice(@Parameter(optional=true) Integer productId,
-										 @Parameter(optional=true) String productSku,
-										 @Parameter(optional=true) String productIdOrSku,
-										 String specialPrice, 
-										 String fromDate, 
-										 String toDate, 
-										 @Parameter(optional=true) String storeView) throws MagentoException
-	{
-		return catalogClient.updateProductSpecialPrice(from(productSku, productId, productIdOrSku), specialPrice,
-				fromDate, toDate, storeView);
-	}
-	
+    /**
+     * Sets a product special price. See catalog-product-setSpecialPrice SOAP method
+     * 
+     * @param productId the id of the product. Use it instead of productIdOrSku in
+     *            case you are sure the product identifier is a product id
+     * @param productSku the sku of the product. Use it instead of productIdOrSku in
+     *            case you are sure the product identifier is a product sku
+     * @param productIdOrSku the id or sku of the product.
+     * @param specialPrice
+     * @param fromDate
+     * @param toDate
+     * @param storeView
+     */
+    @Operation
+    public void updateProductSpecialPrice(@Parameter(optional = true) Integer productId,
+                                          @Parameter(optional = true) String productSku,
+                                          @Parameter(optional = true) String productIdOrSku,
+                                          @Parameter String specialPrice,
+                                          /* TODO optional? */String fromDate,
+                                          /* TODO optional? */String toDate,
+                                          @Parameter(optional = true) String storeView)
+        throws MagentoException
+    {
+        catalogClient.updateProductSpecialPrice(from(productSku, productId, productIdOrSku), specialPrice,
+            fromDate, toDate, storeView);
+    }
+
 	/**
      * Updates a product. See catalog-category-updateProduct SOAP method 
      * Example:
@@ -1509,13 +1617,12 @@ public class MagentoCloudConnector implements Initialisable
      * @param attributes the not empty map of product attributes to update 
      * @param storeView optional store view
      */
-	@Operation
-	public void updateProduct(@Parameter(optional=true) Integer productId, 
-			                  @Parameter(optional=true) String productSku,
-			                  @Parameter(optional=true) String productIdOrSku,
-			                  @Parameter Map<String, Object> attributes, 
-			                  @Parameter(optional=true)  String storeView)
-			throws MagentoException
+    @Operation
+    public void updateProduct(@Parameter(optional = true) Integer productId,
+                              @Parameter(optional = true) String productSku,
+                              @Parameter(optional = true) String productIdOrSku,
+                              @Parameter Map<String, Object> attributes,
+                              @Parameter(optional = true) String storeView) throws MagentoException
 	{
 		catalogClient.updateProduct(from(productSku, productId, productIdOrSku), attributes, storeView);
 	}
