@@ -343,7 +343,7 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
      * @return
      */
     public void updateProductSpecialPrice(@NotNull ProductIdentifier productId,
-                                         @NotNull String specialPrice,
+                                          @NotNull String specialPrice,
                                          String fromDate,
                                          String toDate,
                                          String storeView) throws RemoteException
@@ -410,9 +410,9 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
             productId.getIdentifierType());
     }
 
-    public Object[] listProductAttributeMediaTypes(String setId) throws RemoteException
+    public Object[] listProductAttributeMediaTypes(int setId) throws RemoteException
     {
-        return getPort().catalogProductAttributeMediaTypes(getSessionId(), setId);
+        return getPort().catalogProductAttributeMediaTypes(getSessionId(), String.valueOf(setId));
     }
 
     public void updateProductAttributeMedia(@NotNull ProductIdentifier productId,

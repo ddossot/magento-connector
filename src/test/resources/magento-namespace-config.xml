@@ -385,6 +385,12 @@
                                              storeViewIdOrCode="#[map-payload:storeViewId]"/>
     </flow>
     
+    <flow name="MoveCategory">		
+        <inbound-endpoint address="vm://MoveCategory"
+            exchange-pattern="request-response" />
+		<magento:move-category categoryId="#[map-payload:categoryId]" parentId="#[map-payload:afterId]"/> 
+    </flow>
+    
      <flow name="GetProduct">
         <inbound-endpoint address="vm://GetProduct"
             exchange-pattern="request-response" />
@@ -487,5 +493,25 @@
 		</magento:update-product-attribute-media>
     </flow>
     
+     <flow name="UpdateCategory">
+        <inbound-endpoint address="vm://UpdateCategory"
+            exchange-pattern="request-response" />
+        <magento:update-category categoryId="#[map-payload:categoryId]" >  
+			<magento:attributes>
+			 	<magento:attribute key="name" value="#[map-payload:categoryName]"/>
+			</magento:attributes>
+		</magento:update-category>
+    </flow>
+    
+    
+     <flow name="UpdateInventoryStockItem">
+        <inbound-endpoint address="vm://UpdateInventoryStockItem"
+            exchange-pattern="request-response" />
+        <magento:update-inventory-stock-item  productIdOrSku="#[map-payload:productIdOrSku]">
+			<magento:attributes>
+			 	<magento:attribute key="qty" value="#[map-payload:quantity]"/>
+			</magento:attributes>
+		</magento:update-inventory-stock-item>
+    </flow>
   
 </mule>

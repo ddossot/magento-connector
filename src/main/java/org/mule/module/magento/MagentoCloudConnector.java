@@ -376,8 +376,8 @@ public class MagentoCloudConnector implements Initialisable
 	 *				comment="#[map-payload:comment]" />}	
      * 
      * @param orderId the order id
-     * @param status TODO possible values?
-     * @param comment
+     * @param status the comment status
+     * @param comment the comment
      * @param sendEmail if an email must be sent after shipment creation
      */
     @Operation
@@ -1000,12 +1000,11 @@ public class MagentoCloudConnector implements Initialisable
      * @return the list of attribute media types
      */
     @Operation
-    public List<Map<String, Object>> listProductAttributeMediaTypes(@Parameter String setId) 
+    public List<Map<String, Object>> listProductAttributeMediaTypes(@Parameter int setId) 
     {
         return catalogClient.listProductAttributeMediaTypes(setId);
     }
     
-    //TODO setId type is integral?
 
     /**
      * Answers the product attribute options. See catalog-product-attribute-options
@@ -1330,7 +1329,11 @@ public class MagentoCloudConnector implements Initialisable
      * Move category in tree. See  catalog-category-move SOAP method. Please make sure that you are not 
      * moving category to any of its own children. There are no
      * extra checks to prevent doing it through webservices API, and you won’t be
-     * able to fix this from admin interface then 
+     * able to fix this from admin interface then .
+     * 
+     * Example:
+     * 
+     * {@code <magento:move-category categoryId="#[map-payload:categoryId]" parentId="#[map-payload:afterId]"/> }
      *  
      * @param categoryId
      * @param parentId
@@ -1338,8 +1341,8 @@ public class MagentoCloudConnector implements Initialisable
      */
 	@Operation
 	public void moveCategory(@Parameter int categoryId, 
-	                         /*TODO optional?*/ int parentId,
-	                         /*TODO optional?*/ String afterId)
+	                         @Parameter int parentId,
+	                         @Parameter(optional=true) String afterId)
 			throws MagentoException
 	{
 		catalogClient.moveCategory(categoryId, parentId, afterId);
@@ -1381,13 +1384,22 @@ public class MagentoCloudConnector implements Initialisable
 	/**
      * Updates a category. See catalog-category-update SOAP method
      * 
+     * Example:
+     * 
+     * {@code <magento:update-category categoryId="#[map-payload:categoryId]" />  
+     *          <magento:attributes>
+     *              <magento:attribute key="name" value="#[map-payload:categoryName]"/>
+     *          </magento:attributes>
+     *       </magento:update-category>} 
+     * 
      * @param categoryId
      * @param attributes
      * @param storeViewIdOrCode
      */
 	@Operation
-	public void updateCategory(int categoryId, Map<String, Object> attributes,
-			String storeViewIdOrCode) throws MagentoException
+    public void updateCategory(@Parameter int categoryId,
+                               @Parameter Map<String, Object> attributes,
+                               @Parameter(optional = true) String storeViewIdOrCode) throws MagentoException
 	{
 		catalogClient.updateCategory(categoryId, attributes, storeViewIdOrCode);
 	}
@@ -1438,7 +1450,25 @@ public class MagentoCloudConnector implements Initialisable
 		return catalogClient.listInventoryStockItems(productIdOrSkus);
 	}
 
-	//TODO motivation?
+    /**
+     * Updates an stock inventory item
+     * 
+     * {@code  <magento:update-product-inventory-stock-item  productIdOrSku="#[map-payload:productIdOrSku]">
+     *            <magento:attributes>
+     *              <magento:attribute key="qty" value="#[map-payload:quantity]"/>
+     *            </magento:attributes>
+     *         </magento:update-product-inventory-stock-item>}
+     *         
+     * @param productId
+     *            the id of the product. Use it instead of productIdOrSku in
+     *            case you are sure the product identifier is a product id
+     * @param productSku
+     *            the sku of the product. Use it instead of productIdOrSku in
+     *            case you are sure the product identifier is a product sku
+     * @param productIdOrSku
+     *            the id or sku of the product.
+     * @param attributes
+     */
     @Operation
     public void updateInventoryStockItem(@Parameter(optional = true) Integer productId,
                                          @Parameter(optional = true) String productSku,
@@ -1586,8 +1616,8 @@ public class MagentoCloudConnector implements Initialisable
                                           @Parameter(optional = true) String productSku,
                                           @Parameter(optional = true) String productIdOrSku,
                                           @Parameter String specialPrice,
-                                          /* TODO optional? */String fromDate,
-                                          /* TODO optional? */String toDate,
+                                          @Parameter(optional = true) String fromDate,
+                                          @Parameter(optional = true) String toDate,
                                           @Parameter(optional = true) String storeViewIdOrCode)
         throws MagentoException
     {

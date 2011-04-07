@@ -74,7 +74,7 @@ public interface MagentoOrderClient<AttributesType, AttributesCollectionType, Ex
      * Adds a comment to the given order id
      * 
      * @param orderId the order id
-     * @param status TODO possible values?
+     * @param status 
      * @param comment
      * @param sendEmail if an email must be sent after shipment creation
      */

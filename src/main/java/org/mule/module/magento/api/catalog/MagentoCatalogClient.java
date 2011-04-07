@@ -155,11 +155,10 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
     AttributesCollectionType listInventoryStockItems(@NotNull List<String> products) throws ExceptionType;
 
     /**
+     * Updates an stock inventory item
      * 
      * @param productId
      * @param attributes
-     * @return
-     * 
      */
     void updateInventoryStockItem(@NotNull ProductIdentifier productId, @NotNull Map<String, Object> attributes)
         throws ExceptionType;
@@ -305,7 +304,7 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
      * @return
      * 
      */
-    AttributesCollectionType listProductAttributeMediaTypes(String setId) throws ExceptionType;
+    AttributesCollectionType listProductAttributeMediaTypes(int setId) throws ExceptionType;
 
     /**
      * Updates product media. See catalog-product-attribute-media-update
