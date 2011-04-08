@@ -331,6 +331,19 @@
         <magento:delete-category  categoryId="#[map-payload:categoryId]"/>
     </flow>
     
+    <flow name="CreateProduct">
+        <inbound-endpoint address="vm://CreateProduct"
+            exchange-pattern="request-response" />
+        <magento:create-product set="4" sku="78962" type="simple"/>
+    </flow>
+    
+       @Operation
+    public int createProduct(@Parameter String type,
+                             @Parameter int set,
+                             @Parameter String sku,
+                             @Parameter(optional = true) Map<String, Object> attributes)
+        throws MagentoException
+    
     <flow name="GetProductSpecialPrice">
         <inbound-endpoint address="vm://GetProductSpecialPrice"
             exchange-pattern="request-response" />
@@ -514,13 +527,20 @@
 		</magento:update-inventory-stock-item>
     </flow>
     
+     <flow name="ListCategoryLevels">
+        <inbound-endpoint address="vm://ListCategoryLevels"
+            exchange-pattern="request-response" />
+        <magento:list-category-levels/>
+    </flow>
+    
+    
     <flow name="CreateProductAttributeMedia">
         <inbound-endpoint address="vm://CreateProductAttributeMedia"
             exchange-pattern="request-response" />
         <magento:create-product-attribute-media 
         	content="#[map-payload:content]" 
         	productId="#[map-payload:productId]"
-        	fileName="#[map-payload:fileName]" 
+        	baseFileName="#[map-payload:baseFileName]" 
         	mimeType="JPEG">
 			<magento:attributes>
 			 	<magento:attribute key="label" value="#[map-payload:label]"/>

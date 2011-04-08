@@ -810,9 +810,11 @@ Add Product Link
 Links two products, given its source and destination productIdOrSku.
 Example:
 
-{@code  <magento:add-product-link type="#[map-payload:type]"     
-                         productId="#[map-payload:productId]"
-                         linkedProductIdOrSku="#[map-payload:linkedProductId]"/>
+
+
+      <magento:add-product-link type="#[map-payload:type]"     
+                             productId="#[map-payload:productId]"
+                             linkedProductIdOrSku="#[map-payload:linkedProductId]"/>
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
@@ -854,10 +856,10 @@ Example:
 |productSku|the sku of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product sku|yes||
 |productIdOrSku|the id or sku of the product.|yes||
 |attributes|the media attributes|yes||
-|storeViewIdOrCode||yes||
+|storeViewIdOrCode|the id or code of the target store. Left unspecified for using current store|yes||
 |content|the image to upload|no||
 |mimeType|the mimetype|no||*JPEG*, *GIF*, *PNG*
-|fileName|the remote filename|no||
+|baseFileName|the base name of the new remote image|no||
 
 Returns new image filename
 
@@ -947,7 +949,7 @@ Set the default catalog store view for this session
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|storeViewIdOrCode|the id or code of the store view to set as default for this session|no||
+|storeViewIdOrCode|the id or code of the target store. Left unspecified for using current store the id or code of the store view to set as default for this session|no||
 
 
 
@@ -985,7 +987,7 @@ Example:
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |attributeId||no||
-|storeViewIdOrCode|optional|yes||
+|storeViewIdOrCode|the id or code of the target store. Left unspecified for using current store|yes||
 
 Returns list of category attribute options
 
@@ -1009,7 +1011,7 @@ Example:
 |productId|the id of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product id|yes||
 |productSku|the sku of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product sku|yes||
 |productIdOrSku|the id or sku of the product.|yes||
-|storeViewIdOrCode||yes||
+|storeViewIdOrCode|the id or code of the target store. Left unspecified for using current store|yes||
 
 Returns list of product images attributes
 
@@ -1050,7 +1052,7 @@ Example:
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |attributeId||no||
-|storeViewIdOrCode|optional|yes||
+|storeViewIdOrCode|the id or code of the target store. Left unspecified for using current store|yes||
 
 Returns attributes list
 
@@ -1213,7 +1215,7 @@ Example:
 |productIdOrSku|the id or sku of the product.|yes||
 |fileName||no||
 |attributes||no||
-|storeViewIdOrCode||yes||
+|storeViewIdOrCode|the id or code of the target store. Left unspecified for using current store|yes||
 
 
 
@@ -1242,7 +1244,7 @@ Example:
 |productSku|the sku of the source product. Use it instead of productIdOrSku in case you are sure the source product identifier is a product sku|yes||
 |productIdOrSku|the id or sku of the source product.|yes||
 |linkedProductIdOrSku|the destination product id or sku.|no||
-|attributes||no||
+|attributes|the link attributes|no||
 
 
 
@@ -1290,8 +1292,8 @@ Creates a new category. See catalog-category-create SOAP method.
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |parentId||no||
-|attributes||no||
-|storeViewIdOrCode||yes||
+|attributes|the new category attributes|no||
+|storeViewIdOrCode|the id or code of the target store. Left unspecified for using current store|yes||
 
 Returns new category id
 
@@ -1316,8 +1318,7 @@ Example:
 Get Category
 ------------
 
-Answers category attributes. See catalog-category-info  SOAP method.
-  
+Answers category attributes. See catalog-category-info SOAP method. 
 Example:
 
 
@@ -1327,7 +1328,7 @@ Example:
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |categoryId||no||
-|storeViewIdOrCode||yes||
+|storeViewIdOrCode|the id or code of the target store. Left unspecified for using current store|yes||
 |attributeNames||no||
 
 Returns category attributes
@@ -1337,12 +1338,21 @@ Returns category attributes
 List Category Levels
 --------------------
 
+Answers levels of categories for a website, store view and parent category
+Example:
+
+
+
+     <magento:list-category-levels/> 
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |website||yes||
 |storeViewIdOrCode||yes||
-|parentCategory||yes||
+|parentCategoryId||yes||
+
+Returns list of categories attributes
 
 
 
@@ -1363,9 +1373,9 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|categoryId||no||
-|parentId||no||
-|afterId||yes||
+|categoryId|the id of the category to be moved|no||
+|parentId|the new parent category id|no||
+|afterId|an optional category id for use as reference in the positioning of the moved category|yes||
 
 
 
@@ -1394,11 +1404,16 @@ Example:
 Get Category Tree
 -----------------
 
+Answers the category tree. 
+See  catalog-category-tree SOAP method.
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |parentId||no||
-|storeViewIdOrCode||no||
+|storeViewIdOrCode||yes||
+
+Returns category tree attributes
 
 
 
@@ -1422,14 +1437,23 @@ Example:
 |config-ref|Specify which configuration to use for this invocation|yes||
 |categoryId||no||
 |attributes||no||
-|storeViewIdOrCode||yes||
+|storeViewIdOrCode|the id or code of the target store. Left unspecified for using current store|yes||
 
 
 
 Update Category Product
 -----------------------
 
-Updates a category product
+Updates a category product 
+
+Example:
+
+
+
+     <magento:update-category-product 
+                 categoryId="#[header:categoryId]" 
+                 position="#[header:position]"
+                 productSku="#[header:productSku]"/>
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
@@ -1494,6 +1518,11 @@ Create Product
 
 Creates a new product
 
+Example:
+
+
+     <magento:create-product set="4" sku="78962" type="simple"/>
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
@@ -1513,7 +1542,9 @@ Deletes a product. See catalog-product-delete SOAP method.
 
 Example:
 
-<magento:delete-product productId="#[map-payload:productId]" />
+
+
+     <magento:delete-product productId="#[map-payload:productId]" />
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
@@ -1538,10 +1569,10 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|productId||yes||
-|productSku||yes||
-|productIdOrSku||yes||
-|storeViewIdOrCode||yes||
+|productId|the id of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product id|yes||
+|productSku|the sku of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product sku|yes||
+|productIdOrSku|the id or sku of the product.|yes||
+|storeViewIdOrCode|the id or code of the target store. Left unspecified for using current store|yes||
 
 Returns product special price attributes
 
@@ -1568,7 +1599,7 @@ catalog-product-info SOAP method
 |productId|the id of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product id|yes||
 |productSku|the sku of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product sku|yes||
 |productIdOrSku|the id or sku of the product.|yes||
-|storeViewIdOrCode|the optional store view|yes||
+|storeViewIdOrCode|the id or code of the target store. Left unspecified for using current store|yes||
 |attributesNames||yes||
 |additionalAttributeNames|the list of non standard attributes to be returned in the additionalAttributes attribute|yes||
 
@@ -1591,7 +1622,7 @@ Example:
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |filters|an optional filtering expression|yes||
-|storeViewIdOrCode|an optional storeViewIdOrCode|yes||
+|storeViewIdOrCode|the id or code of the target store. Left unspecified for using current store|yes||
 
 Returns list of product attributes that match the given optional filtering expression
 
@@ -1602,16 +1633,22 @@ Update Product Special Price
 
 Sets a product special price. See catalog-product-setSpecialPrice SOAP method
 
+Example:
+
+
+
+     <magento:update-product-special-price specialPrice="#[variable:session:specialPrice]" productId="#[variable:session:productId]"/>
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |productId|the id of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product id|yes||
 |productSku|the sku of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product sku|yes||
 |productIdOrSku|the id or sku of the product.|yes||
-|specialPrice||no||
-|fromDate||yes||
-|toDate||yes||
-|storeViewIdOrCode||yes||
+|specialPrice|the special price to set|no||
+|fromDate|TODO date format?|yes||
+|toDate|TODO date format?|yes||
+|storeViewIdOrCode|the id or code of the target store. Left unspecified for using current store|yes||
 
 
 
@@ -1636,7 +1673,7 @@ Example:
 |productSku|the sku of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product sku|yes||
 |productIdOrSku|the id or sku of the product.|yes||
 |attributes|the not empty map of product attributes to update|no||
-|storeViewIdOrCode|optional store view|yes||
+|storeViewIdOrCode|the id or code of the target store. Left unspecified for using current store|yes||
 
 
 

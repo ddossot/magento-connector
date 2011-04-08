@@ -16,7 +16,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 import org.mule.module.magento.api.MagentoException;
-import org.mule.module.magento.api.MediaMimeType;
+import org.mule.module.magento.api.catalog.model.MediaMimeType;
 
 import java.util.Arrays;
 import java.util.HashMap;

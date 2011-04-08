@@ -204,8 +204,5 @@ public class MagentoCloudConnectorUnitTest
         verify(port).catalogInventoryStockItemList(anyString(), eq(idsOrSkus));
     }
 
-	// TODO reflectively test all methods. It is a nonses to write individual
-	// tests
-	// for them all
 
 }

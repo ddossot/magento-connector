@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package org.mule.module.magento.api;
+package org.mule.module.magento.api.catalog.model;
 
 public enum MediaMimeType
 {

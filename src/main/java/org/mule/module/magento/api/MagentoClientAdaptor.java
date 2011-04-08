@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class MagentoClientAdaptor
 {
-	private static Logger log = LoggerFactory.getLogger(MagentoCloudConnector.class);
+    private static Logger log = LoggerFactory.getLogger(MagentoCloudConnector.class);
 
     private MagentoClientAdaptor()
     {

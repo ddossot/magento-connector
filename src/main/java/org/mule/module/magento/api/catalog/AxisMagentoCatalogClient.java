@@ -14,7 +14,7 @@ import static org.mule.module.magento.api.util.MagentoObject.fromMap;
 
 import org.mule.module.magento.api.AbstractMagentoClient;
 import org.mule.module.magento.api.AxisPortProvider;
-import org.mule.module.magento.api.MediaMimeType;
+import org.mule.module.magento.api.catalog.model.MediaMimeType;
 import org.mule.module.magento.api.catalog.model.ProductIdentifier;
 import org.mule.module.magento.api.internal.CatalogCategoryEntityCreate;
 import org.mule.module.magento.api.internal.CatalogInventoryStockItemUpdateEntity;
@@ -32,8 +32,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.rmi.RemoteException;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -167,7 +165,6 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
     }
 
     /**
-     * TODO return something else 
      * 
      * Retrieve hierarchical tree. See  catalog-category-tree SOAP method. 
      * @param parentId
@@ -309,8 +306,6 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
                 toArray(nullToEmpty(attributeNames), String.class), 
                 toArray(nullToEmpty(additionalAttributeNames), String.class));
         
-        //FIXME the returned object contains an array of associative entities, which should be mapped as entries
-        //in a map
         return getPort().catalogProductInfo(getSessionId(), productId.getIdentifierAsString(), storeView,
             request, productId.getIdentifierType());
     }

@@ -10,7 +10,7 @@
 
 package org.mule.module.magento.api.catalog;
 
-import org.mule.module.magento.api.MediaMimeType;
+import org.mule.module.magento.api.catalog.model.MediaMimeType;
 import org.mule.module.magento.api.catalog.model.ProductIdentifier;
 
 import java.io.InputStream;
@@ -86,15 +86,15 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
     AttributesType getCategory(int categoryId, String storeView, List<String> attributeNames) throws ExceptionType;
     
     /** 
-     * Answers levels of categories for a website, store view or category (TODO OR???)   
+     * Answers levels of categories for a website, store view and parente category
      *
      * @param website
      * @param storeView
-     * @param parentCategory
+     * @param parentCategoryId
      * @return
      * @throws ExceptionType
      */
-    AttributesCollectionType listCategoryLevels(String website, String storeView, String parentCategory)
+    AttributesCollectionType listCategoryLevels(String website, String storeView, String parentCategoryId)
         throws ExceptionType;
 
     /**
@@ -119,13 +119,11 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
         throws ExceptionType;
 
     /**
-     * TODO return something else 
      * 
      * Retrieve hierarchical tree. See  catalog-category-tree SOAP method. 
      * @param parentId
      * @param storeView
      * @return
-     * 
      */
     AttributesType getCategoryTree(String parentId, String storeView) throws ExceptionType;
 

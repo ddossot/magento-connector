@@ -22,9 +22,9 @@ import org.mule.module.magento.api.AxisPortProvider;
 import org.mule.module.magento.api.DefaultAxisPortProvider;
 import org.mule.module.magento.api.MagentoClientAdaptor;
 import org.mule.module.magento.api.MagentoException;
-import org.mule.module.magento.api.MediaMimeType;
 import org.mule.module.magento.api.catalog.AxisMagentoCatalogClient;
 import org.mule.module.magento.api.catalog.MagentoCatalogClient;
+import org.mule.module.magento.api.catalog.model.MediaMimeType;
 import org.mule.module.magento.api.customer.AxisMagentoInventoryClient;
 import org.mule.module.magento.api.customer.MagentoInventoryClient;
 import org.mule.module.magento.api.directory.AxisMagentoDirectoryClient;
@@ -766,7 +766,7 @@ public class MagentoCloudConnector implements Initialisable
      * 
      * {@code  <magento:add-product-link type="#[map-payload:type]"     
      *                          productId="#[map-payload:productId]"
-     *                          linkedProductIdOrSku="#[map-payload:linkedProductId]"/>
+     *                          linkedProductIdOrSku="#[map-payload:linkedProductId]"/>}
      * @param type
      *            the product type
      * @param productId
@@ -824,10 +824,10 @@ public class MagentoCloudConnector implements Initialisable
      * @param productIdOrSku
      *            the id or sku of the product.
      * @param attributes the media attributes
-     * @param storeViewIdOrCode
+     * @param storeViewIdOrCode the id or code of the target store. Left unspecified for using current store
      * @param content the image to upload
      * @param mimeType the mimetype
-     * @param fileName the remote filename
+     * @param baseFileName the base name of the new remote image
      * @return the new image filename
      */
     @Operation
@@ -838,10 +838,10 @@ public class MagentoCloudConnector implements Initialisable
                                               @Parameter(optional = true) String storeViewIdOrCode,
                                               @Parameter InputStream content,
                                               @Parameter MediaMimeType mimeType,
-                                              @Parameter String fileName)
+                                              @Parameter String baseFileName)
     {
         return catalogClient.createProductAttributeMedia(from(productSku, productId, productIdOrSku),
-            attributes, content, mimeType, fileName, storeViewIdOrCode);
+            attributes, content, mimeType, baseFileName, storeViewIdOrCode);
     }
 
     /**
@@ -952,7 +952,7 @@ public class MagentoCloudConnector implements Initialisable
     /**
      * Set the default catalog store view for this session
      * 
-     * @param storeViewIdOrCode
+     * @param storeViewIdOrCode the id or code of the target store. Left unspecified for using current store
      *            the id or code of the store view to set as default for this
      *            session
      */
@@ -986,7 +986,7 @@ public class MagentoCloudConnector implements Initialisable
      * {@code <magento:list-category-attributes-options attributeId="#[map-payload:attributeId]"/>}
      * 
      * @param attributeId
-     * @param storeViewIdOrCode optional
+     * @param storeViewIdOrCode the id or code of the target store. Left unspecified for using current store 
      * @return the list of category attribute options
      */
     @Operation
@@ -1013,7 +1013,7 @@ public class MagentoCloudConnector implements Initialisable
      *            case you are sure the product identifier is a product sku
      * @param productIdOrSku
      *            the id or sku of the product.
-     * @param storeViewIdOrCode
+     * @param storeViewIdOrCode the id or code of the target store. Left unspecified for using current store
      * @return the list of product images attributes
      */
     @Operation
@@ -1050,7 +1050,7 @@ public class MagentoCloudConnector implements Initialisable
      * {@code <magento:list-product-attribute-options attributeId="#[map-payload:attributeId]"/>}
      * 
      * @param attributeId
-     * @param storeViewIdOrCode optional
+     * @param storeViewIdOrCode the id or code of the target store. Left unspecified for using current store
      * @return the attributes list
      */
     @Operation
@@ -1208,7 +1208,7 @@ public class MagentoCloudConnector implements Initialisable
      *            the id or sku of the product.
      * @param fileName
      * @param attributes
-     * @param storeViewIdOrCode
+     * @param storeViewIdOrCode the id or code of the target store. Left unspecified for using current store
      */
     @Operation
     public void updateProductAttributeMedia(@Parameter(optional = true) Integer productId,
@@ -1255,7 +1255,7 @@ public class MagentoCloudConnector implements Initialisable
      *            the id or sku of the source product.
      * @param linkedProductIdOrSku
      *            the destination product id or sku.
-     * @param attributes
+     * @param attributes the link attributes
      */
     @Operation
     public void updateProductLink(@Parameter String type,
@@ -1308,8 +1308,8 @@ public class MagentoCloudConnector implements Initialisable
      * Creates a new category. See catalog-category-create SOAP method.
      * 
      * @param parentId
-     * @param attributes
-     * @param storeViewIdOrCode
+     * @param attributes the new category attributes
+     * @param storeViewIdOrCode the id or code of the target store. Left unspecified for using current store
      * @return the new category id
      */
     @Operation
@@ -1334,31 +1334,42 @@ public class MagentoCloudConnector implements Initialisable
 	}
 
     /**
-     * Answers category attributes. See catalog-category-info  SOAP method.
-     *   
+     * Answers category attributes. See catalog-category-info SOAP method. 
      * Example:
      * {@code <magento:get-category categoryId="#[map-payload:categoryId]"/>}
      * 
      * @param categoryId
-     * @param storeViewIdOrCode
+     * @param storeViewIdOrCode the id or code of the target store. Left unspecified
+     *            for using current store
      * @param attributeNames
      * @return the category attributes
      */
-	@Operation
-	public Map<String, Object> getCategory(@Parameter int categoryId, 
-	                                       @Parameter(optional=true) String storeViewIdOrCode,
-			List<String> attributeNames) throws MagentoException
-	{
-		return catalogClient.getCategory(categoryId, storeViewIdOrCode, attributeNames);
-	}
+    @Operation
+    public Map<String, Object> getCategory(@Parameter int categoryId,
+                                           @Parameter(optional = true) String storeViewIdOrCode,
+                                           @Parameter List<String> attributeNames) throws MagentoException
+    {
+        return catalogClient.getCategory(categoryId, storeViewIdOrCode, attributeNames);
+    }
 
+    /** 
+     * Answers levels of categories for a website, store view and parent category
+     * Example:
+     * 
+     * {@code <magento:list-category-levels/> }
+     * 
+     * @param website
+     * @param storeView
+     * @param parentCategoryId
+     * @return the list of categories attributes
+     */
     @Operation
     public List<Map<String, Object>> listCategoryLevels(@Parameter(optional = true) String website,
                                                         @Parameter(optional = true) String storeViewIdOrCode,
-                                                        @Parameter(optional = true) String parentCategory)
+                                                        @Parameter(optional = true) String parentCategoryId)
         throws MagentoException
     {
-        return catalogClient.listCategoryLevels(website, storeViewIdOrCode, parentCategory);
+        return catalogClient.listCategoryLevels(website, storeViewIdOrCode, parentCategoryId);
     }
 
     /**
@@ -1371,18 +1382,17 @@ public class MagentoCloudConnector implements Initialisable
      * 
      * {@code <magento:move-category categoryId="#[map-payload:categoryId]" parentId="#[map-payload:afterId]"/> }
      *  
-     * @param categoryId
-     * @param parentId
-     * @param afterId
+     * @param categoryId the id of the category to be moved 
+     * @param parentId the new parent category id
+     * @param afterId an optional category id for use as reference in the positioning of the moved category  
      */
-	@Operation
-	public void moveCategory(@Parameter int categoryId, 
-	                         @Parameter int parentId,
-	                         @Parameter(optional=true) String afterId)
-			throws MagentoException
-	{
-		catalogClient.moveCategory(categoryId, parentId, afterId);
-	}
+    @Operation
+    public void moveCategory(@Parameter int categoryId,
+                             @Parameter int parentId,
+                             @Parameter(optional = true) String afterId) throws MagentoException
+    {
+        catalogClient.moveCategory(categoryId, parentId, afterId);
+    }
 	
     /**
      * Remove a product assignment. See catalog-category-removeProduct SOAP method. 
@@ -1410,8 +1420,16 @@ public class MagentoCloudConnector implements Initialisable
 		catalogClient.deleteCategoryProduct(categoryId, from(productSku, productId, productIdOrSku));
 	}
 	
+    /**
+     * Answers the category tree. 
+     * See  catalog-category-tree SOAP method. 
+     * @param parentId
+     * @param storeView
+     * @return a category tree attributes
+     */
 	@Operation
-	public Map<String, Object> getCategoryTree(String parentId, String storeViewIdOrCode)
+    public Map<String, Object> getCategoryTree(@Parameter String parentId,
+                                               @Parameter(optional = true) String storeViewIdOrCode)
 			throws MagentoException
 	{
 		return catalogClient.getCategoryTree(parentId, storeViewIdOrCode);
@@ -1430,7 +1448,7 @@ public class MagentoCloudConnector implements Initialisable
      * 
      * @param categoryId
      * @param attributes
-     * @param storeViewIdOrCode
+     * @param storeViewIdOrCode the id or code of the target store. Left unspecified for using current store
      */
 	@Operation
     public void updateCategory(@Parameter int categoryId,
@@ -1443,6 +1461,12 @@ public class MagentoCloudConnector implements Initialisable
     /**
      * Updates a category product 
      * 
+     * Example:
+     * 
+     * {@code <magento:update-category-product 
+     *              categoryId="#[header:categoryId]" 
+     *              position="#[header:position]"
+     *              productSku="#[header:productSku]"/>} 
      * @param categoryId the category id
      * @param productId
      *            the id of the product. Use it instead of productIdOrSku in
@@ -1518,6 +1542,9 @@ public class MagentoCloudConnector implements Initialisable
     /**
      * Creates a new product
      * 
+     * Example:
+     * {@code <magento:create-product set="4" sku="78962" type="simple"/>}
+     * 
      * @param type the new product's type
      * @param set the new product's set
      * @param sku the new product's sku
@@ -1540,7 +1567,7 @@ public class MagentoCloudConnector implements Initialisable
 	 * 
 	 * Example:
 	 * 
-	 * <magento:delete-product productId="#[map-payload:productId]" />
+	 * {@code <magento:delete-product productId="#[map-payload:productId]" />}
 	 *  
      * @param productId
      *            the id of the product. Use it instead of productIdOrSku in
@@ -1566,8 +1593,15 @@ public class MagentoCloudConnector implements Initialisable
      * 
      * {@code <magento:get-product-special-price productId="#[map-payload:productId]"/>}
      * 
-     * @param product
-     * @param storeViewIdOrCode
+     * @param productId
+     *            the id of the product. Use it instead of productIdOrSku in
+     *            case you are sure the product identifier is a product id
+     * @param productSku
+     *            the sku of the product. Use it instead of productIdOrSku in
+     *            case you are sure the product identifier is a product sku
+     * @param productIdOrSku
+     *            the id or sku of the product.
+     * @param storeViewIdOrCode the id or code of the target store. Left unspecified for using current store
      * @param productId.getIdentifierType()
      * @return the product special price attributes
      */
@@ -1599,7 +1633,7 @@ public class MagentoCloudConnector implements Initialisable
      *            case you are sure the product identifier is a product sku
      * @param productIdOrSku
      *            the id or sku of the product.
-	 * @param storeViewIdOrCode the optional store view
+	 * @param storeViewIdOrCode the id or code of the target store. Left unspecified for using current store
 	 * @param attributeNames the list of standard attributes to be returned
 	 * @param additionalAttributeNames the list of non standard attributes to be returned in the additionalAttributes attribute 
 	 * @return the attributes
@@ -1624,7 +1658,7 @@ public class MagentoCloudConnector implements Initialisable
      * {@code <magento:list-products/>}
      *    
      * @param filters an optional filtering expression
-     * @param storeViewIdOrCode an optional storeViewIdOrCode
+     * @param storeViewIdOrCode the id or code of the target store. Left unspecified for using current store
      * @return the list of product attributes that match the given optional filtering expression
      */
 	@Operation
@@ -1638,15 +1672,19 @@ public class MagentoCloudConnector implements Initialisable
     /**
      * Sets a product special price. See catalog-product-setSpecialPrice SOAP method
      * 
+     * Example:
+     * 
+     * {@code <magento:update-product-special-price specialPrice="#[variable:session:specialPrice]" productId="#[variable:session:productId]"/>} 
+     * 
      * @param productId the id of the product. Use it instead of productIdOrSku in
      *            case you are sure the product identifier is a product id
      * @param productSku the sku of the product. Use it instead of productIdOrSku in
      *            case you are sure the product identifier is a product sku
      * @param productIdOrSku the id or sku of the product.
-     * @param specialPrice
-     * @param fromDate
-     * @param toDate
-     * @param storeViewIdOrCode
+     * @param specialPrice the special price to set
+     * @param fromDate TODO date format?
+     * @param toDate TODO date format?
+     * @param storeViewIdOrCode the id or code of the target store. Left unspecified for using current store
      */
     @Operation
     public void updateProductSpecialPrice(@Parameter(optional = true) Integer productId,
@@ -1681,7 +1719,7 @@ public class MagentoCloudConnector implements Initialisable
      * @param productIdOrSku
      *            the id or sku of the product.       
      * @param attributes the not empty map of product attributes to update 
-     * @param storeViewIdOrCode optional store view
+     * @param storeViewIdOrCode the id or code of the target store. Left unspecified for using current store
      */
     @Operation
     public void updateProduct(@Parameter(optional = true) Integer productId,
