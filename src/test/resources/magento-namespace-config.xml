@@ -338,7 +338,7 @@
     </flow>
     
     <flow name="UpdateProductSpecialPrice">
-        <inbound-endpoint address="vm://CreateProduct"
+        <inbound-endpoint address="vm://UpdateProductSpecialPrice"
             exchange-pattern="request-response" />
         <magento:update-product-special-price specialPrice="#[variable:session:specialPrice]" productId="#[variable:session:productId]"/>
     </flow>
