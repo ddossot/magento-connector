@@ -62,9 +62,9 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
      */
     public Object[] listCategoryProducts(int categoryId) throws RemoteException
     {
-    	return getPort().catalogCategoryAssignedProducts(getSessionId(), categoryId);
+        return getPort().catalogCategoryAssignedProducts(getSessionId(), categoryId);
     }
-    
+
     /**
      * Assign product to category. See catalog-category-assignProduct SOAP method
      *  
@@ -241,7 +241,10 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
     * @param attributes the attributes of the new product
     * @return the new product's id
     */
-	public int createProduct(@NotNull String type, @NotNull int set, @NotNull String sku, Map<String, Object> attributes)
+    public int createProduct(@NotNull String type,
+                             @NotNull int set,
+                             @NotNull String sku,
+                             Map<String, Object> attributes)
         throws RemoteException
     {
         Validate.notNull(type);
@@ -261,9 +264,9 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
      */
     public void deleteProduct(ProductIdentifier productId) throws RemoteException
     {
-		getPort().catalogProductDelete(getSessionId(),
-				productId.getIdentifierAsString(),
-				productId.getIdentifierType());
+        getPort().catalogProductDelete(getSessionId(), 
+            productId.getIdentifierAsString(),
+            productId.getIdentifierType());
     }
 
     /**
@@ -340,8 +343,8 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
                                          String toDate,
                                          String storeView) throws RemoteException
     {
-    	Validate.notNull(specialPrice);
-    	Validate.notNull(productId);
+        Validate.notNull(specialPrice);
+        Validate.notNull(productId);
         getPort().catalogProductSetSpecialPrice(getSessionId(), productId.getIdentifierAsString(), specialPrice, fromDate,
             toDate, storeView, productId.getIdentifierType());
     }
@@ -480,11 +483,11 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
 
     /* Product Type */
 
-	@NotNull
-	public Object[] listProductTypes() throws RemoteException
-	{
-		return getPort().catalogProductTypeList(getSessionId());
-	}
+    @NotNull
+    public Object[] listProductTypes() throws RemoteException
+    {
+        return getPort().catalogProductTypeList(getSessionId());
+    }
 
     /* Product Tier Price */
 

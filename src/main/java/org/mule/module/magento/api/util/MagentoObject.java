@@ -37,6 +37,11 @@ public final class MagentoObject
     private static MapToBeanConverter beanConverter = new MapToBeanConverter();
     private static MapToAssociativeArray associativeConverter = new MapToAssociativeArray();
     private static ListToBeanArrayConverter listConverter = new ListToBeanArrayConverter();
+    
+    private  MagentoObject()
+    {
+    }
+    
     static
     {
         
@@ -121,10 +126,10 @@ public final class MagentoObject
         {
             try
             {
-                Map<String, String> map = (Map<String,String>)value;
+                Map<String, String> map = (Map<String, String>) value;
                 AssociativeEntity[] array = new AssociativeEntity[map.size()];
                 int i = 0;
-                for(Entry<String,String> entry : map.entrySet()) 
+                for (Entry<String, String> entry : map.entrySet())
                 {
                     array[i++] = new AssociativeEntity(entry.getKey(), entry.getValue());
                 }

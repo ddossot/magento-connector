@@ -76,7 +76,7 @@ public class MagentoCloudConnectorUnitTest
     public void testSalesOrdersList() throws Exception
     {
         when(port.salesOrderList(anyString(), // 
-            eq(new Filters(null, new ComplexFilter[]{ //
+            eq(new Filters(null, new ComplexFilter[]{//
                 new ComplexFilter("customer_id", new AssociativeEntity("eq", "500"))})))) //
         .thenReturn(new SalesOrderEntity[]{new SalesOrderEntity()});
         assertEquals(1, connector.listOrders("eq(customer_id, 500)").size());
@@ -154,25 +154,29 @@ public class MagentoCloudConnectorUnitTest
     @Test
     public void testSalesOrderShipmentAddTrack() throws RemoteException
     {
-    	connector.addOrderShipmentTrack("1", "carrier", "title", "track");
-    	verify(port).salesOrderShipmentAddTrack(anyString(), eq("1"), eq("carrier"), eq("title"), eq("track"));
+        connector.addOrderShipmentTrack("1", "carrier", "title", "track");
+        verify(port).salesOrderShipmentAddTrack(anyString(), eq("1"), eq("carrier"), eq("title"), eq("track"));
     }
 
 
     @Test
     public void testSalesOrderShipmentRemoveTrack() throws RemoteException
     {
-    	connector.deleteOrderShipmentTrack("1", "id");
-    	verify(port).salesOrderShipmentRemoveTrack(anyString(), eq("1"), eq("id"));
+        connector.deleteOrderShipmentTrack("1", "id");
+        verify(port).salesOrderShipmentRemoveTrack(anyString(), eq("1"), eq("id"));
     }
 
-    
-	@Test
+    @Test
     public void testSalesOrderShipmentCreate() throws RemoteException
     {
-		connector.createOrderShipment("foo", new HashMap<Integer, Double>(){{put(100, 10.0);}}, "comment", true, false);
-		verify(port).salesOrderShipmentCreate(anyString(), eq("foo"),
-				eq(new OrderItemIdQty[] { new OrderItemIdQty(100, 10) }), eq("comment"), eq(1), eq(0));
+        connector.createOrderShipment("foo", new HashMap<Integer, Double>()
+        {
+            {
+                put(100, 10.0);
+            }
+        }, "comment", true, false);
+        verify(port).salesOrderShipmentCreate(anyString(), eq("foo"),
+            eq(new OrderItemIdQty[]{new OrderItemIdQty(100, 10)}), eq("comment"), eq(1), eq(0));
     }
 
     @Test

@@ -17,70 +17,71 @@ package org.mule.module.magento.api.catalog.model;
  */
 public interface ProductIdentifier
 {
-	/**The opaque identifier*/
-	String getIdentifierAsString();
+    /** The opaque identifier */
+    String getIdentifierAsString();
 
-	/**The identifier type  - soap methods 
-	 * support just "sku", "id" or null*/
-	String getIdentifierType();
+    /**
+     * The identifier type - soap methods support just "sku", "id" or null
+     */
+    String getIdentifierType();
 
-	class Id implements ProductIdentifier
-	{
-		private final Integer id;
+    class Id implements ProductIdentifier
+    {
+        private final Integer id;
 
-		public Id(Integer id)
-		{
-			this.id = id;
-		}
+        public Id(Integer id)
+        {
+            this.id = id;
+        }
 
-		public String getIdentifierAsString()
-		{
-			return id.toString();
-		}
+        public String getIdentifierAsString()
+        {
+            return id.toString();
+        }
 
-		public String getIdentifierType()
-		{
-			return "id";
-		}
-	}
+        public String getIdentifierType()
+        {
+            return "id";
+        }
+    }
 
-	class Sku implements ProductIdentifier
-	{
-		private final String sku;
+    class Sku implements ProductIdentifier
+    {
+        private final String sku;
 
-		public Sku(String sku)
-		{
-			this.sku = sku;
-		}
+        public Sku(String sku)
+        {
+            this.sku = sku;
+        }
 
-		public String getIdentifierAsString()
-		{
-			return sku;
-		}
+        public String getIdentifierAsString()
+        {
+            return sku;
+        }
 
-		public String getIdentifierType()
-		{
-			return "sku";
-		}
-	}
-	
-	class IdOrSku implements ProductIdentifier
-	{
-		private final String idOrSku;
+        public String getIdentifierType()
+        {
+            return "sku";
+        }
+    }
 
-		public IdOrSku(String sku)
-		{
-			this.idOrSku = sku;
-		}
+    class IdOrSku implements ProductIdentifier
+    {
+        private final String idOrSku;
 
-		public String getIdentifierAsString()
-		{
-			return idOrSku;
-		}
+        public IdOrSku(String sku)
+        {
+            this.idOrSku = sku;
+        }
 
-		public String getIdentifierType()
-		{
-			return null;
-		}
-	}
+        public String getIdentifierAsString()
+        {
+            return idOrSku;
+        }
+
+        public String getIdentifierType()
+        {
+            return null;
+        }
+    }
 }

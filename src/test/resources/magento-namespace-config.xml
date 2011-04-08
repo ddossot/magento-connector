@@ -337,12 +337,11 @@
         <magento:create-product set="4" sku="78962" type="simple"/>
     </flow>
     
-       @Operation
-    public int createProduct(@Parameter String type,
-                             @Parameter int set,
-                             @Parameter String sku,
-                             @Parameter(optional = true) Map<String, Object> attributes)
-        throws MagentoException
+    <flow name="UpdateProductSpecialPrice">
+        <inbound-endpoint address="vm://CreateProduct"
+            exchange-pattern="request-response" />
+        <magento:update-product-special-price specialPrice="#[variable:session:specialPrice]" productId="#[variable:session:productId]"/>
+    </flow>
     
     <flow name="GetProductSpecialPrice">
         <inbound-endpoint address="vm://GetProductSpecialPrice"

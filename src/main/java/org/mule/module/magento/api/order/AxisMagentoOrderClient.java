@@ -95,8 +95,8 @@ public class AxisMagentoOrderClient extends AbstractMagentoClient
                                         boolean sendEmail,
                                         boolean includeCommentInEmail) throws RemoteException
     {
-    	Validate.notNull(shipmentId);
-    	Validate.notNull(comment);
+        Validate.notNull(shipmentId);
+        Validate.notNull(comment);
         getPort().salesOrderShipmentAddComment(getSessionId(), shipmentId, comment,
             toIntegerString(sendEmail), toIntegerString(includeCommentInEmail));
     }

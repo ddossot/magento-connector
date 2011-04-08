@@ -120,8 +120,8 @@ public class MagentoCloudConnector implements Initialisable
      * Example:
      * 
      * {@code <magento:add-order-shipment-comment 
-     * 			shipmentId="#[map-payload:shipmentId]" 
-     *        	comment="#[map-payload:comment]" 
+     *          shipmentId="#[map-payload:shipmentId]" 
+     *          comment="#[map-payload:comment]" 
      *          sendEmail="true" />}
      * 
      * @param shipmentId the shipment's increment id
@@ -145,10 +145,10 @@ public class MagentoCloudConnector implements Initialisable
      * Example:
      * 
      * {@code <magento:add-order-shipment-track
-	 * 			shipmentId="#[map-payload:shipmentId]" 
-	 * 			carrierCode="#[map-payload:carrierCode]"
-	 *			title="#[map-payload:title]" 
-	 *			trackId="#[map-payload:trackId]" />}
+     *          shipmentId="#[map-payload:shipmentId]" 
+     *          carrierCode="#[map-payload:carrierCode]"
+     *          title="#[map-payload:title]" 
+     *          trackId="#[map-payload:trackId]" />}
      * 
      * 
      * @param shipmentId the shipment id
@@ -172,7 +172,7 @@ public class MagentoCloudConnector implements Initialisable
      * Example:
      * 
      * {@code <magento:cancel-order
-     *  	   orderId="#[map-payload:orderId]"/>}
+     *         orderId="#[map-payload:orderId]"/>}
      * 
      * @param orderId the order to cancel
      */
@@ -188,13 +188,13 @@ public class MagentoCloudConnector implements Initialisable
      * Example:
      * 
      * {@code <magento:create-order-shipment 
-     * 			orderId="#[map-payload:orderId]"
-	 * 			comment="#[map-payload:comment]">
-	 *			<magento:itemsQuantities>
-	 *				<magento:itemsQuantity key="#[map-payload:orderItemId1]" value="#[map-payload:Quantity1]"/>
-	 *				<magento:itemsQuantity key="#[map-payload:orderItemId2]" value="#[map-payload:Quantity2]"/>
-	 *			</magento:itemsQuantities>
-	 *		</magento:create-order-shipment>}
+     *          orderId="#[map-payload:orderId]"
+     *          comment="#[map-payload:comment]">
+     *          <magento:itemsQuantities>
+     *              <magento:itemsQuantity key="#[map-payload:orderItemId1]" value="#[map-payload:Quantity1]"/>
+     *              <magento:itemsQuantity key="#[map-payload:orderItemId2]" value="#[map-payload:Quantity2]"/>
+     *          </magento:itemsQuantities>
+     *       </magento:create-order-shipment>}
      * 
      * @param orderId the order increment id
      * @param itemsQuantities a map containing an entry per each (orderItemId,
@@ -236,7 +236,7 @@ public class MagentoCloudConnector implements Initialisable
      * 
      * Example:
      * 
-     * {@code  	<magento:get-order-invoice invoiceId="#[map-payload:invoiceId]"  />}
+     * {@code       <magento:get-order-invoice invoiceId="#[map-payload:invoiceId]"  />}
      * 
      * @param invoiceId
      * @return the invoice attributes
@@ -274,7 +274,7 @@ public class MagentoCloudConnector implements Initialisable
      * Example:
      * 
      * {@code  <magento:get-order-shipment 
-     * 			shipmentId="#[map-payload:orderShipmentId]" /> }
+     *             shipmentId="#[map-payload:orderShipmentId]" /> }
      * 
      * @param invoiceId the invoice id
      * @param comment the comment to add
@@ -310,7 +310,7 @@ public class MagentoCloudConnector implements Initialisable
      * Example
      * 
      * {@code <magento:list-orders 
-     * 			filter="gt(subtotal, #[map-payload:minSubtotal])"/>}	
+     *             filter="gt(subtotal, #[map-payload:minSubtotal])"/>}     
      * 
      * @param filters optional filtering expression
      * @return a list of string-object maps
@@ -326,7 +326,7 @@ public class MagentoCloudConnector implements Initialisable
      * 
      * Example:
      * 
-     * {@code <magento:list-orders-invoices filter="notnull(parent_id)" />}	
+     * {@code <magento:list-orders-invoices filter="notnull(parent_id)" />}     
      * 
      * @param filters optional list of filters
      * @return list of string-object maps order attributes
@@ -358,7 +358,7 @@ public class MagentoCloudConnector implements Initialisable
      * Deletes the given track of the given order's shipment
      * 
      * <magento:delete-order-shipment-track
-	 *		shipmentId="#[map-payload:shipmentId]" trackId="#[map-payload:trackId]" />
+     *       shipmentId="#[map-payload:shipmentId]" trackId="#[map-payload:trackId]" />
      * 
      * @param shipmentId the target shipment id
      * @param trackId the id of the track to delete
@@ -373,9 +373,9 @@ public class MagentoCloudConnector implements Initialisable
      * Adds a comment to the given order id
      * 
      * {@code <magento:add-order-comment 
-     * 				orderId="#[map-payload:orderId]"
-	 *				status="#[map-payload:status]" 
-	 *				comment="#[map-payload:comment]" />}	
+     *               orderId="#[map-payload:orderId]"
+     *              status="#[map-payload:status]" 
+     *              comment="#[map-payload:comment]" />}     
      * 
      * @param orderId the order id
      * @param status the comment status
@@ -424,9 +424,9 @@ public class MagentoCloudConnector implements Initialisable
      * Example: 
      * 
      * {@code  <magento:add-order-comment 
-     * 			orderId="#[map-payload:orderId]"
-     * 			status="#[map-payload:status]" 
-     * 			comment="#[map-payload:comment]" }
+     *             orderId="#[map-payload:orderId]"
+     *             status="#[map-payload:status]" 
+     *             comment="#[map-payload:comment]" }
      * 
      * @param invoiceId the invoice id
      * @param comment the comment to add
@@ -492,10 +492,10 @@ public class MagentoCloudConnector implements Initialisable
      * attributes
      * 
      * {@code <magento:create-customer-address customerId="#[map-payload:customerId]"  >
-	 *		    <magento:attributes >
-	 *			  <magento:attribute key="city_code" value="#[map-payload:cityCode]"/>
-	 *		    </magento:attributes>
-	 *	      </magento:create-customer-address>}
+     *            <magento:attributes >
+     *              <magento:attribute key="city_code" value="#[map-payload:cityCode]"/>
+     *            </magento:attributes>
+     *          </magento:create-customer-address>}
      * 
      * @param customerId
      * @param attributes
@@ -512,14 +512,14 @@ public class MagentoCloudConnector implements Initialisable
      * 
      * Example: 
      * 
-     * {@code 	<magento:create-customer>
-	 *		      <magento:attributes >
-	 *			    <magento:attribute key="email" value="#[map-payload:email]"/>
-	 *			    <magento:attribute key="firstname" value="#[map-payload:firstname]"/>
-	 *			    <magento:attribute key="lastname" value="#[map-payload:lastname]"/>
-	 * 			    <magento:attribute key="password" value="#[map-payload:password]"/>
-	 *		      </magento:attributes>
-	 *	       </magento:create-customer>} 
+     * {@code      <magento:create-customer>
+     *              <magento:attributes >
+     *                <magento:attribute key="email" value="#[map-payload:email]"/>
+     *                <magento:attribute key="firstname" value="#[map-payload:firstname]"/>
+     *                <magento:attribute key="lastname" value="#[map-payload:lastname]"/>
+     *                 <magento:attribute key="password" value="#[map-payload:password]"/>
+     *              </magento:attributes>
+     *           </magento:create-customer>} 
      * 
      * @param attributes the attributes of the new customer
      * @return the new customer id
@@ -567,12 +567,12 @@ public class MagentoCloudConnector implements Initialisable
      * Example:
      * 
      * {@code <magento:get-customer  customerId="#[map-payload:customerId]"  >
-	 *		<magento:attributeNames>
-	 *			<magento:attributeName>customer_name</magento:attributeName>
-     *				<magento:attributeName>customer_last_name </magento:attributeName>
- 	 *			<magento:attributeName>customer_age</magento:attributeName>
-	 *		</magento:attributeNames>
-	 *	  </magento:get-customer>}
+     *       <magento:attributeNames>
+     *            <magento:attributeName>customer_name</magento:attributeName>
+     *              <magento:attributeName>customer_last_name </magento:attributeName>
+     *            <magento:attributeName>customer_age</magento:attributeName>
+     *       </magento:attributeNames>
+     *      </magento:get-customer>}
      * 
      * @param customerId
      * @param attributeNames the attributes to retrieve. Not empty
@@ -643,7 +643,7 @@ public class MagentoCloudConnector implements Initialisable
      * @return the list of attributes map
      */
     @Operation
-    public List<Map<String, Object>> listCustomers(@Parameter(optional=true) String filters)
+    public List<Map<String, Object>> listCustomers(@Parameter(optional = true) String filters)
     {
         return customerClient.listCustomers(filters);
     }
@@ -655,9 +655,9 @@ public class MagentoCloudConnector implements Initialisable
      * Example:
      * 
      * {@code <magento:update-customer customerId="#[map-payload:customerId]">
-	 *		    <magento:attributes>
-	 *		       <magento:attribute key="lastname" value="#[map-payload:lastname]"/>
-	 *		    </magento:attributes>}
+     *            <magento:attributes>
+     *               <magento:attribute key="lastname" value="#[map-payload:lastname]"/>
+     *            </magento:attributes>}
      * 
      * @param customerId
      * @param attributes the attributes map
@@ -675,11 +675,11 @@ public class MagentoCloudConnector implements Initialisable
      * Example:
      * 
      * {@code <magento:update-customer-address addressId="#[map-payload:addressId]">
-	 *		  <magento:attributes>
-	 *			<magento:attribute key="street" value="#[map-payload:street]"/>
-	 *			<magento:attribute key="region" value="#[map-payload:region]"/>
-	 *		   </magento:attributes>
-	 *	    </magento:update-customer-address>} 
+     *          <magento:attributes>
+     *               <magento:attribute key="street" value="#[map-payload:street]"/>
+     *               <magento:attribute key="region" value="#[map-payload:region]"/>
+     *           </magento:attributes>
+     *        </magento:update-customer-address>} 
      * 
      * 
      * @param addressId the customer address to update
@@ -698,11 +698,11 @@ public class MagentoCloudConnector implements Initialisable
      * Example:
      * 
      * {@code <magento:list-stock-items >
-	 *		<magento:productIdOrSkus>
-	 *			<magento:productIdOrSku>1560</magento:productIdOrSku>
-     *		 	<magento:productIdOrSku>JJFO986</magento:productIdOrSku>
-	 *		</magento:productIdOrSkus>
-	 *	</magento:list-stock-items>}
+     *          <magento:productIdOrSkus>
+     *               <magento:productIdOrSku>1560</magento:productIdOrSku>
+     *              <magento:productIdOrSku>JJFO986</magento:productIdOrSku>
+     *          </magento:productIdOrSkus>
+     *     </magento:list-stock-items>}
      * 
      * @param productIdOrSkus a not empty list of product ids or skus whose attributes to list
      * @return a list of stock items attributes
@@ -719,10 +719,10 @@ public class MagentoCloudConnector implements Initialisable
      * Example:
      * 
      * {@code  <magento:update-stock-item productIdOrSku="#[map-payload:productIdOrSku]">
-	 *		<magento:attributes>
-	 *			<magento:attribute key="qty" value="#[map-payload:quantity]"/>
-	 *		</magento:attributes>
-	 *	</magento:update-stock-item>} 
+     *          <magento:attributes>
+     *               <magento:attribute key="qty" value="#[map-payload:quantity]"/>
+     *          </magento:attributes>
+     *     </magento:update-stock-item>} 
      * @param productIdOrSku the product id or sku of the product to update
      * @param the attributes a non empty map of attributes to update 
      */
@@ -739,7 +739,7 @@ public class MagentoCloudConnector implements Initialisable
      * @return a collection of countries attributes
      */
     @Operation
-    public List<Map<String, Object>> listDirectoryCountries() throws MagentoException
+    public List<Map<String, Object>> listDirectoryCountries()
     {
         return directoryClient.listDirectoryCountries();
     }
@@ -755,7 +755,6 @@ public class MagentoCloudConnector implements Initialisable
      */
     @Operation
     public List<Map<String, Object>> listDirectoryRegions(@Parameter String countryId)
-        throws MagentoException
     {
         return directoryClient.listDirectoryRegions(countryId);
     }
@@ -866,11 +865,11 @@ public class MagentoCloudConnector implements Initialisable
      * @param fileName
      */
     @Operation
-    public void deleteProductAttributeMedia(@Parameter(optional=true) Integer productId,
-										   @Parameter(optional=true) String productSku,
-										   @Parameter(optional=true) String productIdOrSku,
-										   String fileName)
-        
+    public void deleteProductAttributeMedia(@Parameter(optional = true) Integer productId,
+                                            @Parameter(optional = true) String productSku,
+                                            @Parameter(optional = true) String productIdOrSku,
+                                            @Parameter String fileName)
+
     {
         catalogClient.deleteProductAttributeMedia(from(productSku, productId, productIdOrSku), fileName);
     }
@@ -900,9 +899,9 @@ public class MagentoCloudConnector implements Initialisable
      */
     @Operation
     public void deleteProductLink(@Parameter String type,
-						    	  @Parameter(optional=true) Integer productId,
-								  @Parameter(optional=true) String productSku,
-								  @Parameter(optional=true) String productIdOrSku,
+                                  @Parameter(optional = true) Integer productId,
+                                  @Parameter(optional = true) String productSku,
+                                  @Parameter(optional = true) String productIdOrSku,
                                   @Parameter String linkedProductIdOrSku) 
     {
         catalogClient.deleteProductLink(type, from(productSku, productId, productIdOrSku), linkedProductIdOrSku);
@@ -930,11 +929,11 @@ public class MagentoCloudConnector implements Initialisable
      * @return the list of links to the product
      */
     @Operation
-    public Map<String, Object> getProductAttributeMedia(@Parameter(optional=true) Integer productId,
-														@Parameter(optional=true) String productSku,
-														@Parameter(optional=true) String productIdOrSku,
+    public Map<String, Object> getProductAttributeMedia(@Parameter(optional = true) Integer productId,
+                                                        @Parameter(optional = true) String productSku,
+                                                        @Parameter(optional = true) String productIdOrSku,
                                                         @Parameter String fileName,
-                                                        @Parameter(optional=true) String storeViewIdOrCode) 
+                                                        @Parameter(optional = true) String storeViewIdOrCode)
     {
         return catalogClient.getProductAttributeMedia(from(productSku, productId, productIdOrSku), fileName, storeViewIdOrCode);
     }
@@ -990,9 +989,8 @@ public class MagentoCloudConnector implements Initialisable
      * @return the list of category attribute options
      */
     @Operation
-    public List<Map<String, Object>> listCategoryAttributeOptions(@Parameter String attributeId, 
-                                                                   @Parameter(optional=true) String storeViewIdOrCode)
-        
+    public List<Map<String, Object>> listCategoryAttributeOptions(@Parameter String attributeId,
+                                                                  @Parameter(optional = true) String storeViewIdOrCode)
     {
         return catalogClient.listCategoryAttributeOptions(attributeId, storeViewIdOrCode);
     }
@@ -1017,10 +1015,10 @@ public class MagentoCloudConnector implements Initialisable
      * @return the list of product images attributes
      */
     @Operation
-    public List<Map<String, Object>> listProductAttributeMedia(@Parameter(optional=true) Integer productId,
-															   @Parameter(optional=true) String productSku,
-															   @Parameter(optional=true) String productIdOrSku,
-															   @Parameter(optional=true) String storeViewIdOrCode)
+    public List<Map<String, Object>> listProductAttributeMedia(@Parameter(optional = true) Integer productId,
+                                                               @Parameter(optional = true) String productSku,
+                                                               @Parameter(optional = true) String productIdOrSku,
+                                                               @Parameter(optional = true) String storeViewIdOrCode)
     {
         return catalogClient.listProductAttributeMedia(from(productSku, productId, productIdOrSku), storeViewIdOrCode);
     }
@@ -1055,8 +1053,7 @@ public class MagentoCloudConnector implements Initialisable
      */
     @Operation
     public List<Map<String, Object>> listProductAttributeOptions(@Parameter String attributeId, 
-                                                                 @Parameter(optional=true) String storeViewIdOrCode)
-        
+                                                                 @Parameter(optional = true) String storeViewIdOrCode)
     {
         return catalogClient.listProductAttributeOptions(attributeId, storeViewIdOrCode);
     }
@@ -1112,9 +1109,9 @@ public class MagentoCloudConnector implements Initialisable
      * @return the list of product attributes
      */
     @Operation
-    public List<Map<String, Object>> listProductAttributeTierPrices(@Parameter(optional=true) Integer productId,
-																	@Parameter(optional=true) String productSku,
-																	@Parameter(optional=true) String productIdOrSku)
+    public List<Map<String, Object>> listProductAttributeTierPrices(@Parameter(optional = true) Integer productId,
+                                                                    @Parameter(optional = true) String productSku,
+                                                                    @Parameter(optional = true) String productIdOrSku)
     {
         return catalogClient.listProductAttributeTierPrices(from(productSku, productId, productIdOrSku));
     }
@@ -1135,11 +1132,10 @@ public class MagentoCloudConnector implements Initialisable
      * @return the list of links to the product
      */
     @Operation
-    public List<Map<String, Object>> listProductLink(String type,	
-    												@Parameter(optional=true) Integer productId,
-    												@Parameter(optional=true) String productSku,
-    												@Parameter(optional=true) String productIdOrSku)
-        
+    public List<Map<String, Object>> listProductLink(String type,     
+                                                     @Parameter(optional = true) Integer productId,
+                                                     @Parameter(optional = true) String productSku,
+                                                     @Parameter(optional = true) String productIdOrSku)
     {
         return catalogClient.listProductLink(type, from(productSku, productId, productIdOrSku));
     }
@@ -1223,10 +1219,10 @@ public class MagentoCloudConnector implements Initialisable
     }
 
     /** FIXME */
-    public void updateProductAttributeTierPrices(@Parameter(optional=true) Integer productId,
-												 @Parameter(optional=true) String productSku,
-												 @Parameter(optional=true) String productIdOrSku,
-                                                 @Parameter List<Map<String, Object>> attributes) 
+    public void updateProductAttributeTierPrices(@Parameter(optional = true) Integer productId,
+                                                 @Parameter(optional = true) String productSku,
+                                                 @Parameter(optional = true) String productIdOrSku,
+                                                 @Parameter List<Map<String, Object>> attributes)
     {
         catalogClient.updateProductAttributeTierPrices(from(productSku, productId, productIdOrSku), attributes);
     }
@@ -1278,7 +1274,7 @@ public class MagentoCloudConnector implements Initialisable
      * @return the listing of category products
      */
     @Operation
-    public List<Map<String, Object>> listCategoryProducts(int categoryId) throws MagentoException
+    public List<Map<String, Object>> listCategoryProducts(int categoryId) 
     {
         return catalogClient.listCategoryProducts(categoryId);
     }
@@ -1299,11 +1295,11 @@ public class MagentoCloudConnector implements Initialisable
                                    @Parameter(optional = true) Integer productId,
                                    @Parameter(optional = true) String productSku,
                                    @Parameter(optional = true) String productIdOrSku,
-                                   String position) throws MagentoException
+                                   String position) 
     {
         catalogClient.addCategoryProduct(categoryId, from(productSku, productId, productIdOrSku), position);
     }
-	
+     
     /**
      * Creates a new category. See catalog-category-create SOAP method.
      * 
@@ -1315,7 +1311,7 @@ public class MagentoCloudConnector implements Initialisable
     @Operation
     public int createCategory(int parentId,
                               Map<String, Object> attributes,
-                              @Parameter(optional = true) String storeViewIdOrCode) throws MagentoException
+                              @Parameter(optional = true) String storeViewIdOrCode) 
     {
         return catalogClient.createCategory(parentId, attributes, storeViewIdOrCode);
     }
@@ -1327,11 +1323,11 @@ public class MagentoCloudConnector implements Initialisable
      *  
      * @param categoryId the category to delete
      */
-	@Operation
-	public void deleteCategory(int categoryId) throws MagentoException
-	{
-		catalogClient.deleteCategory(categoryId);
-	}
+     @Operation
+     public void deleteCategory(int categoryId) 
+     {
+          catalogClient.deleteCategory(categoryId);
+     }
 
     /**
      * Answers category attributes. See catalog-category-info SOAP method. 
@@ -1347,7 +1343,7 @@ public class MagentoCloudConnector implements Initialisable
     @Operation
     public Map<String, Object> getCategory(@Parameter int categoryId,
                                            @Parameter(optional = true) String storeViewIdOrCode,
-                                           @Parameter List<String> attributeNames) throws MagentoException
+                                           @Parameter List<String> attributeNames) 
     {
         return catalogClient.getCategory(categoryId, storeViewIdOrCode, attributeNames);
     }
@@ -1367,7 +1363,7 @@ public class MagentoCloudConnector implements Initialisable
     public List<Map<String, Object>> listCategoryLevels(@Parameter(optional = true) String website,
                                                         @Parameter(optional = true) String storeViewIdOrCode,
                                                         @Parameter(optional = true) String parentCategoryId)
-        throws MagentoException
+        
     {
         return catalogClient.listCategoryLevels(website, storeViewIdOrCode, parentCategoryId);
     }
@@ -1389,11 +1385,11 @@ public class MagentoCloudConnector implements Initialisable
     @Operation
     public void moveCategory(@Parameter int categoryId,
                              @Parameter int parentId,
-                             @Parameter(optional = true) String afterId) throws MagentoException
+                             @Parameter(optional = true) String afterId) 
     {
         catalogClient.moveCategory(categoryId, parentId, afterId);
     }
-	
+     
     /**
      * Remove a product assignment. See catalog-category-removeProduct SOAP method. 
      * Example:
@@ -1411,15 +1407,15 @@ public class MagentoCloudConnector implements Initialisable
      * @param productIdOrSku
      *            the id or sku of the product.
      */
-	@Operation
-	public void deleteCategoryProduct(@Parameter int categoryId,
-			                          @Parameter(optional=true) Integer productId,
-			                          @Parameter(optional=true) String productSku,
-			                          @Parameter(optional=true) String productIdOrSku) throws MagentoException
-	{
-		catalogClient.deleteCategoryProduct(categoryId, from(productSku, productId, productIdOrSku));
-	}
-	
+     @Operation
+    public void deleteCategoryProduct(@Parameter int categoryId,
+                                      @Parameter(optional = true) Integer productId,
+                                      @Parameter(optional = true) String productSku,
+                                      @Parameter(optional = true) String productIdOrSku)
+     {
+          catalogClient.deleteCategoryProduct(categoryId, from(productSku, productId, productIdOrSku));
+     }
+     
     /**
      * Answers the category tree. 
      * See  catalog-category-tree SOAP method. 
@@ -1427,15 +1423,15 @@ public class MagentoCloudConnector implements Initialisable
      * @param storeView
      * @return a category tree attributes
      */
-	@Operation
+     @Operation
     public Map<String, Object> getCategoryTree(@Parameter String parentId,
                                                @Parameter(optional = true) String storeViewIdOrCode)
-			throws MagentoException
-	{
-		return catalogClient.getCategoryTree(parentId, storeViewIdOrCode);
-	}
-	
-	/**
+               
+     {
+          return catalogClient.getCategoryTree(parentId, storeViewIdOrCode);
+     }
+     
+     /**
      * Updates a category. See catalog-category-update SOAP method
      * 
      * Example:
@@ -1450,13 +1446,13 @@ public class MagentoCloudConnector implements Initialisable
      * @param attributes
      * @param storeViewIdOrCode the id or code of the target store. Left unspecified for using current store
      */
-	@Operation
+     @Operation
     public void updateCategory(@Parameter int categoryId,
                                @Parameter Map<String, Object> attributes,
-                               @Parameter(optional = true) String storeViewIdOrCode) throws MagentoException
-	{
-		catalogClient.updateCategory(categoryId, attributes, storeViewIdOrCode);
-	}
+                               @Parameter(optional = true) String storeViewIdOrCode) 
+     {
+          catalogClient.updateCategory(categoryId, attributes, storeViewIdOrCode);
+     }
 
     /**
      * Updates a category product 
@@ -1478,16 +1474,15 @@ public class MagentoCloudConnector implements Initialisable
      *            the id or sku of the product.
      * @param position
      */
-	@Operation
-	public void updateCategoryProduct(@Parameter int categoryId,
-	                                  @Parameter(optional=true) Integer productId,
-	                                  @Parameter(optional=true) String productSku, 
-	                                  @Parameter(optional=true) String productIdOrSku,
-	                                  @Parameter String position)
-			throws MagentoException
-	{
-		catalogClient.updateCategoryProduct(categoryId, from(productSku, productId, productIdOrSku), position);
-	}
+    @Operation
+    public void updateCategoryProduct(@Parameter int categoryId,
+                                      @Parameter(optional = true) Integer productId,
+                                      @Parameter(optional = true) String productSku,
+                                      @Parameter(optional = true) String productIdOrSku,
+                                      @Parameter String position)
+     {
+          catalogClient.updateCategoryProduct(categoryId, from(productSku, productId, productIdOrSku), position);
+     }
 
     /**
      * Lists inventory stock items.
@@ -1503,12 +1498,11 @@ public class MagentoCloudConnector implements Initialisable
      * @param products
      * @return the list of attributes
      */
-	@Operation
-	public List<Map<String, Object>> listInventoryStockItems(@Parameter List<String> productIdOrSkus)
-			throws MagentoException
-	{
-		return catalogClient.listInventoryStockItems(productIdOrSkus);
-	}
+     @Operation
+     public List<Map<String, Object>> listInventoryStockItems(@Parameter List<String> productIdOrSkus)
+     {
+          return catalogClient.listInventoryStockItems(productIdOrSkus);
+     }
 
     /**
      * Updates an stock inventory item
@@ -1533,12 +1527,12 @@ public class MagentoCloudConnector implements Initialisable
     public void updateInventoryStockItem(@Parameter(optional = true) Integer productId,
                                          @Parameter(optional = true) String productSku,
                                          @Parameter(optional = true) String productIdOrSku,
-                                         @Parameter Map<String, Object> attributes) throws MagentoException
-	{
-		catalogClient.updateInventoryStockItem(from(productSku, productId, productIdOrSku), attributes);
-	}
-	
-	   
+                                         @Parameter Map<String, Object> attributes) 
+     {
+          catalogClient.updateInventoryStockItem(from(productSku, productId, productIdOrSku), attributes);
+     }
+     
+       
     /**
      * Creates a new product
      * 
@@ -1556,19 +1550,18 @@ public class MagentoCloudConnector implements Initialisable
                              @Parameter int set,
                              @Parameter String sku,
                              @Parameter(optional = true) Map<String, Object> attributes)
-        throws MagentoException
     {
         return catalogClient.createProduct(type, set, sku, attributes);
     }
 
-	
-	/**
-	 * Deletes a product. See catalog-product-delete SOAP method.
-	 * 
-	 * Example:
-	 * 
-	 * {@code <magento:delete-product productId="#[map-payload:productId]" />}
-	 *  
+     
+     /**
+     * Deletes a product. See catalog-product-delete SOAP method.
+     * 
+     * Example:
+     * 
+     * {@code <magento:delete-product productId="#[map-payload:productId]" />}
+     *  
      * @param productId
      *            the id of the product. Use it instead of productIdOrSku in
      *            case you are sure the product identifier is a product id
@@ -1577,15 +1570,15 @@ public class MagentoCloudConnector implements Initialisable
      *            case you are sure the product identifier is a product sku
      * @param productIdOrSku
      *            the id or sku of the product.
-	 */
-	@Operation
-	public void deleteProduct(@Parameter(optional=true) Integer productId,
-			                  @Parameter(optional=true) String productSku,
-			                  @Parameter(optional=true) String productIdOrSku)
-			throws MagentoException
-	{
-		catalogClient.deleteProduct(from(productSku, productId, productIdOrSku));
-	}
+     */
+    @Operation
+    public void deleteProduct(@Parameter(optional = true) Integer productId,
+                              @Parameter(optional = true) String productSku,
+                              @Parameter(optional = true) String productIdOrSku)
+    {
+        catalogClient.deleteProduct(from(productSku, productId, productIdOrSku));
+    }
+    
     /**
      * Answers a product special price. See catalog-product-getSpecialPrice SOAP method.
      * 
@@ -1605,27 +1598,28 @@ public class MagentoCloudConnector implements Initialisable
      * @param productId.getIdentifierType()
      * @return the product special price attributes
      */
-	@Operation
-	public Map<String, Object> getProductSpecialPrice(@Parameter(optional=true) Integer productId, 
-										 @Parameter(optional=true) String productSku,
-										 @Parameter(optional=true) String productIdOrSku,
-										 @Parameter(optional=true) String storeViewIdOrCode) throws MagentoException
-	{
-		return catalogClient.getProductSpecialPrice(from(productSku, productId, productIdOrSku), storeViewIdOrCode);
-	}
-	
-	/**
-	 * Answers a product's specified attributes. At least one of attributNames or
+    @Operation
+    public Map<String, Object> getProductSpecialPrice(@Parameter(optional = true) Integer productId,
+                                                      @Parameter(optional = true) String productSku,
+                                                      @Parameter(optional = true) String productIdOrSku,
+                                                      @Parameter(optional = true) String storeViewIdOrCode)
+    {
+        return catalogClient.getProductSpecialPrice(from(productSku, productId, productIdOrSku),
+            storeViewIdOrCode);
+     }
+     
+     /**
+     * Answers a product's specified attributes. At least one of attributNames or
      * additionalAttributeNames must be non null and non empty. See
      * catalog-product-info SOAP method
-	 * 
-	 * {@code   <magento:get-product  productIdOrSku="#[map-payload:productIdOrSku]" storeViewIdOrCode="#[map-payload:storeViewIdOrCode]">
+     * 
+     * {@code   <magento:get-product  productIdOrSku="#[map-payload:productIdOrSku]" storeViewIdOrCode="#[map-payload:storeViewIdOrCode]">
      *              <magento:additionalAttributeNames>
      *                  <magento:additionalAttributeName>keyboard_distribution_type</magento:additionalAttributeName>
      *              </magento:additionalAttributeNames>
      *          </magento:get-product>}    
-	 * 
-	 * @param productId
+     * 
+     * @param productId
      *            the id of the product. Use it instead of productIdOrSku in
      *            case you are sure the product identifier is a product id
      * @param productSku
@@ -1633,24 +1627,24 @@ public class MagentoCloudConnector implements Initialisable
      *            case you are sure the product identifier is a product sku
      * @param productIdOrSku
      *            the id or sku of the product.
-	 * @param storeViewIdOrCode the id or code of the target store. Left unspecified for using current store
-	 * @param attributeNames the list of standard attributes to be returned
-	 * @param additionalAttributeNames the list of non standard attributes to be returned in the additionalAttributes attribute 
-	 * @return the attributes
-	 */
-	@Operation
-	public Map<String, Object> getProduct(@Parameter(optional=true) Integer productId, 
-							              @Parameter(optional=true) String productSku, 
-							              @Parameter(optional=true) String productIdOrSku,
-							              @Parameter(optional=true) String storeViewIdOrCode, 
-							              @Parameter(optional=true) List<String> attributesNames, 
-							              @Parameter(optional=true) List<String> additionalAttributeNames) throws MagentoException
-	{
-		return catalogClient.getProduct(from(productSku, productId, productIdOrSku), storeViewIdOrCode, attributesNames, additionalAttributeNames);
-	}
-	
-	
-	/**
+     * @param storeViewIdOrCode the id or code of the target store. Left unspecified for using current store
+     * @param attributeNames the list of standard attributes to be returned
+     * @param additionalAttributeNames the list of non standard attributes to be returned in the additionalAttributes attribute 
+     * @return the attributes
+     */
+    @Operation
+    public Map<String, Object> getProduct(@Parameter(optional = true) Integer productId,
+                                          @Parameter(optional = true) String productSku,
+                                          @Parameter(optional = true) String productIdOrSku,
+                                          @Parameter(optional = true) String storeViewIdOrCode,
+                                          @Parameter(optional = true) List<String> attributesNames,
+                                          @Parameter(optional = true) List<String> additionalAttributeNames)
+    {
+          return catalogClient.getProduct(from(productSku, productId, productIdOrSku), storeViewIdOrCode, attributesNames, additionalAttributeNames);
+     }
+     
+     
+     /**
      * Retrieve products list by filters. See catalog-product-list SOAP method.
      * 
      * Example:
@@ -1661,13 +1655,12 @@ public class MagentoCloudConnector implements Initialisable
      * @param storeViewIdOrCode the id or code of the target store. Left unspecified for using current store
      * @return the list of product attributes that match the given optional filtering expression
      */
-	@Operation
-	public List<Map<String, Object>> listProducts(@Parameter(optional=true) String filters, 
-	                                              @Parameter(optional=true) String storeViewIdOrCode)
-			throws MagentoException
-	{
-		return catalogClient.listProducts(filters, storeViewIdOrCode);
-	}
+    @Operation
+    public List<Map<String, Object>> listProducts(@Parameter(optional = true) String filters,
+                                                  @Parameter(optional = true) String storeViewIdOrCode)
+    {
+          return catalogClient.listProducts(filters, storeViewIdOrCode);
+     }
 
     /**
      * Sets a product special price. See catalog-product-setSpecialPrice SOAP method
@@ -1694,13 +1687,12 @@ public class MagentoCloudConnector implements Initialisable
                                           @Parameter(optional = true) String fromDate,
                                           @Parameter(optional = true) String toDate,
                                           @Parameter(optional = true) String storeViewIdOrCode)
-        throws MagentoException
     {
         catalogClient.updateProductSpecialPrice(from(productSku, productId, productIdOrSku), specialPrice,
             fromDate, toDate, storeViewIdOrCode);
     }
 
-	/**
+     /**
      * Updates a product. See catalog-category-updateProduct SOAP method 
      * Example:
      * 
@@ -1726,12 +1718,12 @@ public class MagentoCloudConnector implements Initialisable
                               @Parameter(optional = true) String productSku,
                               @Parameter(optional = true) String productIdOrSku,
                               @Parameter Map<String, Object> attributes,
-                              @Parameter(optional = true) String storeViewIdOrCode) throws MagentoException
-	{
-		catalogClient.updateProduct(from(productSku, productId, productIdOrSku), attributes, storeViewIdOrCode);
-	}
+                              @Parameter(optional = true) String storeViewIdOrCode) 
+     {
+          catalogClient.updateProduct(from(productSku, productId, productIdOrSku), attributes, storeViewIdOrCode);
+     }
 
-	@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     public void setOrderClient(MagentoOrderClient<?, ?, ?> magentoOrderClient)
     {
         this.orderClient = MagentoClientAdaptor.adapt(MagentoOrderClient.class, magentoOrderClient);

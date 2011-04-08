@@ -17,7 +17,6 @@ import org.mule.module.magento.api.internal.CatalogCategoryEntity;
 import org.mule.module.magento.api.internal.CatalogProductCreateEntity;
 import org.mule.module.magento.api.internal.SalesOrderEntity;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.junit.experimental.theories.DataPoints;
 import org.junit.experimental.theories.Theories;
 import org.junit.experimental.theories.Theory;
@@ -27,7 +26,7 @@ import org.junit.runner.RunWith;
 public class MagentoBeanUnitTest
 {
     @DataPoints
-    public static Object[] entities = new Object[]{
+    public static final Object[] ENTITIES = new Object[]{
         new SalesOrderEntity(),
         createEntity(),
         new CatalogCategoryEntity(10, 45, "hello", 0, 0, 0, null),

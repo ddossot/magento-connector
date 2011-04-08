@@ -55,9 +55,9 @@ public class MagentoClientAdaptorUnitTest
 
     public static interface FooBar
     {
-        public String foo() throws RemoteException;
+        String foo() throws RemoteException;
 
-        public String bar() throws RemoteException;
+        String bar() throws RemoteException;
     }
 
     public static class FooBarImp implements FooBar

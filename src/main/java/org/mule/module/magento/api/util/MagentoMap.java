@@ -23,7 +23,6 @@ import java.util.Map;
 
 import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.lang.Validate;
 
@@ -59,7 +58,7 @@ public class MagentoMap extends BeanMap
     {
         if (isMagentoArrayClass(valueClazz))
         {
-            if(valueClazz.getComponentType() == AssociativeEntity.class)
+            if (valueClazz.getComponentType() == AssociativeEntity.class)
             {
                 return toMap((AssociativeEntity[]) value);
             }
@@ -78,7 +77,10 @@ public class MagentoMap extends BeanMap
         /*This is rough copy paste of the original toString implementation of 
          * AbstractMap, that BeanMap overrides*/
         Iterator<java.util.Map.Entry<String, Object>> i = entrySet().iterator();
-        if (!i.hasNext()) return "{}";
+        if (!i.hasNext())
+        {
+            return "{}";
+        }
         StringBuilder sb = new StringBuilder();
         sb.append('{');
         for (;;)
@@ -107,7 +109,7 @@ public class MagentoMap extends BeanMap
     public static Map<String, Object> toMap(AssociativeEntity[] associativeEntities)
     {
         HashMap<String, Object> map = new HashMap<String, Object>(associativeEntities.length);
-        for(AssociativeEntity association : associativeEntities)
+        for (AssociativeEntity association : associativeEntities)
         {
             map.put(association.getKey(), association.getValue());
         }

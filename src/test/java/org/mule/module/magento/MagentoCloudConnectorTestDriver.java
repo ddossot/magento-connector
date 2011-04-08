@@ -10,7 +10,6 @@
 
 package org.mule.module.magento;
 
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -115,9 +114,9 @@ public class MagentoCloudConnectorTestDriver
     @Test
     public void getWithNumericFilter() throws Exception
     {
-		assertEquals(connector.listOrders("").size(),
-			connector.listOrders("gt(subtotal, 800)").size() 
-		  + connector.listOrders("lteq(subtotal, 800)").size()); 
+        assertEquals(connector.listOrders("").size(),
+            connector.listOrders("gt(subtotal, 800)").size() 
+          + connector.listOrders("lteq(subtotal, 800)").size()); 
     }
     
     /**
@@ -128,43 +127,51 @@ public class MagentoCloudConnectorTestDriver
     @Test
     public void getWithStringFilter() throws Exception
     {
-		assertEquals(connector.listOrders("").size(),
-			connector.listOrders("eq(customer_firstname, 'John')").size() 
-		  + connector.listOrders("neq(customer_firstname, 'John')").size()); 
+        assertEquals(connector.listOrders("").size(),
+            connector.listOrders("eq(customer_firstname, 'John')").size() 
+          + connector.listOrders("neq(customer_firstname, 'John')").size()); 
     }
     
     /**
      * Test that a user can be created an deleted
      */
     @Test
-	public void createCustomer() throws Exception {
-    	int customerId = connector.createCustomer(new HashMap<String, Object>(){{
-    		put("email", "johndoe@mycia.com");
-    		put("firstname", "John");
-    		put("lastname", "Doe");
-    		put("password", "123456");
-    		put("group_id", "1");
-		}});
-    	try{
-    		assertEquals("John", connector.getCustomer(customerId, Arrays.asList("firstname")).get("firstname"));
-    	}finally{
-    		connector.deleteCustomer(customerId);
-    	}
+    public void createCustomer() throws Exception
+    {
+        int customerId = connector.createCustomer(new HashMap<String, Object>()
+        {
+            {
+            put("email", "johndoe@mycia.com");
+            put("firstname", "John");
+            put("lastname", "Doe");
+            put("password", "123456");
+            put("group_id", "1");
+            }
+        });
+        try
+        {
+            assertEquals("John", connector.getCustomer(customerId, Arrays.asList("firstname")).get(
+                "firstname"));
+        }
+        finally
+        {
+            connector.deleteCustomer(customerId);
+        }
     }
     
-	/**
-	 * Tests that the XXXCurrentStore SOAP methods can be used like a getter -
-	 * they are not very well documented
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	public void storeView() throws Exception 
-	{
-		assertEquals(connector.getCatalogCurrentStoreView(), connector.getCatalogCurrentStoreView());
-	}
-	
-	@Test
+    /**
+     * Tests that the XXXCurrentStore SOAP methods can be used like a getter -
+     * they are not very well documented
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void storeView() throws Exception 
+    {
+        assertEquals(connector.getCatalogCurrentStoreView(), connector.getCatalogCurrentStoreView());
+    }
+    
+    @Test
     public void getProductById() throws Exception
     {
         Map<String, Object> product = connector.getProduct(1, null, null, null, // 
@@ -209,8 +216,8 @@ public class MagentoCloudConnectorTestDriver
         try
         {
             productId = connector.createProduct("simple", 4, "ZZF879", null);
-            fileName = connector.createProductAttributeMedia(productId, null, null, null, null, new ClassPathResource(
-                "img.gif").getInputStream(), MediaMimeType.GIF, "img.gif");
+            fileName = connector.createProductAttributeMedia(productId, null, null, null, null,
+                new ClassPathResource("img.gif").getInputStream(), MediaMimeType.GIF, "img.gif");
         }
         finally
         {
