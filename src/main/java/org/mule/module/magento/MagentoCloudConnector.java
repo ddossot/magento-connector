@@ -1695,8 +1695,8 @@ public class MagentoCloudConnector implements Initialisable
      *            case you are sure the product identifier is a product sku
      * @param productIdOrSku the id or sku of the product.
      * @param specialPrice the special price to set
-     * @param fromDate TODO date format?
-     * @param toDate TODO date format?
+     * @param fromDate 
+     * @param toDate 
      * @param storeViewIdOrCode the id or code of the target store. Left unspecified for using current store
      */
     @Operation

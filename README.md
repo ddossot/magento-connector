@@ -82,8 +82,8 @@ Example:
 
 
      <magento:add-order-shipment-comment 
-    			shipmentId="#[map-payload:shipmentId]" 
-           	comment="#[map-payload:comment]" 
+             shipmentId="#[map-payload:shipmentId]" 
+             comment="#[map-payload:comment]" 
              sendEmail="true" />
 
 | attribute | description | optional | default value | possible values |
@@ -106,10 +106,10 @@ Example:
 
 
      <magento:add-order-shipment-track
-    			shipmentId="#[map-payload:shipmentId]" 
-    			carrierCode="#[map-payload:carrierCode]"
-    		title="#[map-payload:title]" 
-    		trackId="#[map-payload:trackId]" />
+             shipmentId="#[map-payload:shipmentId]" 
+             carrierCode="#[map-payload:carrierCode]"
+             title="#[map-payload:title]" 
+             trackId="#[map-payload:trackId]" />
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
@@ -133,7 +133,7 @@ Example:
 
 
      <magento:cancel-order
-     	   orderId="#[map-payload:orderId]"/>
+            orderId="#[map-payload:orderId]"/>
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
@@ -152,13 +152,13 @@ Example:
 
 
      <magento:create-order-shipment 
-    			orderId="#[map-payload:orderId]"
-    			comment="#[map-payload:comment]">
-    		<magento:itemsQuantities>
-    			<magento:itemsQuantity key="#[map-payload:orderItemId1]" value="#[map-payload:Quantity1]"/>
-    			<magento:itemsQuantity key="#[map-payload:orderItemId2]" value="#[map-payload:Quantity2]"/>
-    		</magento:itemsQuantities>
-    	</magento:create-order-shipment>
+             orderId="#[map-payload:orderId]"
+             comment="#[map-payload:comment]">
+             <magento:itemsQuantities>
+                 <magento:itemsQuantity key="#[map-payload:orderItemId1]" value="#[map-payload:Quantity1]"/>
+                 <magento:itemsQuantity key="#[map-payload:orderItemId2]" value="#[map-payload:Quantity2]"/>
+             </magento:itemsQuantities>
+          </magento:create-order-shipment>
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
@@ -202,7 +202,7 @@ Example:
 
 
 
-      	<magento:get-order-invoice invoiceId="#[map-payload:invoiceId]"  />
+           <magento:get-order-invoice invoiceId="#[map-payload:invoiceId]"  />
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
@@ -243,7 +243,7 @@ Example:
 
 
       <magento:get-order-shipment 
-    			shipmentId="#[map-payload:orderShipmentId]" /> 
+                shipmentId="#[map-payload:orderShipmentId]" /> 
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
@@ -281,7 +281,7 @@ Example
 
 
      <magento:list-orders 
-    			filter="gt(subtotal, #[map-payload:minSubtotal])"/>
+                filter="gt(subtotal, #[map-payload:minSubtotal])"/>
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
@@ -339,7 +339,7 @@ Delete Order Shipment Track
 Deletes the given track of the given order's shipment
 
 <magento:delete-order-shipment-track
-	shipmentId="#[map-payload:shipmentId]" trackId="#[map-payload:trackId]" />
+      shipmentId="#[map-payload:shipmentId]" trackId="#[map-payload:trackId]" />
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
@@ -357,9 +357,9 @@ Adds a comment to the given order id
 
 
      <magento:add-order-comment 
-    				orderId="#[map-payload:orderId]"
-    			status="#[map-payload:status]" 
-    			comment="#[map-payload:comment]" />
+                  orderId="#[map-payload:orderId]"
+                 status="#[map-payload:status]" 
+                 comment="#[map-payload:comment]" />
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
@@ -413,9 +413,9 @@ Example:
 
 
       <magento:add-order-comment 
-    			orderId="#[map-payload:orderId]"
-    			status="#[map-payload:status]" 
-    			comment="#[map-payload:comment]" 
+                orderId="#[map-payload:orderId]"
+                status="#[map-payload:status]" 
+                comment="#[map-payload:comment]" 
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
@@ -490,10 +490,10 @@ attributes
 
 
      <magento:create-customer-address customerId="#[map-payload:customerId]"  >
-    	    <magento:attributes >
-    		  <magento:attribute key="city_code" value="#[map-payload:cityCode]"/>
-    	    </magento:attributes>
-          </magento:create-customer-address>
+               <magento:attributes >
+                 <magento:attribute key="city_code" value="#[map-payload:cityCode]"/>
+               </magento:attributes>
+             </magento:create-customer-address>
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
@@ -514,14 +514,14 @@ Example:
 
 
 
-     	<magento:create-customer>
-    	      <magento:attributes >
-    		    <magento:attribute key="email" value="#[map-payload:email]"/>
-    		    <magento:attribute key="firstname" value="#[map-payload:firstname]"/>
-    		    <magento:attribute key="lastname" value="#[map-payload:lastname]"/>
-    			    <magento:attribute key="password" value="#[map-payload:password]"/>
-    	      </magento:attributes>
-           </magento:create-customer>
+          <magento:create-customer>
+                 <magento:attributes >
+                   <magento:attribute key="email" value="#[map-payload:email]"/>
+                   <magento:attribute key="firstname" value="#[map-payload:firstname]"/>
+                   <magento:attribute key="lastname" value="#[map-payload:lastname]"/>
+                    <magento:attribute key="password" value="#[map-payload:password]"/>
+                 </magento:attributes>
+              </magento:create-customer>
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
@@ -579,12 +579,12 @@ Example:
 
 
      <magento:get-customer  customerId="#[map-payload:customerId]"  >
-    	<magento:attributeNames>
-    		<magento:attributeName>customer_name</magento:attributeName>
-    			<magento:attributeName>customer_last_name </magento:attributeName>
-    		<magento:attributeName>customer_age</magento:attributeName>
-    	</magento:attributeNames>
-      </magento:get-customer>
+          <magento:attributeNames>
+               <magento:attributeName>customer_name</magento:attributeName>
+                 <magento:attributeName>customer_last_name </magento:attributeName>
+               <magento:attributeName>customer_age</magento:attributeName>
+          </magento:attributeNames>
+         </magento:get-customer>
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
@@ -685,9 +685,9 @@ Example:
 
 
      <magento:update-customer customerId="#[map-payload:customerId]">
-    	    <magento:attributes>
-    	       <magento:attribute key="lastname" value="#[map-payload:lastname]"/>
-    	    </magento:attributes>
+               <magento:attributes>
+                  <magento:attribute key="lastname" value="#[map-payload:lastname]"/>
+               </magento:attributes>
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
@@ -707,11 +707,11 @@ Example:
 
 
      <magento:update-customer-address addressId="#[map-payload:addressId]">
-    	  <magento:attributes>
-    		<magento:attribute key="street" value="#[map-payload:street]"/>
-    		<magento:attribute key="region" value="#[map-payload:region]"/>
-    	   </magento:attributes>
-        </magento:update-customer-address>
+             <magento:attributes>
+                  <magento:attribute key="street" value="#[map-payload:street]"/>
+                  <magento:attribute key="region" value="#[map-payload:region]"/>
+              </magento:attributes>
+           </magento:update-customer-address>
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
@@ -731,11 +731,11 @@ Example:
 
 
      <magento:list-stock-items >
-    	<magento:productIdOrSkus>
-    		<magento:productIdOrSku>1560</magento:productIdOrSku>
-    	 	<magento:productIdOrSku>JJFO986</magento:productIdOrSku>
-    	</magento:productIdOrSkus>
-    </magento:list-stock-items>
+             <magento:productIdOrSkus>
+                  <magento:productIdOrSku>1560</magento:productIdOrSku>
+                 <magento:productIdOrSku>JJFO986</magento:productIdOrSku>
+             </magento:productIdOrSkus>
+        </magento:list-stock-items>
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
@@ -756,10 +756,10 @@ Example:
 
 
       <magento:update-stock-item productIdOrSku="#[map-payload:productIdOrSku]">
-    	<magento:attributes>
-    		<magento:attribute key="qty" value="#[map-payload:quantity]"/>
-    	</magento:attributes>
-    </magento:update-stock-item>
+             <magento:attributes>
+                  <magento:attribute key="qty" value="#[map-payload:quantity]"/>
+             </magento:attributes>
+        </magento:update-stock-item>
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
@@ -1219,6 +1219,34 @@ Example:
 
 
 
+Update Product Attribute Tier Price
+-----------------------------------
+
+Updates a single product tier price. See catalog-product-attribute-tier-price-update
+SOAP method.
+
+Example:
+
+
+
+     <magento:update-product-attribute-tier-price 
+             productSku="#[map-payload:productSku]"> 
+            <magento:attributes>
+             <magento:attribute key="price" value="#[map-payload:price]"/>
+             <magento:attribute key="qty" value="#[map-payload:quantity]"/>
+             <magento:attribute key="website" value="#[map-payload:website]"/>
+             <magento:attribute key="customer_group_id" value="#[map-payload:customerGroupId]"/>
+            </magento:attributes>
+           <magento:update-product-attribute-tier-price/>
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+|productId||yes||
+|productSku||yes||
+|productIdOrSku||yes||
+|attributes|the tier price to update.|no||
+
 
 
 Update Product Link
@@ -1646,8 +1674,8 @@ Example:
 |productSku|the sku of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product sku|yes||
 |productIdOrSku|the id or sku of the product.|yes||
 |specialPrice|the special price to set|no||
-|fromDate|TODO date format?|yes||
-|toDate|TODO date format?|yes||
+|fromDate||yes||
+|toDate||yes||
 |storeViewIdOrCode|the id or code of the target store. Left unspecified for using current store|yes||
 
 
