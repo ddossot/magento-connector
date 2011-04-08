@@ -13,7 +13,10 @@ package org.mule.module.magento.api.util;
 import static org.mule.module.magento.api.util.MagentoClass.isMagentoArrayClass;
 import static org.mule.module.magento.api.util.MagentoClass.isMagentoClass;
 
+import org.mule.module.magento.api.internal.AssociativeEntity;
+
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +59,10 @@ public class MagentoMap extends BeanMap
     {
         if (isMagentoArrayClass(valueClazz))
         {
+            if(valueClazz.getComponentType() == AssociativeEntity.class)
+            {
+                return toMap((AssociativeEntity[]) value);
+            }
             return toMap((Object[]) value);
         }
         if (isMagentoClass(valueClazz))
@@ -68,6 +75,8 @@ public class MagentoMap extends BeanMap
     @SuppressWarnings("unchecked")
     public String toString()
     {
+        /*This is rough copy paste of the original toString implementation of 
+         * AbstractMap, that BeanMap overrides*/
         Iterator<java.util.Map.Entry<String, Object>> i = entrySet().iterator();
         if (!i.hasNext()) return "{}";
         StringBuilder sb = new StringBuilder();
@@ -93,6 +102,16 @@ public class MagentoMap extends BeanMap
     {
         Validate.isTrue(isMagentoClass(magentoObject.getClass()));
         return new MagentoMap(magentoObject);
+    }
+    
+    public static Map<String, Object> toMap(AssociativeEntity[] associativeEntities)
+    {
+        HashMap<String, Object> map = new HashMap<String, Object>(associativeEntities.length);
+        for(AssociativeEntity association : associativeEntities)
+        {
+            map.put(association.getKey(), association.getValue());
+        }
+        return map;
     }
 
     @SuppressWarnings("unchecked")

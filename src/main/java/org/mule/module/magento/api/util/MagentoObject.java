@@ -10,10 +10,13 @@
 
 package org.mule.module.magento.api.util;
 
+import org.mule.module.magento.api.internal.AssociativeEntity;
+
 import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.beanutils.ConvertUtilsBean;
@@ -27,21 +30,27 @@ import org.apache.commons.lang.UnhandledException;
  * An utility class for converting a map of string and objects into a magento object,
  * following the same conversion rules that in {@link MagentoMap}
  */
+@SuppressWarnings("unchecked")
 public final class MagentoObject
 {
     private static BeanUtilsBean beanUtils;
     private static MapToBeanConverter beanConverter = new MapToBeanConverter();
+    private static MapToAssociativeArray associativeConverter = new MapToAssociativeArray();
     private static ListToBeanArrayConverter listConverter = new ListToBeanArrayConverter();
     static
     {
+        
         beanUtils = new BeanUtilsBean(new ConvertUtilsBean()
         {
-            @SuppressWarnings("unchecked")
             @Override
             public Converter lookup(Class type)
             {
                 if (MagentoClass.isMagentoArrayClass(type))
                 {
+                    if (type.getComponentType() == AssociativeEntity.class)
+                    {
+                        return associativeConverter;
+                    }
                     return listConverter;
                 }
                 if (MagentoClass.isMagentoClass(type))
@@ -50,20 +59,33 @@ public final class MagentoObject
                 }
                 return super.lookup(type);
             }
-
-        });
+        })
+        {
+            @Override
+            protected Object convert(Object value, Class targetType)
+            {
+                if (!targetType.isPrimitive() && value == null)
+                {
+                    return null;
+                }
+                return super.convert(value, targetType);
+            }
+        };
     }
 
-    @SuppressWarnings("unchecked")
     public static <T> T fromMap(Class<T> clazz, Map<String, Object> map)
     {
         return (T) beanConverter.convert(clazz, map);
     }
+    
+    public static AssociativeEntity[] fromMap(Map<String, Object> map)
+    {
+        return associativeConverter.convert(null, map);
+    }
 
-    @SuppressWarnings("unchecked")
     public static <T> T[] fromMap(Class<T> clazz, List<Map<String, Object>> list)
     {
-        return (T[]) beanConverter.convert(Array.newInstance(clazz, 0).getClass(), list);
+        return (T[]) listConverter.convert(Array.newInstance(clazz, 0).getClass(), list);
     }
 
     /**
@@ -72,15 +94,10 @@ public final class MagentoObject
      */
     private static class ListToBeanArrayConverter implements Converter
     {
-        @SuppressWarnings("unchecked")
         public Object convert(Class type, Object value)
         {
             try
             {
-                if (value == null)
-                {
-                    return null;
-                }
                 List<Map<String, Object>> list = (List<Map<String, Object>>) value;
                 Object[] array = (Object[]) Array.newInstance(type.getComponentType(), list.size());
                 Iterator<Map<String, Object>> iter = list.iterator();
@@ -97,18 +114,35 @@ public final class MagentoObject
             }
         }
     }
+    
+    private static class MapToAssociativeArray implements Converter
+    {
+        public AssociativeEntity[] convert(Class type, Object value)
+        {
+            try
+            {
+                Map<String, String> map = (Map<String,String>)value;
+                AssociativeEntity[] array = new AssociativeEntity[map.size()];
+                int i = 0;
+                for(Entry<String,String> entry : map.entrySet()) 
+                {
+                    array[i++] = new AssociativeEntity(entry.getKey(), entry.getValue());
+                }
+                return array;
+            }
+            catch (Exception e)
+            {
+                throw new UnhandledException(e);
+            }
+        }
+    }
 
     private static class MapToBeanConverter implements Converter
     {
-        @SuppressWarnings("unchecked")
         public Object convert(Class type, Object value)
         {
             try
             {
-                if (value == null)
-                {
-                    return null;
-                }
                 LazyDynaMap dynaMap = new LazyDynaMap((Map<String, Object>) value);
                 WrapDynaBean bean = (WrapDynaBean) WrapDynaClass.createDynaClass(type).newInstance();
                 beanUtils.copyProperties(bean, dynaMap);
@@ -121,4 +155,6 @@ public final class MagentoObject
             }
         }
     }
+    
+   
 }
