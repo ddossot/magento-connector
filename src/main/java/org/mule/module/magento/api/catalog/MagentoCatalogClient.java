@@ -387,14 +387,14 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
         throws ExceptionType;
 
     /**
-     * Updates product tier prices. See catalog-product-attribute-tier-price-update
+     * Updates a single product tier price. See catalog-product-attribute-tier-price-update
      * SOAP method.
      * 
      * @param productId
      * @param attributes
      */
-    void updateProductAttributeTierPrices(@NotNull ProductIdentifier productId,
-                                          @NotNull List<Map<String, Object>> attributes) throws ExceptionType;
+    void updateProductAttributeTierPrice(@NotNull ProductIdentifier productId,
+                                          @NotNull Map<String, Object> attributes) throws ExceptionType;
 
     /**
      * Links two products

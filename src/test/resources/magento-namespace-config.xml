@@ -547,4 +547,19 @@
 			</magento:attributes>
 		</magento:create-product-attribute-media>
     </flow>
+    
+    <flow name="UpdateProductAttributeTierPrice">
+        <inbound-endpoint address="vm://UpdateProductAttributeTierPrice"
+            exchange-pattern="request-response" />
+        <magento:update-product-attribute-tier-price productSku="#[map-payload:productSku]"> 
+              <magento:attributes>
+               <magento:attribute key="price" value="#[map-payload:price]"/>
+               <magento:attribute key="qty" value="#[map-payload:quantity]"/>
+               <magento:attribute key="website" value="#[map-payload:website]"/>
+               <magento:attribute key="customer_group_id" value="#[map-payload:customerGroupId]"/>
+              </magento:attributes>
+        </magento:update-product-attribute-tier-price>
+    </flow>
+    
+    
 </mule>

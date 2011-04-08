@@ -1218,13 +1218,33 @@ public class MagentoCloudConnector implements Initialisable
             attributes, storeViewIdOrCode);
     }
 
-    /** FIXME */
-    public void updateProductAttributeTierPrices(@Parameter(optional = true) Integer productId,
-                                                 @Parameter(optional = true) String productSku,
-                                                 @Parameter(optional = true) String productIdOrSku,
-                                                 @Parameter List<Map<String, Object>> attributes)
+    
+    /**
+     * Updates a single product tier price. See catalog-product-attribute-tier-price-update
+     * SOAP method.
+     * 
+     * Example:
+     * 
+     * {@code <magento:update-product-attribute-tier-price 
+     *          productSku="#[map-payload:productSku]"> 
+     *         <magento:attributes>
+     *          <magento:attribute key="price" value="#[map-payload:price]"/>
+     *          <magento:attribute key="qty" value="#[map-payload:quantity]"/>
+     *          <magento:attribute key="website" value="#[map-payload:website]"/>
+     *          <magento:attribute key="customer_group_id" value="#[map-payload:customerGroupId]"/>
+     *         </magento:attributes>
+     *        <magento:update-product-attribute-tier-price/>} 
+     * 
+     * @param productId
+     * @param attributes the tier price to update.
+     */
+    @Operation
+    public void updateProductAttributeTierPrice(@Parameter(optional = true) Integer productId,
+                                                @Parameter(optional = true) String productSku,
+                                                @Parameter(optional = true) String productIdOrSku,
+                                                @Parameter Map<String, Object> attributes)
     {
-        catalogClient.updateProductAttributeTierPrices(from(productSku, productId, productIdOrSku), attributes);
+        catalogClient.updateProductAttributeTierPrice(from(productSku, productId, productIdOrSku), attributes);
     }
 
     /**

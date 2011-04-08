@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.rmi.RemoteException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -501,15 +502,18 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
         return getPort().catalogProductAttributeTierPriceInfo(getSessionId(), productId.getIdentifierAsString(), productId.getIdentifierType());
     }
 
-    public void updateProductAttributeTierPrices(@NotNull ProductIdentifier productId,
-                                                 @NotNull List<Map<String, Object>> attributes)
+    public void updateProductAttributeTierPrice(@NotNull ProductIdentifier productId,
+                                                 @NotNull Map<String, Object> attributes)
         throws RemoteException
     {
         Validate.notNull(productId);
         Validate.notNull(attributes);
         
-        getPort().catalogProductAttributeTierPriceUpdate(getSessionId(), productId.getIdentifierAsString(),
-            MagentoObject.fromMap(CatalogProductTierPriceEntity.class, attributes), productId.getIdentifierType());
+        getPort().catalogProductAttributeTierPriceUpdate(getSessionId(), 
+            productId.getIdentifierAsString(),
+            new CatalogProductTierPriceEntity[]{
+                MagentoObject.fromMap(CatalogProductTierPriceEntity.class, attributes)},
+            productId.getIdentifierType());
     }
 
     /* h. Product Link (related, cross sells, up sells, grouped) */
