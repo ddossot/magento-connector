@@ -837,7 +837,7 @@ public class MagentoCloudConnector implements Initialisable
                                               @Parameter(optional = true) String storeViewIdOrCode,
                                               @Parameter InputStream content,
                                               @Parameter MediaMimeType mimeType,
-                                              @Parameter String baseFileName)
+                                              @Parameter(optional = true) String baseFileName) 
     {
         return catalogClient.createProductAttributeMedia(from(productSku, productId, productIdOrSku),
             attributes, content, mimeType, baseFileName, storeViewIdOrCode);

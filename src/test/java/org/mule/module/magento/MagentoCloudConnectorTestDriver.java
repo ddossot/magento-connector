@@ -279,7 +279,7 @@ public class MagentoCloudConnectorTestDriver
         }
     }
 
-    @Test @Ignore("Due to a magento bug - it needs an attribute that is not exposed through the soap api - , cetegory creation is broken")
+    @Test //@Ignore("Due to a magento bug - it needs an attribute that is not exposed through the soap api - , cetegory creation is broken")
     public void testCreateCategory() throws Exception
     {
         Integer categoryId = null;
