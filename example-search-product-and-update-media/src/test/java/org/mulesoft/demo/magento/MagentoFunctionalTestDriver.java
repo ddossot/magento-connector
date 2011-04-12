@@ -26,10 +26,36 @@ public class MagentoFunctionalTestDriver extends FunctionalTestCase
         return "mule-config.xml";
     }
 
-    public void testWholeFlow() throws Exception
+    public void testSearchAndUploadMedia() throws Exception
     {
         System.out.println(lookupFlowConstruct("MainFlow").process(
             getTestEvent(Collections.singletonMap("productType", "simple"))));
+    }
+    
+    /**
+     * Creates some products for this test. Run this test only 
+     * once
+     */
+    public void ignoreTestSetupS3BucketFlow() throws Exception
+    {
+        lookupFlowConstruct("SetupMagentoFlow").process(getTestEvent(""));
+    }
+    
+    /**
+     * Uploads an image to S3. Run this test only once
+     */
+    public void ignoreTestSetupS3ImageFlow() throws Exception
+    {
+        lookupFlowConstruct("SetupS3ImageFlow").process(getTestEvent(""));
+    }
+    
+    /**
+     * Creates some images for this test. Run this test only 
+     * once
+     */
+    public void ignoreTestSetupS3Flow() throws Exception
+    {
+        lookupFlowConstruct("SetupS3BucketFlow").process(getTestEvent(""));
     }
 
     private SimpleFlowConstruct lookupFlowConstruct(final String name)
