@@ -405,8 +405,18 @@ public class MagentoCloudConnector implements Initialisable
     {
         orderClient.unholdOrder(orderId);
     }
-
-    //TODO generic creation?
+    
+    /**
+     * Creates an invoice for the given order
+     * 
+     * @param orderId
+     * @param itemsQuantities a map containing an entry per each (orderItemId,
+     *            quantity) pair
+     * @param comment an optional comment
+     * @param sendEmail if an email must be sent after shipment creation
+     * @param includeCommentInEmail if the comment must be sent in the email
+     * @return the new invoice's id
+     */
     @Operation
     public String createOrderInvoice(@Parameter String orderId,
                                      @Parameter Map<Integer, Double> itemsQuantities,

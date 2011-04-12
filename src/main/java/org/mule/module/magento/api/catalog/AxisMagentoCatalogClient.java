@@ -379,7 +379,6 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
     {
         Validate.notNull(productId);
         Validate.notNull(mimeType);
-        Validate.notNull(baseFileName);
         
         CatalogProductImageFileEntity file = new CatalogProductImageFileEntity(encodeStream(content), mimeType.toString(), baseFileName);
         CatalogProductAttributeMediaCreateEntity request = 
