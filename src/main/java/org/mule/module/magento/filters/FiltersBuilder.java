@@ -36,7 +36,16 @@ public class FiltersBuilder
      */
     public void addBinaryExpression(String operation, String variable, String value)
     {
-        complexFilters.add(new ComplexFilter(variable, new AssociativeEntity(operation, value)));
+        complexFilters.add(new ComplexFilter(variable, new AssociativeEntity(operation, convertValue(value))));
+    }
+
+    private String convertValue(String value)
+    {
+        if (value.length() >= 2 && value.charAt(0) == '\'' && value.charAt(value.length() - 1) == '\'')
+        {
+            return value.substring(1, value.length() - 1);
+        }
+        return value;
     }
 
     /**

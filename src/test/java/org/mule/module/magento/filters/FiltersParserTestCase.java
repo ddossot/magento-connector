@@ -140,24 +140,40 @@ public class FiltersParserTestCase
     }
     
     /**
+     * Tests that the apos of a string argument are not added to the filtering value
+     */
+    @Test
+    public void testParseStringArgument() throws Exception
+    {
+        assertEquals(new Filters(null, new ComplexFilter[]{new ComplexFilter("name", new AssociativeEntity(
+            "eq", "Hardware"))}), parse("eq(name, 'Hardware')"));
+        assertEquals(new Filters(null, new ComplexFilter[]{new ComplexFilter("name", new AssociativeEntity(
+            "eq", ""))}), parse("eq(name, '')"));
+    }
+    
+    /**
      * Tests that the custom istrue expression is equivalent to eq(_,1)
      */
+    @Test
     public void testIsTrue() throws Exception
     {
-        assertEquals(parse("eq(is_active, 1)"), parse("istrue(is_active"));
+        assertEquals(parse("eq(is_active, 1)"), parse("istrue(is_active)"));
     }
 
     /**
      * Tests that the custom isfalse expression is equivalent to eq(_,0)
      */
+    @Test
     public void testIsFalse() throws Exception
     {
-        assertEquals(parse("eq(is_active, 0)"), parse("isfalse(is_active"));
+        assertEquals(parse("eq(is_active, 0)"), parse("isfalse(is_active)"));
     }
 
     public Filters parse(String expression) throws ParseException
     {
         return FiltersParser.parse(expression);
     }
+    
+    
 
 }

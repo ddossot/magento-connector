@@ -10,23 +10,17 @@
 
 package org.mule.module.magento;
 
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 import org.mule.module.magento.api.MagentoException;
 import org.mule.module.magento.api.catalog.model.MediaMimeType;
-import org.mule.tools.cloudconnect.annotations.Operation;
-import org.mule.tools.cloudconnect.annotations.Parameter;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import javax.validation.constraints.AssertTrue;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.junit.Before;
@@ -139,10 +133,9 @@ public class MagentoCloudConnectorTestDriver
     @Test
     public void getWithStringFilter() throws Exception
     {
-        assertEquals(connector.listOrders("").size(), connector.listOrders("eq(customer_firstname, 'John')")
-            .size()
-                                                      + connector.listOrders(
-                                                          "neq(customer_firstname, 'John')").size());
+        assertEquals(connector.listOrders("").size(), 
+                     connector.listOrders("eq(customer_firstname, 'John')").size() 
+                         + connector.listOrders("neq(customer_firstname, 'John')").size());
     }
 
     /**
@@ -184,20 +177,49 @@ public class MagentoCloudConnectorTestDriver
         assertEquals(connector.getCatalogCurrentStoreView(), connector.getCatalogCurrentStoreView());
     }
 
+    /**
+     * This test assumes that there exists a product with id 1
+     */
     @Test
-    public void getProductById() throws Exception
+    public void getAndUpdateExistentProduct() throws Exception
     {
-        Map<String, Object> product = connector.getProduct(1, null, null, null, // 
-            Arrays.asList("set", "type", "name", "description", "status", "visiility"), null);
-        System.out.println(product);
-        assertNotNull(product);
+        final String description = "A great wood kitchen table";
+        final String shortDescription = "Best Product ever!";
+        updateDescriptions(description, shortDescription);
+        Map<String, Object> product = getDescriptions();
+        assertEquals(description, product.get("description"));
+        assertEquals(shortDescription, product.get("short_description"));
+
+        final Object description2 = "An acceptable kitchen table";
+        final Object shortDescription2 = "A good product";
+        updateDescriptions(description2, shortDescription2);
+        product = getDescriptions();
+        assertEquals(description2, product.get("description"));
+        assertEquals(shortDescription2, product.get("short_description"));
     }
 
+    private void updateDescriptions(final Object description2, final Object shortDescription2)
+    {
+        connector.updateProduct(1, null, null, new HashMap<String, Object>()
+        {
+            {
+                put("description", description2);
+                put("short_description", shortDescription2);
+            }
+        }, null);
+    }
+
+    private Map<String, Object> getDescriptions()
+    {
+        return connector.getProduct(1, null, null, null, Arrays.asList("description", "short_description"),
+            null);
+    }
+    
     /**
      * Test that products can be created, linked and deleted
      */
     @Test
-    public void linkProduct() throws Exception
+    public void createAndLinkProduct() throws Exception
     {
         Integer productId = null;
         Integer productId2 = null;
