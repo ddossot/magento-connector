@@ -284,7 +284,7 @@ Example
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|filter||yes||
+|filter|optional filtering expression - one or more comma-separated unary or binary predicates, one for each filter, in the form filterType(attributeName, value), for binary filters or filterType(attributeName), for unary filters, where filterType is istrue, isfalse or any of the Magento standard filters. Non-numeric values need to be escaped using simple quotes.|yes||
 
 Returns list of string-object maps
 
@@ -304,7 +304,7 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|filter||yes||
+|filter|optional filtering expression - one or more comma-separated unary or binary predicates, one for each filter, in the form filterType(attributeName, value), for binary filters or filterType(attributeName), for unary filters, where filterType is istrue, isfalse or any of the Magento standard filters. Non-numeric values need to be escaped using simple quotes.|yes||
 
 Returns of string-object maps order attributes
 
@@ -325,7 +325,7 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|filter||yes||
+|filter|optional filtering expression - one or more comma-separated unary or binary predicates, one for each filter, in the form filterType(attributeName, value), for binary filters or filterType(attributeName), for unary filters, where filterType is istrue, isfalse or any of the Magento standard filters. Non-numeric values need to be escaped using simple quotes.|yes||
 
 Returns of string-object map order shipments attributes
 
@@ -665,12 +665,12 @@ Example:
 
 
 
-     <magento:list-customers filters="gteq(customer_age, #[map-payload:minCustomerAge])" />
+     <magento:list-customers filter="gteq(customer_age, #[map-payload:minCustomerAge])" />
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|filters|optional filtering expression - one or more comma-separated unary or binary predicates, one for each filter, in the form filterType(attributeName, value), for binary filters or filterType(attributeName), for unary filters, where filterType is istrue, isfalse or any of the Magento standard filters. Non-numeric values need to be escaped using simple quotes.|yes||
+|filter|optional filtering expression - one or more comma-separated unary or binary predicates, one for each filter, in the form filterType(attributeName, value), for binary filters or filterType(attributeName), for unary filters, where filterType is istrue, isfalse or any of the Magento standard filters. Non-numeric values need to be escaped using simple quotes.|yes||
 
 Returns list of attributes map
 
@@ -1651,7 +1651,7 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|filters|optional filtering expression - one or more comma-separated unary or binary predicates, one for each filter, in the form filterType(attributeName, value), for binary filters or filterType(attributeName), for unary filters, where filterType is istrue, isfalse or any of the Magento standard filters. Non-numeric values need to be escaped using simple quotes.|yes||
+|filter|optional filtering expression - one or more comma-separated unary or binary predicates, one for each filter, in the form filterType(attributeName, value), for binary filters or filterType(attributeName), for unary filters, where filterType is istrue, isfalse or any of the Magento standard filters. Non-numeric values need to be escaped using simple quotes.|yes||
 |storeViewIdOrCode|the id or code of the target store. Left unspecified for using current store|yes||
 
 Returns list of product attributes that match the given optional filtering expression

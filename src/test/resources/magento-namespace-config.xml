@@ -232,7 +232,7 @@
 	<flow name="ListCustomers">
 		<inbound-endpoint address="vm://ListCustomers"
 			exchange-pattern="request-response" />
-		<magento:list-customers filters="gteq(customer_age, #[map-payload:minCustomerAge])" />
+		<magento:list-customers filter="gteq(customer_age, #[map-payload:minCustomerAge])" />
 	</flow>
 	
 	<flow name="ListCustomerGroups">

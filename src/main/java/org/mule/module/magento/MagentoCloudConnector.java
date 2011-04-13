@@ -309,7 +309,7 @@ public class MagentoCloudConnector implements Initialisable
      * {@code <magento:list-orders
      * filter="gt(subtotal, #[map-payload:minSubtotal])"/>}
      * 
-     * @param filters optional filtering expression - one or more comma-separated
+     * @param filter optional filtering expression - one or more comma-separated
      *            unary or binary predicates, one for each filter, in the form
      *            filterType(attributeName, value), for binary filters or
      *            filterType(attributeName), for unary filters, where filterType is
@@ -330,7 +330,7 @@ public class MagentoCloudConnector implements Initialisable
      * 
      * {@code <magento:list-orders-invoices filter="notnull(parent_id)" />}     
      * 
-     *  @param filters optional filtering expression - one or more comma-separated
+     *  @param filter optional filtering expression - one or more comma-separated
      *            unary or binary predicates, one for each filter, in the form
      *            filterType(attributeName, value), for binary filters or
      *            filterType(attributeName), for unary filters, where filterType is
@@ -352,7 +352,7 @@ public class MagentoCloudConnector implements Initialisable
      * 
      * {@code <magento:list-orders-shipments filter="null(parent_id)" />}
      * 
-     * @param filters optional filtering expression - one or more comma-separated
+     * @param filter optional filtering expression - one or more comma-separated
      *            unary or binary predicates, one for each filter, in the form
      *            filterType(attributeName, value), for binary filters or
      *            filterType(attributeName), for unary filters, where filterType is
@@ -659,9 +659,9 @@ public class MagentoCloudConnector implements Initialisable
      * 
      * Example:
      * 
-     * {@code <magento:list-customers filters="gteq(customer_age, #[map-payload:minCustomerAge])" />}
+     * {@code <magento:list-customers filter="gteq(customer_age, #[map-payload:minCustomerAge])" />}
      * 
-     * @param filters optional filtering expression - one or more comma-separated
+     * @param filter optional filtering expression - one or more comma-separated
      *            unary or binary predicates, one for each filter, in the form
      *            filterType(attributeName, value), for binary filters or
      *            filterType(attributeName), for unary filters, where filterType is
@@ -670,9 +670,9 @@ public class MagentoCloudConnector implements Initialisable
      * @return the list of attributes map
      */
     @Operation
-    public List<Map<String, Object>> listCustomers(@Parameter(optional = true) String filters)
+    public List<Map<String, Object>> listCustomers(@Parameter(optional = true) String filter)
     {
-        return customerClient.listCustomers(filters);
+        return customerClient.listCustomers(filter);
     }
 
     /**
@@ -1705,7 +1705,7 @@ public class MagentoCloudConnector implements Initialisable
      * 
      * {@code <magento:list-products/>}
      *    
-     * @param filters optional filtering expression - one or more comma-separated
+     * @param filter optional filtering expression - one or more comma-separated
      *            unary or binary predicates, one for each filter, in the form
      *            filterType(attributeName, value), for binary filters or
      *            filterType(attributeName), for unary filters, where filterType is
@@ -1715,10 +1715,10 @@ public class MagentoCloudConnector implements Initialisable
      * @return the list of product attributes that match the given optional filtering expression
      */
     @Operation
-    public List<Map<String, Object>> listProducts(@Parameter(optional = true) String filters,
+    public List<Map<String, Object>> listProducts(@Parameter(optional = true) String filter,
                                                   @Parameter(optional = true) String storeViewIdOrCode)
     {
-          return catalogClient.listProducts(filters, storeViewIdOrCode);
+          return catalogClient.listProducts(filter, storeViewIdOrCode);
      }
 
     /**
