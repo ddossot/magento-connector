@@ -238,7 +238,7 @@ public class MagentoCloudConnector implements Initialisable
      * 
      * {@code       <magento:get-order-invoice invoiceId="#[map-payload:invoiceId]"  />}
      * 
-     * @param invoiceId
+     * @param invoiceId the target invoiceId
      * @return the invoice attributes
      */
     @Operation
@@ -254,7 +254,7 @@ public class MagentoCloudConnector implements Initialisable
      * 
      * {@code  <magento:get-order-shipment-carriers  orderId="#[map-payload:orderId]"  />}
      * 
-     * @param orderId
+     * @param orderId the target order id
      * @param itemsQuantities a map containing an entry per each (orderItemId,
      *            quantity) pair
      * @param comment an optional comment
@@ -288,13 +288,13 @@ public class MagentoCloudConnector implements Initialisable
     }
 
     /**
-     * Puts order on hold
+     * Puts order on hold. This operation can be reverted with unholdOrder.
      * 
      * Example:
      * 
      * {@code  <magento:hold-order orderId="#[map-payload:orderId]"/>}
      * 
-     * @param order id
+     * @param orderId the order to put on hold state
      */
     @Operation
     public void holdOrder(@Parameter String orderId)
@@ -302,17 +302,19 @@ public class MagentoCloudConnector implements Initialisable
         orderClient.holdOrder(orderId);
     }
 
-    
     /**
-     * Lists order attributes that match the 
-     * given filtering expression
+     * Lists order attributes that match the given filtering expression.
      * 
      * Example
+     * {@code <magento:list-orders
+     * filter="gt(subtotal, #[map-payload:minSubtotal])"/>}
      * 
-     * {@code <magento:list-orders 
-     *             filter="gt(subtotal, #[map-payload:minSubtotal])"/>}     
-     * 
-     * @param filters optional filtering expression
+     * @param filters optional filtering expression - one or more comma-separated
+     *            unary or binary predicates, one for each filter, in the form
+     *            filterType(attributeName, value), for binary filters or
+     *            filterType(attributeName), for unary filters, where filterType is
+     *            istrue, isfalse or any of the Magento standard filters. Non-numeric
+     *            values need to be escaped using simple quotes.
      * @return a list of string-object maps
      */
     @Operation
@@ -328,7 +330,12 @@ public class MagentoCloudConnector implements Initialisable
      * 
      * {@code <magento:list-orders-invoices filter="notnull(parent_id)" />}     
      * 
-     * @param filters optional list of filters
+     *  @param filters optional filtering expression - one or more comma-separated
+     *            unary or binary predicates, one for each filter, in the form
+     *            filterType(attributeName, value), for binary filters or
+     *            filterType(attributeName), for unary filters, where filterType is
+     *            istrue, isfalse or any of the Magento standard filters. Non-numeric
+     *            values need to be escaped using simple quotes.
      * @return list of string-object maps order attributes
      */
     @Operation
@@ -345,7 +352,12 @@ public class MagentoCloudConnector implements Initialisable
      * 
      * {@code <magento:list-orders-shipments filter="null(parent_id)" />}
      * 
-     * @param filters optional list of filters
+     * @param filters optional filtering expression - one or more comma-separated
+     *            unary or binary predicates, one for each filter, in the form
+     *            filterType(attributeName, value), for binary filters or
+     *            filterType(attributeName), for unary filters, where filterType is
+     *            istrue, isfalse or any of the Magento standard filters. Non-numeric
+     *            values need to be escaped using simple quotes.
      * @return list of string-object map order shipments attributes
      */
     @Operation
@@ -398,7 +410,7 @@ public class MagentoCloudConnector implements Initialisable
      * 
      * {@code  <magento:unhold-order orderId="#[map-payload:orderId]" />}
      * 
-     * @param order id
+     * @param orderId the id of the order to remove from hold state
      */
     @Operation
     public void unholdOrder(@Parameter String orderId)
@@ -507,8 +519,8 @@ public class MagentoCloudConnector implements Initialisable
      *            </magento:attributes>
      *          </magento:create-customer-address>}
      * 
-     * @param customerId
-     * @param attributes
+     * @param customerId the customer 
+     * @param attributes the address attributes
      * @return a new customer address id
      */
     @Operation
@@ -547,7 +559,7 @@ public class MagentoCloudConnector implements Initialisable
      * 
      * {@code <magento:delete-customer customerId="#[map-payload:customerId]" />} 
      * 
-     * @param customerId
+     * @param customerId the customer to delete
      */
     @Operation
     public void deleteCustomer(@Parameter int customerId)
@@ -649,7 +661,12 @@ public class MagentoCloudConnector implements Initialisable
      * 
      * {@code <magento:list-customers filters="gteq(customer_age, #[map-payload:minCustomerAge])" />}
      * 
-     * @param filters an optional filtering expression.
+     * @param filters optional filtering expression - one or more comma-separated
+     *            unary or binary predicates, one for each filter, in the form
+     *            filterType(attributeName, value), for binary filters or
+     *            filterType(attributeName), for unary filters, where filterType is
+     *            istrue, isfalse or any of the Magento standard filters. Non-numeric
+     *            values need to be escaped using simple quotes.
      * @return the list of attributes map
      */
     @Operation
@@ -669,7 +686,7 @@ public class MagentoCloudConnector implements Initialisable
      *               <magento:attribute key="lastname" value="#[map-payload:lastname]"/>
      *            </magento:attributes>}
      * 
-     * @param customerId
+     * @param customerId the target customer to update
      * @param attributes the attributes map
      * 
      */
@@ -872,7 +889,7 @@ public class MagentoCloudConnector implements Initialisable
      *            product sku
      * @param productIdOrSku
      *            the id or sku of the product.
-     * @param fileName
+     * @param fileName the remote media file to delete
      */
     @Operation
     public void deleteProductAttributeMedia(@Parameter(optional = true) Integer productId,
@@ -978,7 +995,7 @@ public class MagentoCloudConnector implements Initialisable
      * Example: 
      * {@code <magento:list-category-attributes setId="#[map-payload:setId]"/>}
      * 
-     * @param setId
+     * @param setId the target set
      * @return the list of category attributes
      */
     @Operation
@@ -994,7 +1011,7 @@ public class MagentoCloudConnector implements Initialisable
      * Example:
      * {@code <magento:list-category-attributes-options attributeId="#[map-payload:attributeId]"/>}
      * 
-     * @param attributeId
+     * @param attributeId the target attribute whose options will be retrieved
      * @param storeViewIdOrCode the id or code of the target store. Left unspecified for using current store 
      * @return the list of category attribute options
      */
@@ -1057,7 +1074,7 @@ public class MagentoCloudConnector implements Initialisable
      * Example:
      * {@code <magento:list-product-attribute-options attributeId="#[map-payload:attributeId]"/>}
      * 
-     * @param attributeId
+     * @param attributeId the target attribute whose options will be listed
      * @param storeViewIdOrCode the id or code of the target store. Left unspecified for using current store
      * @return the attributes list
      */
@@ -1212,7 +1229,7 @@ public class MagentoCloudConnector implements Initialisable
      *            case you are sure the product identifier is a product sku
      * @param productIdOrSku
      *            the id or sku of the product.
-     * @param fileName
+     * @param fileName the name of the remote media file to update 
      * @param attributes
      * @param storeViewIdOrCode the id or code of the target store. Left unspecified for using current store
      */
@@ -1246,6 +1263,13 @@ public class MagentoCloudConnector implements Initialisable
      *        <magento:update-product-attribute-tier-price/>} 
      * 
      * @param productId
+     *            the id of the product. Use it instead of productIdOrSku in
+     *            case you are sure the product identifier is a product id
+     * @param productSku
+     *            the sku of the product. Use it instead of productIdOrSku in
+     *            case you are sure the product identifier is a product sku
+     * @param productIdOrSku
+     *            the id or sku of the product.
      * @param attributes the tier price to update.
      */
     @Operation
@@ -1268,7 +1292,7 @@ public class MagentoCloudConnector implements Initialisable
      *          </magento:attributes>                   
      *        </magento:update-product-link>}
      * 
-     * @param type
+     * @param type the link type
       *@param productId
      *            the id of the source product. Use it instead of productIdOrSku
      *            in case you are sure the source product identifier is a
@@ -1300,7 +1324,7 @@ public class MagentoCloudConnector implements Initialisable
      * Example:
      * 
      * {@code <magento:list-category-products  categoryId="#[map-payload:categoryId]"/>} 
-     * @param categoryId
+     * @param categoryId the category 
      * @return the listing of category products
      */
     @Operation
@@ -1312,13 +1336,13 @@ public class MagentoCloudConnector implements Initialisable
     /**
      * Assign product to category. See catalog-category-assignProduct SOAP method
      * 
-     * @param categoryId
+     * @param categoryId the category where the given product will be added 
      * @param productId the id of the product. Use it instead of productIdOrSku in
      *            case you are sure the product identifier is a product id
      * @param productSku the sku of the product. Use it instead of productIdOrSku in
      *            case you are sure the product identifier is a product sku
      * @param productIdOrSku the id or sku of the product.
-     * @param position
+     * @param position 
      */
     @Operation
     public void addCategoryProduct(int categoryId,
@@ -1333,7 +1357,7 @@ public class MagentoCloudConnector implements Initialisable
     /**
      * Creates a new category. See catalog-category-create SOAP method.
      * 
-     * @param parentId
+     * @param parentId the parent category id
      * @param attributes the new category attributes
      * @param storeViewIdOrCode the id or code of the target store. Left unspecified for using current store
      * @return the new category id
@@ -1364,10 +1388,10 @@ public class MagentoCloudConnector implements Initialisable
      * Example:
      * {@code <magento:get-category categoryId="#[map-payload:categoryId]"/>}
      * 
-     * @param categoryId
+     * @param categoryId the category whose attributes will be retrieved
      * @param storeViewIdOrCode the id or code of the target store. Left unspecified
      *            for using current store
-     * @param attributeNames
+     * @param attributeNames the category attributes that will be retrieved  
      * @return the category attributes
      */
     @Operation
@@ -1385,8 +1409,8 @@ public class MagentoCloudConnector implements Initialisable
      * {@code <magento:list-category-levels/> }
      * 
      * @param website
-     * @param storeView
-     * @param parentCategoryId
+     * @param storeViewIdOrCode the id or code of the target store. Left unspecified for using current store
+     * @param parentCategoryId the parent category of the categories that will be listed
      * @return the list of categories attributes
      */
     @Operation
@@ -1427,7 +1451,7 @@ public class MagentoCloudConnector implements Initialisable
      * {@code <magento:delete-category-product 
      *              categoryId="#[map-payload:categoryId]"
      *              productSku="#[map-payload:productSku]"/>}
-     * @param categoryId
+     * @param categoryId the category to delete
      * @param productId
      *            the id of the product. Use it instead of productIdOrSku in
      *            case you are sure the product identifier is a product id
@@ -1450,7 +1474,7 @@ public class MagentoCloudConnector implements Initialisable
      * Answers the category tree. 
      * See  catalog-category-tree SOAP method. 
      * @param parentId
-     * @param storeView
+     * @param storeViewIdOrCode the id or code of the target store. Left unspecified for using current store
      * @return a category tree attributes
      */
      @Operation
@@ -1472,8 +1496,8 @@ public class MagentoCloudConnector implements Initialisable
      *          </magento:attributes>
      *       </magento:update-category>} 
      * 
-     * @param categoryId
-     * @param attributes
+     * @param categoryId the category to update
+     * @param attributes the category new attributes
      * @param storeViewIdOrCode the id or code of the target store. Left unspecified for using current store
      */
      @Operation
@@ -1502,7 +1526,7 @@ public class MagentoCloudConnector implements Initialisable
      *            case you are sure the product identifier is a product sku
      * @param productIdOrSku
      *            the id or sku of the product.
-     * @param position
+     * @param position the category position for ordering the category inside its level 
      */
     @Operation
     public void updateCategoryProduct(@Parameter int categoryId,
@@ -1525,7 +1549,7 @@ public class MagentoCloudConnector implements Initialisable
      *          </magento:productIdOrSkus>
      *         </magento:list-inventory-stock-items>}
      * 
-     * @param products
+     * @param products the list of product ids and/or skus whose attributes will be retrieved
      * @return the list of attributes
      */
      @Operation
@@ -1551,7 +1575,7 @@ public class MagentoCloudConnector implements Initialisable
      *            case you are sure the product identifier is a product sku
      * @param productIdOrSku
      *            the id or sku of the product.
-     * @param attributes
+     * @param attributes the new attributes of the stock item
      */
     @Operation
     public void updateInventoryStockItem(@Parameter(optional = true) Integer productId,
@@ -1681,7 +1705,12 @@ public class MagentoCloudConnector implements Initialisable
      * 
      * {@code <magento:list-products/>}
      *    
-     * @param filters an optional filtering expression
+     * @param filters optional filtering expression - one or more comma-separated
+     *            unary or binary predicates, one for each filter, in the form
+     *            filterType(attributeName, value), for binary filters or
+     *            filterType(attributeName), for unary filters, where filterType is
+     *            istrue, isfalse or any of the Magento standard filters. Non-numeric
+     *            values need to be escaped using simple quotes.
      * @param storeViewIdOrCode the id or code of the target store. Left unspecified for using current store
      * @return the list of product attributes that match the given optional filtering expression
      */
@@ -1705,8 +1734,8 @@ public class MagentoCloudConnector implements Initialisable
      *            case you are sure the product identifier is a product sku
      * @param productIdOrSku the id or sku of the product.
      * @param specialPrice the special price to set
-     * @param fromDate 
-     * @param toDate 
+     * @param fromDate optional start date of the special price period 
+     * @param toDate optional end date of the special price period
      * @param storeViewIdOrCode the id or code of the target store. Left unspecified for using current store
      */
     @Operation

@@ -38,7 +38,7 @@ application:
     <dependency>
         <groupId>org.mule.modules</groupId>
         <artifactId>mule-module-magento</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
     </dependency>
 
 Configuration
@@ -207,7 +207,7 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|invoiceId||no||
+|invoiceId|the target invoiceId|no||
 
 Returns invoice attributes
 
@@ -227,7 +227,7 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|orderId||no||
+|orderId|the target order id|no||
 
 Returns new invoice's id
 
@@ -255,7 +255,7 @@ Example:
 Hold Order
 ----------
 
-Puts order on hold
+Puts order on hold. This operation can be reverted with unholdOrder.
 
 Example:
 
@@ -266,22 +266,20 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|orderId||no||
+|orderId|the order to put on hold state|no||
 
 
 
 List Orders
 -----------
 
-Lists order attributes that match the 
-given filtering expression
+Lists order attributes that match the given filtering expression.
 
 Example
 
 
-
-     <magento:list-orders 
-                filter="gt(subtotal, #[map-payload:minSubtotal])"/>
+     <magento:list-orders
+    filter="gt(subtotal, #[map-payload:minSubtotal])"/>
 
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
@@ -385,7 +383,7 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|orderId||no||
+|orderId|the id of the order to remove from hold state|no||
 
 
 
@@ -502,8 +500,8 @@ attributes
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|customerId||no||
-|attributes||no||
+|customerId|the customer|no||
+|attributes|the address attributes|no||
 
 Returns new customer address id
 
@@ -550,7 +548,7 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|customerId||no||
+|customerId|the customer to delete|no||
 
 
 
@@ -672,7 +670,7 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|filters|an optional filtering expression.|yes||
+|filters|optional filtering expression - one or more comma-separated unary or binary predicates, one for each filter, in the form filterType(attributeName, value), for binary filters or filterType(attributeName), for unary filters, where filterType is istrue, isfalse or any of the Magento standard filters. Non-numeric values need to be escaped using simple quotes.|yes||
 
 Returns list of attributes map
 
@@ -696,7 +694,7 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|customerId||no||
+|customerId|the target customer to update|no||
 |attributes|the attributes map|no||
 
 
@@ -888,7 +886,7 @@ Example:
 |productId|the id of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product id|yes||
 |productSku|the sku of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product sku|yes||
 |productIdOrSku|the id or sku of the product.|yes||
-|fileName||no||
+|fileName|the remote media file to delete|no||
 
 
 
@@ -990,7 +988,7 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|attributeId||no||
+|attributeId|the target attribute whose options will be retrieved|no||
 |storeViewIdOrCode|the id or code of the target store. Left unspecified for using current store|yes||
 
 Returns list of category attribute options
@@ -1055,7 +1053,7 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|attributeId||no||
+|attributeId|the target attribute whose options will be listed|no||
 |storeViewIdOrCode|the id or code of the target store. Left unspecified for using current store|yes||
 
 Returns attributes list
@@ -1217,7 +1215,7 @@ Example:
 |productId|the id of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product id|yes||
 |productSku|the sku of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product sku|yes||
 |productIdOrSku|the id or sku of the product.|yes||
-|fileName||no||
+|fileName|the name of the remote media file to update|no||
 |attributes||no||
 |storeViewIdOrCode|the id or code of the target store. Left unspecified for using current store|yes||
 
@@ -1246,9 +1244,9 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|productId||yes||
-|productSku||yes||
-|productIdOrSku||yes||
+|productId|the id of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product id|yes||
+|productSku|the sku of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product sku|yes||
+|productIdOrSku|the id or sku of the product.|yes||
 |attributes|the tier price to update.|no||
 
 
@@ -1271,7 +1269,7 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|type||no||
+|type|the link type|no||
 |productId|the id of the source product. Use it instead of productIdOrSku in case you are sure the source product identifier is a product id|yes||
 |productSku|the sku of the source product. Use it instead of productIdOrSku in case you are sure the source product identifier is a product sku|yes||
 |productIdOrSku|the id or sku of the source product.|yes||
@@ -1293,7 +1291,7 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|categoryId||no||
+|categoryId|the category|no||
 
 Returns listing of category products
 
@@ -1307,7 +1305,7 @@ Assign product to category. See catalog-category-assignProduct SOAP method
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|categoryId||no||
+|categoryId|the category where the given product will be added|no||
 |productId|the id of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product id|yes||
 |productSku|the sku of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product sku|yes||
 |productIdOrSku|the id or sku of the product.|yes||
@@ -1323,7 +1321,7 @@ Creates a new category. See catalog-category-create SOAP method.
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|parentId||no||
+|parentId|the parent category id|no||
 |attributes|the new category attributes|no||
 |storeViewIdOrCode|the id or code of the target store. Left unspecified for using current store|yes||
 
@@ -1359,9 +1357,9 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|categoryId||no||
+|categoryId|the category whose attributes will be retrieved|no||
 |storeViewIdOrCode|the id or code of the target store. Left unspecified for using current store|yes||
-|attributeNames||no||
+|attributeNames|the category attributes that will be retrieved|no||
 
 Returns category attributes
 
@@ -1381,8 +1379,8 @@ Example:
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |website||yes||
-|storeViewIdOrCode||yes||
-|parentCategoryId||yes||
+|storeViewIdOrCode|the id or code of the target store. Left unspecified for using current store|yes||
+|parentCategoryId|the parent category of the categories that will be listed|yes||
 
 Returns list of categories attributes
 
@@ -1426,7 +1424,7 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|categoryId||no||
+|categoryId|the category to delete|no||
 |productId|the id of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product id|yes||
 |productSku|the sku of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product sku|yes||
 |productIdOrSku|the id or sku of the product.|yes||
@@ -1443,7 +1441,7 @@ See  catalog-category-tree SOAP method.
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |parentId||no||
-|storeViewIdOrCode||yes||
+|storeViewIdOrCode|the id or code of the target store. Left unspecified for using current store|yes||
 
 Returns category tree attributes
 
@@ -1467,8 +1465,8 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|categoryId||no||
-|attributes||no||
+|categoryId|the category to update|no||
+|attributes|the category new attributes|no||
 |storeViewIdOrCode|the id or code of the target store. Left unspecified for using current store|yes||
 
 
@@ -1494,7 +1492,7 @@ Example:
 |productId|the id of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product id|yes||
 |productSku|the sku of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product sku|yes||
 |productIdOrSku|the id or sku of the product.|yes||
-|position||no||
+|position|the category position for ordering the category inside its level|no||
 
 
 
@@ -1541,7 +1539,7 @@ Updates an stock inventory item
 |productId|the id of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product id|yes||
 |productSku|the sku of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product sku|yes||
 |productIdOrSku|the id or sku of the product.|yes||
-|attributes||no||
+|attributes|the new attributes of the stock item|no||
 
 
 
@@ -1653,7 +1651,7 @@ Example:
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
-|filters|an optional filtering expression|yes||
+|filters|optional filtering expression - one or more comma-separated unary or binary predicates, one for each filter, in the form filterType(attributeName, value), for binary filters or filterType(attributeName), for unary filters, where filterType is istrue, isfalse or any of the Magento standard filters. Non-numeric values need to be escaped using simple quotes.|yes||
 |storeViewIdOrCode|the id or code of the target store. Left unspecified for using current store|yes||
 
 Returns list of product attributes that match the given optional filtering expression
@@ -1678,8 +1676,8 @@ Example:
 |productSku|the sku of the product. Use it instead of productIdOrSku in case you are sure the product identifier is a product sku|yes||
 |productIdOrSku|the id or sku of the product.|yes||
 |specialPrice|the special price to set|no||
-|fromDate||yes||
-|toDate||yes||
+|fromDate|optional start date of the special price period|yes||
+|toDate|optional end date of the special price period|yes||
 |storeViewIdOrCode|the id or code of the target store. Left unspecified for using current store|yes||
 
 
