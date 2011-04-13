@@ -1,0 +1,53 @@
+* Cloud Connector SDK integration
+
+ The Connector now uses the CloudConnector SDK for generating the schemas and handlers. However, as a drawback, lists and maps passing to some connector operations in not 
+as customizable as before, and there are some possible desirable use-cases that will not be supported by the current version, until those features are supported by the 
+cloud connector schema generator. See issue http://www.mulesoft.org/jira/browse/CLDCONNECT-18
+
+* Generic Create/Update operations
+
+ Creation and update of Magento entities is complex as they involve most times dozens of mandatory and/or optional attributes. In order to decrease development time, ensure
+ consistency and simplify such operations, that would otherwise require up to 20 arguments, we have generalized them so that those attributes are passed as simple String-Object Maps. 
+ The same applies for return types. Such strategy, when combined with enhancements described in previous sections, will add flexibility to the manner attributes are passed.     
+
+* Filtering Expressions
+
+ Supports all default filtering binary operation - from, to, eq, neq, like, nlike, is, moreq, gt, lt, gteq, lteq, in, nin, finset -, all the default filtering 
+unary expressions - null, notnull -, plus custom istrue and isfalse unary expressions. Both custom operation were not originally cover by the development plan, but were
+added since it was not a big effort, but simplifies many common filters.  
+
+* Known Issues
+
+ Category creation is not working due to a magento bug - it requires an attribute that is not exposed through the SOAP API. This Issues was apparently fixed
+ circa March 2011, but has been not released yet - it was not included in 1.5.0.1 . See http://www.magentocommerce.com/bug-tracking/issue?issue=10637
+ and http://www.magentocommerce.com/bug-tracking/issue?issue=11079
+ 
+* Current Store Refactor
+
+ The following operations have been merged into a single one, as all them were just alias of the same one, and were thought to be different because of
+a bad understanding of the API:
+ * catalog-category-currentStore
+ * catalog-category-attribute-currentStore
+ * catalog-product-currentStore
+ * catalog-product-attribute-currentStore
+ * catalog-product-attribute-media-currentStore
+ 
+ On the other side, the currentStore operation works a both a setter or getter of the current session store, depending on how it is used. In order
+to be simple, it has been splitted into two operations - updateCurrentStore and getCurrentStore. 
+ 
+* Media Upload
+
+ Unlike most operations, that have been exposed as-is following the original Magento Connector philosophy, some product media upload parameters haven been adapted and exposed
+ as connector arguments, in order to simplify input-streams passing and base64 encoding.
+ 
+* Operation Naming
+
+ Both the SOAP API and the original connector exposed operations using an noun-verb / object-method naming convention, using verbs in an inconsistent way.
+ The connector now exposes all their operation using a more expressive, english-friendly verb-noun naming, and using verbs in a more consistent way. For example,
+ SOAP directoryRegionList API mehtod has been renamed to listDirectoryRegions, and customerCustomerInfo has been renamed as getCustomer. 
+ 
+* Testing 
+
+ Magento API is hughe, and big effort has been put on unit and integration testing the more complex operations. However, due to this complexity, a 100%
+ line and branch is nearly impossible. 
+  
