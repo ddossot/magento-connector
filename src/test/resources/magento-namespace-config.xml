@@ -15,7 +15,7 @@
 	xmlns:magento="http://www.mulesoft.org/schema/mule/magento"
 	xsi:schemaLocation="
                http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/3.1/mule.xsd
-               http://www.mulesoft.org/schema/mule/magento http://www.mulesoft.org/schema/mule/magento/1.0-SNAPSHOT/mule-magento.xsd
+               http://www.mulesoft.org/schema/mule/magento http://www.mulesoft.org/schema/mule/magento/1.0/mule-magento.xsd
                ">
                
 	<!-- Order API -->               
