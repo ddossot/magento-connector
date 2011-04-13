@@ -41,7 +41,7 @@ import org.apache.commons.lang.BooleanUtils;
  */
 public abstract class AbstractMagentoClient
 {
-    protected final AxisPortProvider provider;
+    private final AxisPortProvider provider;
 
     public AbstractMagentoClient(AxisPortProvider provider)
     {
@@ -82,10 +82,11 @@ public abstract class AbstractMagentoClient
         }
         return collection;
     }
-    
-    protected <K,V> Map<K,V> nullToEmpty(Map<K, V> attributes)
+
+    protected <K, V> Map<K, V> nullToEmpty(Map<K, V> attributes)
     {
-        if(attributes == null){
+        if (attributes == null)
+        {
             return Collections.emptyMap();
         }
         return attributes;

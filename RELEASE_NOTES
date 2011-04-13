@@ -46,8 +46,3 @@ to be simple, it has been splitted into two operations - updateCurrentStore and 
  The connector now exposes all their operation using a more expressive, english-friendly verb-noun naming, and using verbs in a more consistent way. For example,
  SOAP directoryRegionList API mehtod has been renamed to listDirectoryRegions, and customerCustomerInfo has been renamed as getCustomer. 
  
-* Testing 
-
- Magento API is hughe, and big effort has been put on unit and integration testing the more complex operations. However, due to this complexity, a 100%
- line and branch is nearly impossible. 
-  

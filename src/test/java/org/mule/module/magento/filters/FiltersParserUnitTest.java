@@ -23,7 +23,7 @@ import org.junit.Test;
  * 
  * @author flbulgarelli
  */
-public class FiltersParserTestCase
+public class FiltersParserUnitTest
 {
 
     /***
@@ -106,6 +106,8 @@ public class FiltersParserTestCase
     {
         parse("lteq(customer_id, 156), gt(customer_id, 100), gteq(customer_city_code, 9986)");
     }
+    
+    
 
     /**
      * Tests that expressions once parsed can be interpreted
@@ -151,6 +153,16 @@ public class FiltersParserTestCase
             "eq", ""))}), parse("eq(name, '')"));
     }
     
+    
+    /**
+     * Tests that in expressions can be parsed
+     */
+    @Test
+    public void testParseIn() throws Exception
+    {
+        parse("in(customer_id, '10,20,60')");
+        parse("nin(customer_id, '10,20,60')");
+    }
     /**
      * Tests that the custom istrue expression is equivalent to eq(_,1)
      */
@@ -168,6 +180,8 @@ public class FiltersParserTestCase
     {
         assertEquals(parse("eq(is_active, 0)"), parse("isfalse(is_active)"));
     }
+    
+    
 
     public Filters parse(String expression) throws ParseException
     {

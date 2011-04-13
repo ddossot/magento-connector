@@ -392,14 +392,18 @@ Example:
 Create Order Invoice
 --------------------
 
+Creates an invoice for the given order
+
 | attribute | description | optional | default value | possible values |
 |:-----------|:-----------|:---------|:--------------|:----------------|
 |config-ref|Specify which configuration to use for this invocation|yes||
 |orderId||no||
-|itemsQuantities||no||
-|comment||yes||
-|sendEmail||yes|false|
-|includeCommentInEmail||yes|false|
+|itemsQuantities|a map containing an entry per each (orderItemId, quantity) pair|no||
+|comment|an optional comment|yes||
+|sendEmail|if an email must be sent after shipment creation|yes|false|
+|includeCommentInEmail|if the comment must be sent in the email|yes|false|
+
+Returns new invoice's id
 
 
 
@@ -859,7 +863,7 @@ Example:
 |storeViewIdOrCode|the id or code of the target store. Left unspecified for using current store|yes||
 |content|the image to upload|no||
 |mimeType|the mimetype|no||*JPEG*, *GIF*, *PNG*
-|baseFileName|the base name of the new remote image|no||
+|baseFileName|the base name of the new remote image|yes||
 
 Returns new image filename
 

@@ -12,7 +12,7 @@ package org.mule.module.magento;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import org.mule.module.magento.api.MagentoException;
 import org.mule.module.magento.api.catalog.model.MediaMimeType;
@@ -20,8 +20,10 @@ import org.mule.module.magento.api.catalog.model.MediaMimeType;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -36,9 +38,9 @@ public class MagentoCloudConnectorTestDriver
 {
     /**A category that is supposed to exist, as a workaround to the create category magento bug*/
     private static final Integer ROOT_CATEGORY_ID = 3;
-    private static final Integer CATEGORY_ID = 4;
-    private static final Integer CATEGORY_ID_3 = 6;
+    private static final Integer CATEGORY_ID_1 = 4;
     private static final Integer CATEGORY_ID_2 = 5;
+    private static final Integer CATEGORY_ID_3 = 6;
     
     private static final String ORDER_ID = "100000001";
     private MagentoCloudConnector connector;
@@ -139,10 +141,45 @@ public class MagentoCloudConnectorTestDriver
     }
 
     /**
-     * Test that a user can be created an deleted
+     * Test that a user can be created an deleted, and that such operations
+     * impact on the customer listing
      */
     @Test
     public void createCustomer() throws Exception
+    {
+        final String email = "johndoe@mycia.com";
+        final String firstname = "John";
+        final String lastname = "Doe";
+        assertEquals(0, countCustomers(email, firstname, lastname));
+        
+        int customerId = connector.createCustomer(new HashMap<String, Object>()
+        {
+            {
+                put("email", email);
+                put("firstname", firstname);
+                put("lastname", lastname);
+                put("password", "123456");
+                put("group_id", "1");
+            }
+        });
+        try
+        {
+            assertEquals(1, countCustomers(email, firstname, lastname));
+            assertEquals(firstname, 
+                connector.getCustomer(customerId, Arrays.asList("firstname")).get("firstname"));
+        }
+        finally
+        {
+            connector.deleteCustomer(customerId);
+            assertEquals(0, countCustomers(email, firstname, lastname));
+        }
+    }
+    
+    /**
+     * Test that a customer can be updated 
+     */
+    @Test
+    public void updateCustomer() throws Exception
     {
         int customerId = connector.createCustomer(new HashMap<String, Object>()
         {
@@ -156,13 +193,33 @@ public class MagentoCloudConnectorTestDriver
         });
         try
         {
-            assertEquals("John", connector.getCustomer(customerId, Arrays.asList("firstname")).get(
-                "firstname"));
+            connector.updateCustomer(customerId, new HashMap<String, Object>()
+            {
+                {
+                    put("firstname", "Tom");
+                }
+            });
+            assertEquals("Tom", 
+                connector.getCustomer(customerId, Arrays.asList("firstname")).get("firstname"));
         }
         finally
         {
             connector.deleteCustomer(customerId);
         }
+    }
+
+    /**Counts customers that have the given email, firstname and lastname*/
+    private int countCustomers(String email, String firstname, String lastname)
+    {
+        return connector.listCustomers(
+            "eq(firstname,'" + firstname + "'), eq(lastname, '" + lastname + "'), eq(email, '" + email + "')").size();
+    }
+    
+    /**Tests that customer groups can be listed*/
+    @Test
+    public void listCustomerGroups() throws Exception
+    {
+        assertFalse(connector.listCustomerGroups().isEmpty());
     }
 
     /**
@@ -197,7 +254,7 @@ public class MagentoCloudConnectorTestDriver
         assertEquals(description2, product.get("description"));
         assertEquals(shortDescription2, product.get("short_description"));
     }
-
+    
     private void updateDescriptions(final Object description2, final Object shortDescription2)
     {
         connector.updateProduct(1, null, null, new HashMap<String, Object>()
@@ -214,6 +271,7 @@ public class MagentoCloudConnectorTestDriver
         return connector.getProduct(1, null, null, null, Arrays.asList("description", "short_description"),
             null);
     }
+    
     
     /**
      * Test that products can be created, linked and deleted
@@ -238,6 +296,38 @@ public class MagentoCloudConnectorTestDriver
             if (productId2 != null)
             {
                 connector.deleteProduct(productId2, null, null);
+            }
+        }
+    }
+    
+    /**
+     * Test that product inventory can be set retrieved
+     */
+    @Test
+    public void productInventory() throws Exception
+    {
+        Integer productId = null;
+        productId = connector.createProduct("simple", 4, "X8960",
+            Collections.singletonMap("stock_data",
+            (Object) new HashMap<String, Object>()
+            {
+                {
+                    put("qty", "10");
+                    put("is_in_stock", true);
+                }
+            }));
+        try
+        {
+            List<Map<String, Object>> stockItems = connector.listStockItems(Arrays.asList("X8960"));
+            assertEquals(1, stockItems.size());
+            assertEquals("10.0000", stockItems.get(0).get("qty"));
+            assertEquals("1", stockItems.get(0).get("is_in_stock"));
+        }
+        finally
+        {
+            if (productId != null)
+            {
+                connector.deleteProduct(productId, null, null);
             }
         }
     }
@@ -301,8 +391,8 @@ public class MagentoCloudConnectorTestDriver
         }
     }
 
-    @Test //@Ignore("Due to a magento bug - it needs an attribute that is not exposed through the soap api - , cetegory creation is broken")
-    public void testCreateCategory() throws Exception
+    @Test @Ignore("Due to a magento bug 10637 - it needs an attribute that is not exposed through the soap api - , cetegory creation is broken")
+    public void createCategory() throws Exception
     {
         Integer categoryId = null;
         try
@@ -330,26 +420,72 @@ public class MagentoCloudConnectorTestDriver
     }
     
     /**
-     * Test that category attributes can be fetched
+     * Tests that can list countries and regions
+     */
+    @Test
+    public void directory() throws Exception
+    {
+        List<Map<String, Object>> countries = connector.listDirectoryCountries();
+        assertFalse(countries.isEmpty());
+        assertEquals("Andorra", countries.get(0).get("name"));
+        assertEquals("United Arab Emirates", countries.get(1).get("name"));
+        assertFalse(connector.listDirectoryRegions("US").isEmpty());
+    }
+    
+    /**
+     * Test that category attributes can be fetched 
      * 
-     * This test assumes there exist a category with id {@link #CATEGORY_ID},
+     * This test assumes there exist a category with id {@link #CATEGORY_ID_1},
      * name subCategory1, active
      * and description "This a subcategory!"
      * 
      * @throws Exception
      */
     @Test
-    public void testGetCategory() throws Exception
+    public void getCategory() throws Exception
     {
-        Map<String, Object> attributes = connector.getCategory(CATEGORY_ID, null, Arrays.asList("name", "is_active",
+        Map<String, Object> attributes = connector.getCategory(CATEGORY_ID_1, null, Arrays.asList("name", "is_active",
             "description"));
         assertEquals(attributes.get("name"), "SubCategory1");
         assertEquals(1, attributes.get("is_active"));
         assertEquals(attributes.get("description"), "This a subcategory!");
     }
     
+    /**
+     * Test that the category tree can be fetched. This tests assumes the existence
+     * of a root category with id {@link #ROOT_CATEGORY_ID}, and that the category structure is the following:
+     * <pre>
+     * Root:{@value #ROOT_CATEGORY_ID} +- SubCategory1:{@value #CATEGORY_ID_1}
+     *                                 |
+     *                                 +-SubCategory3:{@value #CATEGORY_ID_3}
+     *                                 |
+     *                                 +-SubCategory2:{@value #CATEGORY_ID_2}   
+     * </pre>
+     */
     @Test
-    public void testMove() throws Exception
+    public void getCategoryTree() throws Exception
+    {
+        Map<String, Object> categoryTree = connector.getCategoryTree(ROOT_CATEGORY_ID.toString(), null);
+        assertEquals(ROOT_CATEGORY_ID, categoryTree.get("category_id"));
+        assertEquals(CATEGORY_ID_1, getChildren(categoryTree, 0).get("category_id"));
+        assertEquals(CATEGORY_ID_3, getChildren(categoryTree, 1).get("category_id"));
+        assertEquals(CATEGORY_ID_2, getChildren(categoryTree, 2).get("category_id"));
+    }
+    
+    /**
+     * Gets the nth children of a category
+     * @param categoryTree
+     * @param pos
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> getChildren(Map<String, Object> categoryTree, int pos)
+    {
+        return ((List<Map<String, Object>>) categoryTree.get("children")).get(pos);
+    }
+    
+    @Test
+    public void move() throws Exception
     {
         assertEquals(ROOT_CATEGORY_ID.toString(), connector.getCategory(CATEGORY_ID_2, null, Arrays.asList("parent_id")).get("parent_id"));
         
@@ -360,24 +496,4 @@ public class MagentoCloudConnectorTestDriver
         assertEquals(ROOT_CATEGORY_ID.toString(), connector.getCategory(CATEGORY_ID_2, null, Arrays.asList("parent_id")).get("parent_id"));
     }
     
-    /**
-     * Tests that a product category can be updated.
-     * This tests assumes there exists a category with id {@link #CATEGORY_ID}.
-     * 
-     */
-    @Test @Ignore("not done yet")
-    public void updateCategory() throws Exception
-    {
-        connector.updateCategory(CATEGORY_ID, new HashMap<String, Object>(){{
-            put("meta_description", "baz");
-            put("default_sort_by", 1);
-            
-        }}, null);
-        assertEquals("bar", connector.getCategory(CATEGORY_ID, null, Arrays.asList("meta_description")).get(
-            "meta_description"));
-
-        connector.updateCategory(CATEGORY_ID, Collections.singletonMap("meta_description", (Object) "baz"), null);
-        assertEquals("baz", connector.getCategory(CATEGORY_ID, null, Arrays.asList("meta_description")).get(
-            "meta_description"));
-    }
 }
