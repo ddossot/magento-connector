@@ -20,7 +20,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-       http://www.mulesoft.org/schema/mule/magento http://www.mulesoft.org/schema/mule/magento/1.0/mule-magento.xsd
+       http://www.mulesoft.org/schema/mule/magento http://www.mulesoft.org/schema/mule/magento/1.1-SNAPSHOT/mule-magento.xsd
        http://www.mulesoft.org/schema/mule/core    http://www.mulesoft.org/schema/mule/core/3.1/mule.xsd
        http://www.mulesoft.org/schema/mule/json    http://www.mulesoft.org/schema/mule/json/3.1/mule-json.xsd
        http://www.mulesoft.org/schema/mule/s3      http://www.mulesoft.org/schema/mule/s3/1.0/mule-s3.xsd
@@ -54,6 +54,7 @@
  
  <flow name="MainFlow">
  	<description>Searches Products by keyword, and updates their images</description>
+ 	<http:inbound-endpoint host="localhost" port="9090" path="magento-demo-search-product-and-update-media" />
  	<flow-ref name="SearchProducts"/>
  	<logger level="ERROR" message="#[payload]"/>
  	<collection-splitter/>
@@ -62,6 +63,7 @@
  
   <flow name="SetupMagentoFlow">
 	<description>Creates some products in Magento for testing.</description>
+	<http:inbound-endpoint host="localhost" port="9090" path="magento-demo-setup" />
 	<magento:create-product set="4" sku="A04569"
 		type="simple">
 		<magento:attributes>
