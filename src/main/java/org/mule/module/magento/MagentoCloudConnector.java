@@ -12,10 +12,6 @@ package org.mule.module.magento;
 
 import static org.mule.module.magento.api.catalog.model.ProductIdentifiers.from;
 
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
-
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.module.magento.api.AxisPortProvider;
@@ -38,6 +34,14 @@ import org.mule.tools.cloudconnect.annotations.Connector;
 import org.mule.tools.cloudconnect.annotations.Operation;
 import org.mule.tools.cloudconnect.annotations.Parameter;
 import org.mule.tools.cloudconnect.annotations.Property;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
 /**
  * A Cloud Connector for the Magento Order Sales API.
  * 
@@ -851,10 +855,12 @@ public class MagentoCloudConnector implements Initialisable
      *            the id or sku of the product.
      * @param attributes the media attributes
      * @param storeViewIdOrCode the id or code of the target store. Left unspecified for using current store
-     * @param content the image to upload
+     * @param content the image to upload. It may be a file, an input stream or a byte array
      * @param mimeType the mimetype
      * @param baseFileName the base name of the new remote image
      * @return the new image filename
+     * @throws IOException 
+     * @throws MagentoException 
      */
     @Operation
     public String createProductAttributeMedia(@Parameter(optional = true) Integer productId,
@@ -862,12 +868,29 @@ public class MagentoCloudConnector implements Initialisable
                                               @Parameter(optional = true) String productIdOrSku,
                                               @Parameter(optional = true) Map<String, Object> attributes,
                                               @Parameter(optional = true) String storeViewIdOrCode,
-                                              @Parameter InputStream content,
+                                              @Parameter Object content,
                                               @Parameter MediaMimeType mimeType,
-                                              @Parameter(optional = true) String baseFileName) 
+                                              @Parameter(optional = true) String baseFileName) throws IOException 
     {
         return catalogClient.createProductAttributeMedia(from(productSku, productId, productIdOrSku),
-            attributes, content, mimeType, baseFileName, storeViewIdOrCode);
+            attributes, createContent(content), mimeType, baseFileName, storeViewIdOrCode);
+    }
+
+    private InputStream createContent(Object content) throws IOException
+    {
+        if (content instanceof InputStream)
+        {
+            return (InputStream) content;
+        }
+        if (content instanceof File)
+        {
+            return new FileInputStream((File) content);
+        }
+        if (content instanceof byte[])
+        {
+            return new ByteArrayInputStream((byte[]) content);
+        }
+        throw new IllegalArgumentException("Unsupported Content Type " + content);
     }
 
     /**
@@ -1649,7 +1672,6 @@ public class MagentoCloudConnector implements Initialisable
      * @param productIdOrSku
      *            the id or sku of the product.
      * @param storeViewIdOrCode the id or code of the target store. Left unspecified for using current store
-     * @param productId.getIdentifierType()
      * @return the product special price attributes
      */
     @Operation
