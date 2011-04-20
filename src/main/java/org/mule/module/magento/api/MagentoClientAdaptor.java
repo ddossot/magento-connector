@@ -46,16 +46,26 @@ public final class MagentoClientAdaptor
                 {
                     try
                     {
-                        log.debug("Entering {} with args {}", method.getName(), args);
+                        if (log.isDebugEnabled())
+                        {
+                            log.debug("Entering {} with args {}", method.getName(), args);
+                        }
                         Object ret = new MagentoMap(new Holder(method.invoke(receptor, args))).get("value");
-                        log.debug("Returning from {} with value {}", method.getName(), ret);
+                        if (log.isDebugEnabled())
+                        {
+                            log.debug("Returning from {} with value {}", method.getName(), ret);
+                        }
                         return ret;
                     }
                     catch (InvocationTargetException e)
                     {
                         if (e.getCause() instanceof AxisFault)
                         {
-                            log.warn("An exception was thrown while invoking {}: {}", method.getName(), e.getCause());
+                            if (log.isWarnEnabled())
+                            {
+                                log.warn("An exception was thrown while invoking {}: {}", method.getName(),
+                                    e.getCause());
+                            }
                             throw toMagentoException((AxisFault) e.getCause());
                         }
                         throw e;
