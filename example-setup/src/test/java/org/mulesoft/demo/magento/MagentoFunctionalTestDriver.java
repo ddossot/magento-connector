@@ -15,8 +15,6 @@ import org.mule.tck.FunctionalTestCase;
 
 import java.util.Collections;
 
-import org.slf4j.LoggerFactory;
-
 public class MagentoFunctionalTestDriver extends FunctionalTestCase
 {
 
@@ -26,36 +24,37 @@ public class MagentoFunctionalTestDriver extends FunctionalTestCase
         return "mule-config.xml";
     }
 
-    public void testSearchAndUploadMedia() throws Exception
+    /**
+     * Creates some products for this test. Run this test only once
+     */
+    public void testCreateProductsFlow() throws Exception
     {
-        System.out.println(lookupFlowConstruct("MainFlow").process(
-            getTestEvent(Collections.singletonMap("productType", "simple"))));
+        lookupFlowConstruct("CreateProductsFlow").process(getTestEvent(""));
     }
     
     /**
      * Creates some products for this test. Run this test only 
      * once
      */
-    public void ignoreTestSetupS3BucketFlow() throws Exception
+    public void ignoretestSetupFlow() throws Exception
     {
-        lookupFlowConstruct("SetupMagentoFlow").process(getTestEvent(""));
+        lookupFlowConstruct("CreatePriceUpdatesFlow").process(getTestEvent(""));
     }
-    
+
+    /**
+     * Creates an S3 bucket
+     */
+    public void testCreateS3BucketFlow() throws Exception
+    {
+        lookupFlowConstruct("CreateS3BucketFlow").process(getTestEvent(""));
+    }
+
     /**
      * Uploads an image to S3. Run this test only once
      */
-    public void ignoreTestSetupS3ImageFlow() throws Exception
+    public void testUploadS3ImageFlow() throws Exception
     {
-        lookupFlowConstruct("SetupS3ImageFlow").process(getTestEvent(""));
-    }
-    
-    /**
-     * Creates some images for this test. Run this test only 
-     * once
-     */
-    public void ignoreTestSetupS3Flow() throws Exception
-    {
-        lookupFlowConstruct("SetupS3BucketFlow").process(getTestEvent(""));
+        lookupFlowConstruct("UploadS3ImageFlow").process(getTestEvent(""));
     }
 
     private SimpleFlowConstruct lookupFlowConstruct(final String name)

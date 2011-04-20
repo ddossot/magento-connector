@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Mule Magento Cloud Connector
+
+    Copyright (c) MuleSoft, Inc.  All rights reserved.  http://www.mulesoft.com
+
+    The software in this package is published under the terms of the CPAL v1.0
+    license, a copy of which has been included with this distribution in the
+    LICENSE.txt file.
+
+-->
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+       xmlns:magento="http://www.mulesoft.org/schema/mule/magento"
+       xmlns:s3="http://www.mulesoft.org/schema/mule/s3" 
+       xmlns:json="http://www.mulesoft.org/schema/mule/json"
+       xmlns:mongodb="http://www.mulesoft.org/schema/mule/mongodb"
+       xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
+       xmlns:spring="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:http="http://www.mulesoft.org/schema/mule/http"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.mulesoft.org/schema/mule/magento http://www.mulesoft.org/schema/mule/magento/1.1-SNAPSHOT/mule-magento.xsd
+       http://www.mulesoft.org/schema/mule/core    http://www.mulesoft.org/schema/mule/core/3.1/mule.xsd
+       http://www.mulesoft.org/schema/mule/json    http://www.mulesoft.org/schema/mule/json/3.1/mule-json.xsd
+       http://www.mulesoft.org/schema/mule/s3      http://www.mulesoft.org/schema/mule/s3/1.0/mule-s3.xsd
+       http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/3.1/mule-scripting.xsd
+       http://www.mulesoft.org/schema/mule/mongodb http://www.mulesoft.org/schema/mule/mongodb/3.1/mule-mongodb.xsd 
+       http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/3.0/mule-http.xsd">
+	
+    <magento:config name="MagentoTest" username="${magentoUsername}" password="${magentoPassword}" address="${magentoAddress}" />     
+ 	<s3:config accessKey="${s3AccessKey}" secretKey="${s3SecretKey}" />
+ 	<mongodb:connector name="mongodb" database="${mongoDatabase}" hostname="${mongoHostname}" />
+
+	<flow name="CreatePriceUpdatesFlow">	
+		<description>Creates some price update document in the mongodb</description>
+		<http:inbound-endpoint host="localhost" port="9090"
+			path="magento-demo-setup-create-price-updates" />
+		<scripting:component>
+			<scripting:script engine="groovy">
+					return [ "{ \"sku\": \"A04569\", \"price\": 8963}", "{ \"sku\": \"FF0AS489\", \"price\": 150 }", "{ \"sku\": \"1029H\", \"price \": 9863 }" ]
+            </scripting:script>
+			</scripting:component>
+		<collection-splitter/>
+		<mongodb:outbound-endpoint collection="priceUpdates"/>
+	</flow>
+	
+	<flow name="CreateProductsFlow">
+		<description>Creates some products in Magento for testing.
+		</description>
+		<http:inbound-endpoint host="localhost" port="9090"
+			path="magento-demo-setup-create-products" />
+		<magento:create-product set="4" sku="A04569"
+			type="simple">
+			<magento:attributes>
+				<magento:attribute key="name" value="Blue Oak Chair" />
+				<magento:attribute key="status" value="1" />
+			</magento:attributes>
+		</magento:create-product>
+		<magento:create-product set="4" sku="FF0AS489"
+			type="simple">
+			<magento:attributes>
+				<magento:attribute key="name" value="Levis Jeans" />
+				<magento:attribute key="status" value="1" />
+			</magento:attributes>
+		</magento:create-product>
+		<magento:create-product set="4" sku="1029H"
+			type="simple">
+			<magento:attributes>
+				<magento:attribute key="name" value="Generic USB Mouse" />
+				<magento:attribute key="status" value="1" />
+				<magento:attribute key="meta_keyword" value="technology" />
+			</magento:attributes>
+		</magento:create-product>
+	</flow>
+
+	<flow name="CreateS3BucketFlow">
+		<description>Creates a bucket in S3 for testing</description>
+		<http:inbound-endpoint host="localhost" port="9090"
+			path="magento-demo-setup-create-bucket" />
+		<s3:create-bucket bucketName="${s3.bucketName}" />
+	</flow>
+
+	<flow name="UploadS3ImageFlow">
+		<description>Uploads an USB mouse image to s3</description>
+		<http:inbound-endpoint host="localhost" port="9090"
+			path="magento-demo-setup-upload-s3-image" />
+		<outbound-endpoint
+			address="http://www.zumbrovalley.net/ArcadeOptics/trackball/ms009s_top.jpg" />
+		<s3:create-object content="#[payload]" bucketName="${s3.bucketName}"
+			key="1029H.jpg" acl="PUBLIC_READ" />
+	</flow>
+ 
+</mule>

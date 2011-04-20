@@ -51,34 +51,9 @@
  
  <flow name="MainFlow">
  	<description>For each update in a mongodb, update the corresponding product in magento</description>
- 	<http:inbound-endpoint host="localhost" port="9090" path="magento-demo-update-product" />
+ 	<http:inbound-endpoint host="localhost" port="9091" path="magento-demo-update-product" />
  	<flow-ref name="GetPriceUpdates"/>
  	<collection-splitter/>
  	<flow-ref name="UpdateProductPrice"/>
- </flow>
- 
- <flow name="SetupFlow">
-	<description>Creates some products in Magento for testing.</description>
- 	<http:inbound-endpoint host="localhost" port="9090" path="magento-demo-setup" />
-	<magento:create-product set="4" sku="A04569"
-		type="simple">
-		<magento:attributes>
-			<magento:attribute key="name" value="Blue Oak Chair"/>
-			<magento:attribute key="status" value="1" />
-		</magento:attributes>
-	</magento:create-product>
-	<magento:create-product set="4" sku="FF0AS489"
-		type="simple">
-		<magento:attributes>
-			<magento:attribute key="name" value="Levis Jeans"/>
-			<magento:attribute key="status" value="1" />
-		</magento:attributes>
-	</magento:create-product>
-	<magento:create-product set="4" sku="1029H" type="simple">
-		<magento:attributes>
-			<magento:attribute key="name" value="Generic USB Mouse"/>
-			<magento:attribute key="status" value="1" />
-		</magento:attributes>
-	</magento:create-product>
  </flow>
 </mule>

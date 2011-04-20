@@ -42,62 +42,22 @@
  		Downloads an Image from an S3 server, an uploads it to the magento server as 
  		a product image
  	</description>
-    <message-properties-transformer scope="session">
+    <message-properties-transformer scope="invocation">
 		<add-message-property key="sku" value="#[ognl:get('sku')]" />
 		<add-message-property key="filename" value="#[ognl:get('sku') + '.jpg']" />
 	</message-properties-transformer>
- 	<s3:get-object-content bucketName="${s3.bucketName}" key="#[header:session:filename]" />
+ 	<s3:get-object-content bucketName="${s3.bucketName}" key="#[variable:filename]" />
  	<magento:create-product-attribute-media 
  		 content="#[payload]" 
  		 mimeType="JPEG" 
- 		 productSku="#[header:session:sku]"/>
+ 		 productSku="#[variable:sku]"/>
  </flow>
  
  <flow name="MainFlow">
  	<description>Searches Products by keyword, and updates their images</description>
- 	<http:inbound-endpoint host="localhost" port="9090" path="magento-demo-search-product-and-update-media" />
+ 	<http:inbound-endpoint host="localhost" port="9092" path="magento-demo-search-product-and-update-media" />
  	<flow-ref name="SearchProducts"/>
- 	<logger level="ERROR" message="#[payload]"/>
  	<collection-splitter/>
  	<flow-ref name="UploadMedia"/>
  </flow>
- 
-  <flow name="SetupMagentoFlow">
-	<description>Creates some products in Magento for testing.</description>
-	<http:inbound-endpoint host="localhost" port="9090" path="magento-demo-setup" />
-	<magento:create-product set="4" sku="A04569"
-		type="simple">
-		<magento:attributes>
-			<magento:attribute key="name" value="Blue Oak Chair"/>
-			<magento:attribute key="status" value="1" />
-		</magento:attributes>
-	</magento:create-product>
-	<magento:create-product set="4" sku="FF0AS489"
-		type="simple">
-		<magento:attributes>
-			<magento:attribute key="name" value="Levis Jeans"/>
-			<magento:attribute key="status" value="1" />
-		</magento:attributes>
-	</magento:create-product>
-	<magento:create-product set="4" sku="1029H" type="simple">
-		<magento:attributes>
-			<magento:attribute key="name" value="Generic USB Mouse"/>
-			<magento:attribute key="status" value="1" />
-			<magento:attribute key="meta_keyword" value="technology" />
-		</magento:attributes>
-	</magento:create-product>
- </flow>
- 
- <flow name="SetupS3BucketFlow">
- 	<description>Creates a bucket in S3 for testing</description>
- 	<logger level="ERROR" message="${s3.bucketName}"/>
- 	<s3:create-bucket bucketName="${s3.bucketName}" />
- </flow>
- 
- <flow name="SetupS3ImageFlow">
- 	<description>Uploads an usb mouse image to s3</description>
-	<outbound-endpoint address="http://www.zumbrovalley.net/ArcadeOptics/trackball/ms009s_top.jpg" />
-	<s3:create-object content="#[payload]" bucketName="${s3.bucketName}" key="1029H.jpg" acl="PUBLIC_READ" />
- </flow>
- 
 </mule>

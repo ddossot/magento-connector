@@ -14,28 +14,12 @@ import org.mule.api.MuleEvent;
 import org.mule.construct.SimpleFlowConstruct;
 import org.mule.tck.FunctionalTestCase;
 
-
 public class MagentoFunctionalTestDriver extends FunctionalTestCase
 {
     @Override
     protected String getConfigResources()
     {
         return "mule-config.xml";
-    }
-    
-    /**
-     * Creates some products for this test. Run this test only 
-     * once
-     */
-    public void ignoretestSetupFlow() throws Exception
-    {
-        /*
-        Create also the following elements in a mongo db:  
-        db.priceUpdates.insert({ sku: "A04569", price: 8963})
-        db.priceUpdates.insert({ sku: "FF0AS489", price: 150 })
-        db.priceUpdates.insert({ sku: "1029H", price: 9863 })
-        */
-        lookupFlowConstruct("SetupFlow").process(getTestEvent(""));
     }
 
     public void testUpdateFlow() throws Exception
