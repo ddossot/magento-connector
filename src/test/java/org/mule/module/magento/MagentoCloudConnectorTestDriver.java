@@ -50,8 +50,8 @@ public class MagentoCloudConnectorTestDriver
     {
         connector = new MagentoCloudConnector();
         connector.setAddress("http://magento.it.zauber.com.ar/index.php/api/v2_soap");
-        connector.setPassword(System.getenv("magento.password"));
-        connector.setUsername(System.getenv("magento.username"));
+        connector.setPassword(System.getenv("magentoPassword"));
+        connector.setUsername(System.getenv("magentoUsername"));
         connector.initialise();
     }
 

@@ -7,10 +7,10 @@ INTRODUCTION
 
 HOW TO DEMO:
   1. Set the following system properties:
-    a. magento.username. This is the username of your Magento Account
-    b. magento.password. This is the password of your Magento account
-  	c. magento.address. This is the url of your Magento server
-  	d. s3.accessKey. This is the access key of your Amazon Account
+    a. magentoUsername This is the username of your Magento Account
+    b. magentoPassword This is the password of your Magento account
+  	c. magentoAddress This is the url of your Magento server
+  	d. s3AccessKey This is the access key of your Amazon Account
     e. s3.secetKey. This is the secret key of your Amazon Account
     f. s3.bucketName. This is a test bucket from where images where being uploaded to Magento
   2. Run the "SetupS3ImageFlow", "SetupS3BucketFlow" and "SetupMagentoFlow" only once, in order to create a bucket, an image and some products 
