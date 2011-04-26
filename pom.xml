@@ -7,7 +7,7 @@
     <packaging>cloud-connector</packaging>
     <!-- <packaging>cloud-connector</packaging> -->
     <name>Mule Magento Cloud Connector</name>
-    <version>1.1</version>
+    <version>1.2-SNAPSHOT</version>
     <description>Mule Cloud connector to Magento</description>
     <url>http://www.mulesoft.org/documentation/display/MAGENTO/Home</url>
 
@@ -67,6 +67,9 @@
                 <artifactId>mule-cloud-connector-maven-plugin</artifactId>
                 <version>${cloudconnect.version}</version>
                 <extensions>true</extensions>
+				<configuration>
+					<schemaVersion>1.1</schemaVersion>
+				</configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
