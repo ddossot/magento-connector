@@ -314,12 +314,12 @@
         <repository>
             <id>muleforge-releases</id>
             <name>MuleForge Snapshot Repository</name>
-            <url>dav:https://repository.muleforge.org/release/</url>
+            <url>dav:https://repository.mulesoft.org/releases/</url>
         </repository>
         <snapshotRepository>
             <id>muleforge-snapshots</id>
             <name>MuleForge Repository</name>
-            <url>dav:https://repository.muleforge.org/snapshot/</url>
+            <url>dav:https://repository.mulesoft.org/snapshots/</url>
             <uniqueVersion>false</uniqueVersion>
         </snapshotRepository>
     </distributionManagement>
@@ -334,7 +334,13 @@
         <repository>
             <id>muleforge-release</id>
             <name>MuleForge Release Repository</name>
-            <url>http://repository.muleforge.org/release/</url>
+            <url>http://repository.mulesoft.org/releases/</url>
+            <layout>default</layout>
+        </repository>
+        <repository>
+            <id>muleforge-snapshots</id>
+            <name>MuleForge Snapshots Repository</name>
+            <url>http://repository.mulesoft.org/snapshots/</url>
             <layout>default</layout>
         </repository>
         <repository>
@@ -349,12 +355,23 @@
         <pluginRepository>
             <id>muleforge-plugin-release</id>
             <name>Muleforge Release Repository</name>
-            <url>http://repository.muleforge.org/release/</url>
+            <url>http://repository.mulesoft.org/releases/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
             <snapshots>
                 <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>muleforge-plugin-snapshots</id>
+            <name>Muleforge Snapshot Repository</name>
+            <url>http://repository.mulesoft.org/snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
