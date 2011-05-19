@@ -401,6 +401,10 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
         {
             throw new UnhandledException("Could not encode the stream", e);
         }
+        finally
+        {
+            IOUtils.closeQuietly(content);
+        }
     }
 
     public Object getProductAttributeMedia(@NotNull ProductIdentifier productId,
