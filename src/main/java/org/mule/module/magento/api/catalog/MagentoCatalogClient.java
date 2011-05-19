@@ -171,7 +171,8 @@ public interface MagentoCatalogClient<AttributesType, AttributesCollectionType, 
     int createProduct(@NotNull String type,
                       @NotNull int set,
                       @NotNull String sku,
-                      Map<String, Object> attributes) throws ExceptionType;
+                      Map<String, Object> attributes, 
+                      String storeView) throws ExceptionType;
 
     /**
      * Deletes a product. See catalog-product-delete SOAP method.

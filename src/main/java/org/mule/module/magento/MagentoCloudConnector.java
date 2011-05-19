@@ -1620,15 +1620,17 @@ public class MagentoCloudConnector implements Initialisable
      * @param set the new product's set
      * @param sku the new product's sku
      * @param attributes the attributes of the new product
+     * @param storeViewIdOrCode TODO
      * @return the new product's id
      */
     @Operation
     public int createProduct(@Parameter String type,
                              @Parameter int set,
                              @Parameter String sku,
-                             @Parameter(optional = true) Map<String, Object> attributes)
+                             @Parameter(optional = true) Map<String, Object> attributes,
+                             @Parameter(optional = true) String storeViewIdOrCode)
     {
-        return catalogClient.createProduct(type, set, sku, attributes);
+        return catalogClient.createProduct(type, set, sku, attributes, storeViewIdOrCode);
     }
 
      

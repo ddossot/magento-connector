@@ -49,9 +49,13 @@ public class MagentoCloudConnectorTestDriver
     public void setup() throws Exception
     {
         connector = new MagentoCloudConnector();
-        connector.setAddress("http://magento.it.zauber.com.ar/index.php/api/v2_soap");
+        //it looks like http://<host>/index.php/api/v2_soap
+        connector.setAddress(System.getenv("magentoHost"));
         connector.setPassword(System.getenv("magentoPassword"));
         connector.setUsername(System.getenv("magentoUsername"));
+        System.out.println(connector.getAddress());
+        System.out.println(connector.getPassword());
+        System.out.println(connector.getUsername());
         connector.initialise();
     }
 
@@ -283,8 +287,8 @@ public class MagentoCloudConnectorTestDriver
         Integer productId2 = null;
         try
         {
-            productId = connector.createProduct("simple", 4, "FOOO457", null);
-            productId2 = connector.createProduct("simple", 4, "AOOO986", null);
+            productId = connector.createProduct("simple", 4, "FOOO457", null, null);
+            productId2 = connector.createProduct("simple", 4, "AOOO986", null, null);
             connector.addProductLink("related", productId, null, null, productId2.toString(), null);
         }
         finally
@@ -315,7 +319,7 @@ public class MagentoCloudConnectorTestDriver
                     put("qty", "10");
                     put("is_in_stock", true);
                 }
-            }));
+            }), null);
         try
         {
             List<Map<String, Object>> stockItems = connector.listStockItems(Arrays.asList("X8960"));
@@ -343,7 +347,7 @@ public class MagentoCloudConnectorTestDriver
         try
         {
             int originalProductsCount = connector.listProducts(null, null).size();
-            productId = connector.createProduct("simple", 4, "986320", null);
+            productId = connector.createProduct("simple", 4, "986320", null, null);
             assertEquals(originalProductsCount + 1, connector.listProducts(null, null).size());
             connector.updateProductSpecialPrice(null, "986320", null, "6953.6", "2011-30-01", null, null);
             Map<String, Object> productSpecialPrice = connector.getProductSpecialPrice(productId, null, null,
@@ -368,7 +372,7 @@ public class MagentoCloudConnectorTestDriver
         String fileName = null;
         try
         {
-            productId = connector.createProduct("simple", 4, "W875651", null);
+            productId = connector.createProduct("simple", 4, "W875651", null, null);
             int originalMediaCount = connector.listProductAttributeMedia(productId, null, null, null).size();
 
             fileName = connector.createProductAttributeMedia(productId, null, null, null, null,

@@ -245,7 +245,8 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
     public int createProduct(@NotNull String type,
                              @NotNull int set,
                              @NotNull String sku,
-                             Map<String, Object> attributes)
+                             Map<String, Object> attributes
+                             , String storeView)
         throws RemoteException
     {
         Validate.notNull(type);
@@ -253,7 +254,7 @@ public class AxisMagentoCatalogClient extends AbstractMagentoClient
         Validate.notNull(sku);
         
         return getPort().catalogProductCreate(getSessionId(), type, String.valueOf(set), sku,
-            fromMap(CatalogProductCreateEntity.class, attributes));
+            fromMap(CatalogProductCreateEntity.class, attributes), storeView);
     }
 
 

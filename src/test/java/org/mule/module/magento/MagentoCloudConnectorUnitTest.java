@@ -18,13 +18,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.rmi.RemoteException;
-import java.util.Arrays;
-import java.util.HashMap;
-
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
 import org.mule.module.magento.api.AxisPortProvider;
 import org.mule.module.magento.api.catalog.AxisMagentoCatalogClient;
 import org.mule.module.magento.api.customer.AxisMagentoInventoryClient;
@@ -35,12 +28,21 @@ import org.mule.module.magento.api.internal.Filters;
 import org.mule.module.magento.api.internal.Mage_Api_Model_Server_V2_HandlerPortType;
 import org.mule.module.magento.api.internal.OrderItemIdQty;
 import org.mule.module.magento.api.internal.SalesOrderEntity;
+import org.mule.module.magento.api.internal.SalesOrderListEntity;
 import org.mule.module.magento.api.internal.SalesOrderShipmentEntity;
 import org.mule.module.magento.api.inventory.AxisMagentoCustomerClient;
 import org.mule.module.magento.api.order.AxisMagentoOrderClient;
 import org.mule.module.magento.api.order.model.Carrier;
 
+import java.rmi.RemoteException;
+import java.util.Arrays;
+import java.util.HashMap;
+
 import edu.emory.mathcs.backport.java.util.Collections;
+
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 @SuppressWarnings("serial")
 public class MagentoCloudConnectorUnitTest
 {
@@ -68,7 +70,7 @@ public class MagentoCloudConnectorUnitTest
     public void testSalesOrdersListNoFilters() throws Exception
     {
         when(port.salesOrderList(anyString(), eq(new Filters()))).thenReturn(
-            new SalesOrderEntity[]{new SalesOrderEntity()});
+            new SalesOrderListEntity[]{new SalesOrderListEntity()});
         assertEquals(1, connector.listOrders(null).size());
     }
 
@@ -78,7 +80,7 @@ public class MagentoCloudConnectorUnitTest
         when(port.salesOrderList(anyString(), // 
             eq(new Filters(null, new ComplexFilter[]{//
                 new ComplexFilter("customer_id", new AssociativeEntity("eq", "500"))})))) //
-        .thenReturn(new SalesOrderEntity[]{new SalesOrderEntity()});
+        .thenReturn(new SalesOrderListEntity[]{new SalesOrderListEntity()});
         assertEquals(1, connector.listOrders("eq(customer_id, 500)").size());
     }
 
