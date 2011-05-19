@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.mule.modules</groupId>
@@ -62,38 +64,36 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.mule.tools</groupId>
-                <artifactId>mule-cloud-connector-maven-plugin</artifactId>
-                <version>${cloudconnect.version}</version>
-                <extensions>true</extensions>
+				<groupId>org.mule.tools</groupId>
+				<artifactId>mule-cloud-connector-maven-plugin</artifactId>
+				<version>${cloudconnect.version}</version>
+				<extensions>true</extensions>
 				<configuration>
 					<schemaVersion>1.1</schemaVersion>
 				</configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.2</version>
-                <configuration>
-                    <finalName>${project.artifactId}-${project.version}</finalName>
-                    <descriptors>
-                        <descriptor>assembly.xml</descriptor>
-                    </descriptors>
-                    <appendAssemblyId>false</appendAssemblyId>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.0</version>
-                <configuration>
-                    <!-- We only do this at release time. However, before doing a
-               release of your project and deploying it you nedd to run 'mvn assembly:assembly' and check that
-               the distribution is created correctly -->
-                    <preparationGoals>assembly:assembly</preparationGoals>
-                </configuration>
-            </plugin>
-            <plugin>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<finalName>${project.artifactId}-${project.version}</finalName>
+					<descriptors>
+						<descriptor>assembly.xml</descriptor>
+					</descriptors>
+					<appendAssemblyId>false</appendAssemblyId>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<configuration>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<pushChanges>false</pushChanges>
+				</configuration>
+				<version>2.1</version>
+			</plugin>
+       <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>axistools-maven-plugin</artifactId>
                 <version>1.4</version>
@@ -239,178 +239,124 @@
     </reporting>
 
 
-    <dependencies>
-        <!-- Mule Dependencies -->
-        <dependency>
-            <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-spring-config</artifactId>
-            <version>${muleVersion}</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.mule.transports</groupId>
-            <artifactId>mule-transport-axis</artifactId>
-            <version>${muleVersion}</version>
-        </dependency>
+	<dependencies>
+		<!-- Mule Dependencies -->
+		<dependency>
+			<groupId>org.mule.modules</groupId>
+			<artifactId>mule-module-spring-config</artifactId>
+			<version>${muleVersion}</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.transports</groupId>
+			<artifactId>mule-transport-axis</artifactId>
+			<version>${muleVersion}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.mule.tools</groupId>
 			<artifactId>mule-cloud-connector-annotations</artifactId>
 			<version>${cloudconnect.version}</version>
 		</dependency>
-		
+
 		<!-- Validation annotations-->
 		<dependency>
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>
 			<version>1.0.0.GA</version>
 		</dependency>
-		
-        <!-- for testing -->
-        <dependency>
-            <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-client</artifactId>
-            <version>${muleVersion}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mule.tests</groupId>
-            <artifactId>mule-tests-functional</artifactId>
-            <version>${muleVersion}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mule.transports</groupId>
-            <artifactId>mule-transport-vm</artifactId>
-            <version>${muleVersion}</version>
-            <scope>test</scope>
-        </dependency>
-         <dependency>
-            <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-scripting</artifactId>
-            <version>${muleVersion}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.8.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
+
+		<!-- for testing -->
+		<dependency>
+			<groupId>org.mule.modules</groupId>
+			<artifactId>mule-module-client</artifactId>
+			<version>${muleVersion}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.tests</groupId>
+			<artifactId>mule-tests-functional</artifactId>
+			<version>${muleVersion}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.transports</groupId>
+			<artifactId>mule-transport-vm</artifactId>
+			<version>${muleVersion}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.modules</groupId>
+			<artifactId>mule-module-scripting</artifactId>
+			<version>${muleVersion}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
 			<version>1.8.4</version>
 			<scope>test</scope>
 		</dependency>
-    </dependencies>
+	</dependencies>
 
-    <!-- Mule Forge Configuration -->
-    <scm>
-        <connection>scm:git:git://github.com:mulesoft/magento-connector.git</connection>
-        <developerConnection>
+	<!-- Mule Forge Configuration -->
+	<scm>
+		<connection>scm:git:git://github.com:mulesoft/magento-connector.git</connection>
+		<developerConnection>
             scm:git:git@github.com:mulesoft/magento-connector.git
         </developerConnection>
-        <url>http://github.com/mulesoft/magento-connector</url>
-    </scm>
-    <distributionManagement>
-        <repository>
-            <id>muleforge-releases</id>
-            <name>MuleForge Snapshot Repository</name>
-            <url>dav:https://repository.mulesoft.org/releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>muleforge-snapshots</id>
-            <name>MuleForge Repository</name>
-            <url>dav:https://repository.mulesoft.org/snapshots/</url>
-            <uniqueVersion>false</uniqueVersion>
-        </snapshotRepository>
-    </distributionManagement>
+		<url>http://github.com/mulesoft/magento-connector</url>
+	</scm>
+	<distributionManagement>
+		<repository>
+			<id>muleforge-releases</id>
+			<name>MuleForge Snapshot Repository</name>
+			<url>dav:https://repository.muleforge.org/release/</url>
+		</repository>
+		<snapshotRepository>
+			<id>muleforge-snapshots</id>
+			<name>MuleForge Repository</name>
+			<url>dav:https://repository.muleforge.org/snapshot/</url>
+			<uniqueVersion>false</uniqueVersion>
+		</snapshotRepository>
+	</distributionManagement>
 
-    <repositories>
-        <repository>
-            <id>codehaus-repo</id>
-            <name>MuleForge Release Repository</name>
-            <url>http://repository.codehaus.org/</url>
-            <layout>default</layout>
-        </repository>
-        <repository>
-            <id>muleforge-release</id>
-            <name>MuleForge Release Repository</name>
-            <url>http://repository.mulesoft.org/releases/</url>
-            <layout>default</layout>
-        </repository>
-        <repository>
-            <id>muleforge-snapshots</id>
-            <name>MuleForge Snapshots Repository</name>
-            <url>http://repository.mulesoft.org/snapshots/</url>
-            <layout>default</layout>
-        </repository>
-        <repository>
-            <id>codehaus-mule-repo</id>
-            <name>Codehaus Repository</name>
-            <url>http://dist.codehaus.org/mule/dependencies/maven2</url>
-            <layout>default</layout>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>muleforge-plugin-release</id>
-            <name>Muleforge Release Repository</name>
-            <url>http://repository.mulesoft.org/releases/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-        <pluginRepository>
-            <id>muleforge-plugin-snapshots</id>
-            <name>Muleforge Snapshot Repository</name>
-            <url>http://repository.mulesoft.org/snapshots/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
-
-     <profiles>
-        <profile>
-            <id>it</id>
-            <build>
-                <testResources>
-                    <testResource>
-                        <directory>src/test/resources</directory>
-                    </testResource>
-                    <testResource>
-                        <directory>src/it/resources</directory>
-                    </testResource>
-                </testResources>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>build-helper-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>add-test-source</id>
-                                <phase>generate-test-sources</phase>
-                                <goals>
-                                    <goal>add-test-source</goal>
-                                </goals>
-                                <configuration>
-                                    <sources>
-                                        <source>src/it/java</source>
-                                    </sources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
+	<repositories>
+		<repository>
+			<id>codehaus-repo</id>
+			<name>MuleForge Release Repository</name>
+			<url>http://repository.codehaus.org/</url>
+			<layout>default</layout>
+		</repository>
+		<repository>
+			<id>muleforge-release</id>
+			<name>MuleForge Release Repository</name>
+			<url>http://repository.muleforge.org/release/</url>
+			<layout>default</layout>
+		</repository>
+		<repository>
+			<id>codehaus-mule-repo</id>
+			<name>Codehaus Repository</name>
+			<url>http://dist.codehaus.org/mule/dependencies/maven2</url>
+			<layout>default</layout>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>muleforge-plugin-release</id>
+			<name>Muleforge Release Repository</name>
+			<url>http://repository.muleforge.org/release/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
 </project>
