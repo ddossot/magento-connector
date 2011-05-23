@@ -1,3 +1,19 @@
+================== 1.2 ==================
+
+* Changes
+ * Updated for supporting Magento 1.5.1.0
+ 
+* Known Issues
+  * Since Magento 1.5.1.0, pure search by SKU is broken - so either refer records by id or by idOrSku, but no by sku. 
+
+================== 1.1.1 ================
+
+* Changes 
+ * Fix in resource handling: file input streams were not being properly closed
+  
+
+================== 1.1 ==================
+
 * Cloud Connector SDK integration
 
  The Connector now uses the CloudConnector SDK for generating the schemas and handlers. However, as a drawback, lists and maps passing to some connector operations in not 
