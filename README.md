@@ -38,7 +38,7 @@ application:
     <dependency>
         <groupId>org.mule.modules</groupId>
         <artifactId>mule-module-magento</artifactId>
-        <version>1.2-SNAPSHOT</version>
+        <version>1.3-SNAPSHOT</version>
     </dependency>
 
 Configuration
@@ -940,6 +940,17 @@ Example:
 Returns list of links to the product
 
 
+
+Get Catalog Current Store View
+------------------------------
+
+Answers the current default catalog store view id for this session
+
+| attribute | description | optional | default value | possible values |
+|:-----------|:-----------|:---------|:--------------|:----------------|
+|config-ref|Specify which configuration to use for this invocation|yes||
+
+Returns current default store view id
 
 
 
