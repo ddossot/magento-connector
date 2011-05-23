@@ -53,9 +53,6 @@ public class MagentoCloudConnectorTestDriver
         connector.setAddress(System.getenv("magentoHost"));
         connector.setPassword(System.getenv("magentoPassword"));
         connector.setUsername(System.getenv("magentoUsername"));
-        System.out.println(connector.getAddress());
-        System.out.println(connector.getPassword());
-        System.out.println(connector.getUsername());
         connector.initialise();
     }
 
