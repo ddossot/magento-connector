@@ -7,7 +7,7 @@
     <packaging>cloud-connector</packaging>
     <!-- <packaging>cloud-connector</packaging> -->
     <name>Mule Magento Cloud Connector</name>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2</version>
     <description>Mule Cloud connector to Magento</description>
     <url>http://www.mulesoft.org/documentation/display/MAGENTO/Home</url>
 
