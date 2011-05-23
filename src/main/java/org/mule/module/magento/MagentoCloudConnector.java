@@ -1620,7 +1620,7 @@ public class MagentoCloudConnector implements Initialisable
      * @param set the new product's set
      * @param sku the new product's sku
      * @param attributes the attributes of the new product
-     * @param storeViewIdOrCode TODO
+     * @param storeViewIdOrCode the id or code of the target store. Left unspecified for using current store
      * @return the new product's id
      */
     @Operation
