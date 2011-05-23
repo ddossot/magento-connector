@@ -12,7 +12,7 @@ package org.mule.module.magento;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 import org.mule.module.magento.api.MagentoException;
 import org.mule.module.magento.api.catalog.model.MediaMimeType;
@@ -23,10 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 
@@ -36,6 +34,7 @@ import org.springframework.core.io.ClassPathResource;
 @SuppressWarnings("serial")
 public class MagentoCloudConnectorTestDriver
 {
+    private static final int EXISTENT_PRODUCT_ID = 11;
     /**A category that is supposed to exist, as a workaround to the create category magento bug*/
     private static final Integer ROOT_CATEGORY_ID = 3;
     private static final Integer CATEGORY_ID_1 = 4;
@@ -75,7 +74,8 @@ public class MagentoCloudConnectorTestDriver
     }
 
     /**
-     * Tests getting information of an existent order
+     * Tests getting information of an existent order.
+     * The order {@link #ORDER_ID} must exist 
      */
     @Test
     public void getOrder() throws Exception
@@ -112,7 +112,7 @@ public class MagentoCloudConnectorTestDriver
     @Test
     public void updateStockItem() throws Exception
     {
-        connector.updateStockItem("1", new HashMap<String, Object>()
+        connector.updateStockItem(String.valueOf(EXISTENT_PRODUCT_ID), new HashMap<String, Object>()
         {
             {
                 put("manage_stock", "0");
@@ -237,9 +237,35 @@ public class MagentoCloudConnectorTestDriver
     {
         assertEquals(connector.getCatalogCurrentStoreView(), connector.getCatalogCurrentStoreView());
     }
+    
+    /**
+     * Tests that search by SKU works
+     * This test assumes that there exists a product with id {@link #EXISTENT_PRODUCT_ID}
+     */
+    @Test
+    public void getExistentProductBySku() throws Exception
+    {
+        Map<String, Object> product = getExistentProductWithDescriptions();
+        Map<String, Object> product2 = connector.getProduct(null, null, (String) product.get("sku"), null,
+            Arrays.asList("description"), Collections.<String> emptyList());
+        assertEquals(product.get("id"), product2.get("id"));
+    }
+    
+    /**
+     * Tests that search by ID works
+     * This test assumes that there exists a product with id {@link #EXISTENT_PRODUCT_ID}
+     */
+    @Test
+    public void getExistentProductByIdOrSku() throws Exception
+    {
+        Map<String, Object> product = getExistentProductWithDescriptions();
+        Map<String, Object> product2 = connector.getProduct(null, (String) product.get("sku"), null, null,
+            Arrays.asList("description"), Collections.<String> emptyList());
+        assertEquals(product.get("id"), product2.get("id"));
+    }
 
     /**
-     * This test assumes that there exists a product with id 1
+     * This test assumes that there exists a product with id {@link #EXISTENT_PRODUCT_ID}
      */
     @Test
     public void getAndUpdateExistentProduct() throws Exception
@@ -247,21 +273,21 @@ public class MagentoCloudConnectorTestDriver
         final String description = "A great wood kitchen table";
         final String shortDescription = "Best Product ever!";
         updateDescriptions(description, shortDescription);
-        Map<String, Object> product = getDescriptions();
+        Map<String, Object> product = getExistentProductWithDescriptions();
         assertEquals(description, product.get("description"));
         assertEquals(shortDescription, product.get("short_description"));
-
+        
         final Object description2 = "An acceptable kitchen table";
         final Object shortDescription2 = "A good product";
         updateDescriptions(description2, shortDescription2);
-        product = getDescriptions();
+        product = getExistentProductWithDescriptions();
         assertEquals(description2, product.get("description"));
         assertEquals(shortDescription2, product.get("short_description"));
     }
     
     private void updateDescriptions(final Object description2, final Object shortDescription2)
     {
-        connector.updateProduct(1, null, null, new HashMap<String, Object>()
+        connector.updateProduct(null, null, String.valueOf(EXISTENT_PRODUCT_ID), new HashMap<String, Object>()
         {
             {
                 put("description", description2);
@@ -270,10 +296,10 @@ public class MagentoCloudConnectorTestDriver
         }, null);
     }
 
-    private Map<String, Object> getDescriptions()
+    private Map<String, Object> getExistentProductWithDescriptions()
     {
-        return connector.getProduct(1, null, null, null, Arrays.asList("description", "short_description"),
-            null);
+        return connector.getProduct(EXISTENT_PRODUCT_ID, null, null, null, Arrays.asList("sku",
+            "description", "short_description"), null);
     }
     
     
@@ -338,7 +364,7 @@ public class MagentoCloudConnectorTestDriver
 
     /**
      * Test that product can be listed, and their special prices retrieved and
-     * updated
+     * updated. It assumes that a product with sku 986320 exists
      */
     @Test
     public void specialPrices() throws Exception
@@ -347,9 +373,9 @@ public class MagentoCloudConnectorTestDriver
         try
         {
             int originalProductsCount = connector.listProducts(null, null).size();
-            productId = connector.createProduct("simple", 4, "986320", null, null);
+            productId = connector.createProduct("simple", 4, "AK4596", null, null);
             assertEquals(originalProductsCount + 1, connector.listProducts(null, null).size());
-            connector.updateProductSpecialPrice(null, "986320", null, "6953.6", "2011-30-01", null, null);
+            connector.updateProductSpecialPrice(null, null, productId.toString(), "6953.6", "2011-30-01", null, null);
             Map<String, Object> productSpecialPrice = connector.getProductSpecialPrice(productId, null, null,
                 null);
             assertNotNull(productSpecialPrice);
@@ -395,7 +421,7 @@ public class MagentoCloudConnectorTestDriver
         }
     }
 
-    @Test @Ignore("Due to a magento bug 10637 - it needs an attribute that is not exposed through the soap api - , cetegory creation is broken")
+    @Test 
     public void createCategory() throws Exception
     {
         Integer categoryId = null;
