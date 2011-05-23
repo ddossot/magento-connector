@@ -18,7 +18,7 @@
         <jdk.name>J2SE-1.5</jdk.name>
         <jdk.version>1.5</jdk.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <cloudconnect.version>2.0.12</cloudconnect.version>
+        <cloudconnect.version>2.0.14</cloudconnect.version>
     </properties>
 
     <build>
