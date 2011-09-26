@@ -19,13 +19,13 @@ import org.apache.axis.AxisFault;
 import org.apache.commons.lang.Validate;
 import org.mule.module.magento.MagentoCloudConnector;
 import org.mule.module.magento.api.util.MagentoMap;
+import org.mule.util.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * An utility class for creating proxies that handle {@link AxisFault}s by converting
- * them into {@link MagentoException}s, and return Maps of objects instead of magento
- * objects
+ * An utility class for creating proxies that handle {@link AxisFault}s by converting them into {@link MagentoException}
+ * s, and return Maps of objects instead of magento objects
  */
 public final class MagentoClientAdaptor
 {
@@ -36,13 +36,14 @@ public final class MagentoClientAdaptor
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> T adapt(Class<T> receptorClass, final T receptor)
+    public static <T> T adapt(final Class<T> receptorClass, final T receptor)
     {
         Validate.isTrue(receptorClass.isInterface());
         return (T) Proxy.newProxyInstance(MagentoClientAdaptor.class.getClassLoader(),
             new Class[]{receptorClass}, new InvocationHandler()
             {
-                public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
+                public Object invoke(final Object proxy, final Method method, final Object[] args)
+                    throws Throwable
                 {
                     try
                     {
@@ -50,14 +51,14 @@ public final class MagentoClientAdaptor
                         {
                             log.debug("Entering {} with args {}", method.getName(), args);
                         }
-                        Object ret = new MagentoMap(new Holder(method.invoke(receptor, args))).get("value");
+                        final Object ret = new MagentoMap(new Holder(method.invoke(receptor, args))).get("value");
                         if (log.isDebugEnabled())
                         {
                             log.debug("Returning from {} with value {}", method.getName(), ret);
                         }
                         return ret;
                     }
-                    catch (InvocationTargetException e)
+                    catch (final InvocationTargetException e)
                     {
                         if (e.getCause() instanceof AxisFault)
                         {
@@ -75,17 +76,25 @@ public final class MagentoClientAdaptor
             });
     }
 
-    private static MagentoException toMagentoException(AxisFault fault)
+    private static MagentoException toMagentoException(final AxisFault fault)
     {
-        return new MagentoException( //
-            Integer.parseInt(fault.getFaultCode().toString()), fault.getFaultString(), fault);
+        final String faultCode = fault.getFaultCode().toString();
+
+        if (NumberUtils.isNumber(faultCode))
+        {
+            return new MagentoException(Integer.parseInt(faultCode), fault.getFaultString(), fault);
+        }
+        else
+        {
+            return new MagentoException(MagentoException.UNKNOWN_ERROR, fault.getFaultString(), fault);
+        }
     }
 
     public static class Holder
     {
-        private Object value;
+        private final Object value;
 
-        public Holder(Object value)
+        public Holder(final Object value)
         {
             this.value = value;
         }

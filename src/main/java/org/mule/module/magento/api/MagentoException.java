@@ -15,6 +15,7 @@ public final class MagentoException extends RuntimeException
     private static final long serialVersionUID = -5626573459450043144L;
     private final int faultCode;
 
+    public static final int UNKNOWN_ERROR = -1;
     public static final int SHIPMENT_DOES_NOT_EXIST = 100;
     public static final int INVALID_FILTERS = 101;
     public static final int INVALID_DATA = 102;
@@ -22,7 +23,7 @@ public final class MagentoException extends RuntimeException
     public static final int TRACKING_DOES_NOT_EXIST = 104;
     public static final int TRACKING_NOT_DELETED = 105;
 
-    MagentoException(int faultCode, String message, Throwable cause)
+    MagentoException(final int faultCode, final String message, final Throwable cause)
     {
         super(message, cause);
         this.faultCode = faultCode;
@@ -33,4 +34,3 @@ public final class MagentoException extends RuntimeException
         return faultCode;
     }
 }
-

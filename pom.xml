@@ -12,13 +12,13 @@
     <url>http://www.mulesoft.org/documentation/display/MAGENTO/Home</url>
 
     <properties>
-        <muleVersion>3.1.0</muleVersion>
+        <muleVersion>3.1.2</muleVersion>
         <eclipsePluginVersion>2.8</eclipsePluginVersion>
         <vmtype>org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType</vmtype>
         <jdk.name>J2SE-1.5</jdk.name>
         <jdk.version>1.5</jdk.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <cloudconnect.version>2.0.14</cloudconnect.version>
+        <cloudconnect.version>2.0.17-SNAPSHOT</cloudconnect.version>
     </properties>
 
     <build>
